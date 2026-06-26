@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vegavat">
+  <defs>
+    <linearGradient id="vg-violet" x1="14" y1="10" x2="44" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8A45FF"/>
+      <stop offset="100%" stop-color="#5300C4"/>
+    </linearGradient>
+    <linearGradient id="vg-cyan" x1="12" y1="50" x2="54" y2="8" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B6BF6"/>
+      <stop offset="55%" stop-color="#22B8E6"/>
+      <stop offset="100%" stop-color="#34E0F0"/>
+    </linearGradient>
+  </defs>
+  <path d="M11 12 H20.5 L32 39 L43.5 12 H53 L36 52 H28 Z" fill="url(#vg-violet)"/>
+  <path d="M13 47 C 6 30, 18 17, 35 22" fill="none" stroke="url(#vg-cyan)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M30 36 C 36 30, 44 22, 51 13" fill="none" stroke="url(#vg-cyan)" stroke-width="5.5" stroke-linecap="round"/>
+  <path d="M51 13 L41 14 M51 13 L50 23" fill="none" stroke="url(#vg-cyan)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 3 L54 9.5 L60.5 12 L54 14.5 L52 21 L50 14.5 L43.5 12 L50 9.5 Z" fill="#34E0F0"/>
+</svg>
