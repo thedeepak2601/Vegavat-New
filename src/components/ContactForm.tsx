@@ -33,7 +33,7 @@ const initialForm = {
   message: "",
 };
 
-export default function ContactForm() {
+export default function ContactForm({ compact = false }: { compact?: boolean } = {}) {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
@@ -96,29 +96,31 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 rounded-2xl border border-charcoal/[0.07] bg-white p-7 shadow-card sm:p-9"
+      className={`rounded-2xl border border-charcoal/[0.07] bg-white shadow-card ${
+        compact ? "space-y-3 p-4 sm:p-5" : "space-y-5 p-7 sm:p-9"
+      }`}
     >
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className={`grid sm:grid-cols-2 ${compact ? "gap-3" : "gap-5"}`}>
         <Field label="Full Name *">
-          <input required value={form.name} onChange={update("name")} placeholder="Jane Doe" className={inputCls} />
+          <input required value={form.name} onChange={update("name")} placeholder="Jane Doe" className={compact ? compactInputCls : inputCls} />
         </Field>
         <Field label="Email *">
-          <input required type="email" value={form.email} onChange={update("email")} placeholder="jane@company.com" className={inputCls} />
+          <input required type="email" value={form.email} onChange={update("email")} placeholder="jane@company.com" className={compact ? compactInputCls : inputCls} />
         </Field>
       </div>
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className={`grid sm:grid-cols-2 ${compact ? "gap-3" : "gap-5"}`}>
         <Field label="Phone">
-          <input type="tel" value={form.phone} onChange={update("phone")} placeholder="+1 (555) 000-0000" className={inputCls} />
+          <input type="tel" value={form.phone} onChange={update("phone")} placeholder="+1 (555) 000-0000" className={compact ? compactInputCls : inputCls} />
         </Field>
         <Field label="Service Interested In">
-          <select value={form.service} onChange={update("service")} className={inputCls}>
+          <select value={form.service} onChange={update("service")} className={compact ? compactInputCls : inputCls}>
             <option value="" disabled>Select a service</option>
             {services.map((s) => <option key={s}>{s}</option>)}
           </select>
         </Field>
       </div>
       <Field label="Project Details *">
-        <textarea required rows={5} value={form.message} onChange={update("message")} placeholder="Tell us about your project, goals and timeline…" className={inputCls} />
+        <textarea required rows={compact ? 3 : 5} value={form.message} onChange={update("message")} placeholder="Tell us about your project, goals and timeline…" className={compact ? compactInputCls : inputCls} />
       </Field>
 
       {status === "error" && (
@@ -140,6 +142,9 @@ export default function ContactForm() {
 
 const inputCls =
   "w-full rounded-xl border border-charcoal/15 px-4 py-3 text-sm text-charcoal placeholder:text-charcoal/40 focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20";
+
+const compactInputCls =
+  "w-full rounded-lg border border-charcoal/15 px-3 py-2 text-sm text-charcoal placeholder:text-charcoal/40 focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

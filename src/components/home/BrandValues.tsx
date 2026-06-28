@@ -1,5 +1,6 @@
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
+import { LogoMark } from "@/components/Logo";
 
 const CATEGORIES = ["Software Development", "IT Solutions", "Digital Transformation"];
 
@@ -80,30 +81,69 @@ export default function BrandValues() {
 
         {/* logo concept */}
         <Reveal delay={0.1}>
-          <div className="relative mt-8 overflow-hidden rounded-3xl bg-charcoal px-6 py-10 text-white sm:px-10">
-            <div className="pointer-events-none absolute inset-0 bg-grid-violet bg-[size:34px_34px] opacity-30" />
-            <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-violet/25 blur-[100px]" />
+          <div className="relative mt-8 overflow-hidden rounded-3xl border border-violet/15 bg-[#F8F5FF] px-5 py-6 shadow-soft sm:px-8 lg:px-10">
+            <div className="pointer-events-none absolute inset-0 bg-grid-violet bg-[size:32px_32px] opacity-60" />
+            <div className="pointer-events-none absolute -left-24 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-violet/15 blur-[90px]" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-[#34E0F0]/12 to-transparent" />
 
-            <p className="relative text-center text-[11px] font-bold uppercase tracking-widest text-violet-200">Logo Concept</p>
+            <div className="relative grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+              <div className="relative overflow-hidden rounded-2xl bg-charcoal px-6 py-8 text-white shadow-[0_24px_70px_-30px_rgba(18,18,18,0.7)]">
+                <div className="pointer-events-none absolute inset-0 bg-grid-violet bg-[size:30px_30px] opacity-25" />
+                <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-violet/30 blur-[70px]" />
+                <div className="pointer-events-none absolute -bottom-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-[#34E0F0]/20 blur-[80px]" />
 
-            <div className="relative mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-              {CONCEPT.map((c) => (
-                <div
-                  key={c.label}
-                  className="group flex flex-col items-center rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#34E0F0]/40 hover:bg-white/[0.06]"
-                >
-                  <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-violet/30 to-[#34E0F0]/15 text-[#34E0F0] ring-1 ring-white/10 transition-transform duration-300 group-hover:scale-110">
-                    {c.symbol}
-                  </span>
-                  <span className="mt-4 text-sm font-bold">{c.label}</span>
-                  <span className="mt-1 text-[11px] leading-snug text-white/50">{c.meaning}</span>
+                <p className="relative text-[11px] font-bold uppercase tracking-widest text-violet-200">
+                  Logo Concept
+                </p>
+
+                <div className="relative mt-8 grid place-items-center">
+                  <div className="absolute h-48 w-48 rounded-full border border-white/10" />
+                  <div className="absolute h-36 w-36 rounded-full border border-violet/30" />
+                  <div className="absolute h-56 w-56 rounded-full bg-violet/10 blur-3xl" />
+                  <div className="relative grid h-44 w-44 place-items-center rounded-full border border-white/10 bg-white/[0.06] shadow-glow">
+                    <LogoMark className="h-20 w-auto brightness-0 invert" />
+                  </div>
                 </div>
-              ))}
-            </div>
 
-            <p className="relative mx-auto mt-8 max-w-xl text-center text-sm leading-relaxed text-white/60">
-              A modern, dynamic combination that represents growth, innovation and digital excellence.
-            </p>
+                <p className="relative mx-auto mt-8 max-w-sm text-center text-sm leading-relaxed text-white/65">
+                  A brand mark built around motion, clarity and digital confidence.
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="hidden lg:absolute lg:left-7 lg:top-8 lg:block lg:h-[calc(100%-4rem)] lg:w-px lg:bg-gradient-to-b lg:from-violet/20 lg:via-[#34E0F0]/50 lg:to-violet/20" />
+                <div className="space-y-3">
+                  {CONCEPT.map((c, i) => (
+                    <div
+                      key={c.label}
+                      className="group relative flex items-center gap-4 rounded-2xl border border-charcoal/[0.07] bg-white/80 p-4 shadow-card backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-violet/25 hover:bg-white hover:shadow-soft"
+                    >
+                      <span className="relative z-10 grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-violet to-violet-800 text-[#34E0F0] shadow-glow ring-4 ring-[#F8F5FF] transition-transform duration-300 group-hover:scale-105">
+                        {c.symbol}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-[10px] font-extrabold uppercase tracking-widest text-violet/55">
+                            0{i + 1}
+                          </span>
+                          <h3 className="text-base font-extrabold text-charcoal">{c.label}</h3>
+                        </div>
+                        <p className="mt-1 text-sm leading-relaxed text-charcoal/60">{c.meaning}</p>
+                      </div>
+                      <span className="ml-auto hidden h-8 w-8 shrink-0 place-items-center rounded-full bg-violet/5 text-violet transition-colors group-hover:bg-violet group-hover:text-white sm:grid">
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M13 6l6 6-6 6" />
+                        </svg>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 rounded-2xl border border-violet/10 bg-white/60 px-5 py-4 text-sm font-medium leading-relaxed text-charcoal/65">
+                  Together, these elements express growth, innovation and reliable digital delivery.
+                </div>
+              </div>
+            </div>
           </div>
         </Reveal>
       </div>

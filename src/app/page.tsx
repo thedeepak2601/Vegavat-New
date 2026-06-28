@@ -14,7 +14,7 @@ import Testimonials from "@/components/home/Testimonials";
 import PortfolioGrid from "@/components/PortfolioGrid";
 import SectionHeader from "@/components/SectionHeader";
 import Newsletter from "@/components/Newsletter";
-import CTABanner from "@/components/CTABanner";
+import HomeQuoteModal from "@/components/home/HomeQuoteModal";
 
 export default function HomePage() {
   return (
@@ -61,12 +61,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Final call to action */}
-      <CTABanner
-        eyebrow="Get Free Quote"
-        title="Ask for a proposal, we'll get back to you"
-        desc="Fill out a simple form and our team will reach out with a tailored plan and free estimate within 24 hours."
-      />
+      <HomeQuoteModal />
     </>
   );
 }

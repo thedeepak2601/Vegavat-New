@@ -8,6 +8,7 @@ import ScrollProgress from "@/components/effects/ScrollProgress";
 import ScrollToTop from "@/components/effects/ScrollToTop";
 import CursorGlow from "@/components/effects/CursorGlow";
 import WhatsAppButton from "@/components/effects/WhatsAppButton";
+import CalendlyQRModal from "@/components/effects/CalendlyQRModal";
 import ChatWidget from "@/components/effects/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main>{children}</main>
         <Footer />
         <ScrollToTop />
+        <CalendlyQRModal />
         <WhatsAppButton />
         <ChatWidget />
       </body>
