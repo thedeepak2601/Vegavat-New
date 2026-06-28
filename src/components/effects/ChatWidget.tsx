@@ -184,7 +184,7 @@ export default function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.9 }}
             onClick={openChat}
-            className="fixed bottom-[5.5rem] right-6 z-50 flex max-w-[230px] items-start gap-2.5 rounded-2xl rounded-br-sm border border-charcoal/10 bg-white px-4 py-3 text-left shadow-soft"
+            className="fixed bottom-[9.5rem] right-6 z-50 flex max-w-[230px] items-start gap-2.5 rounded-2xl rounded-br-sm border border-charcoal/10 bg-white px-4 py-3 text-left shadow-soft"
           >
             <span className="text-lg">👋</span>
             <span className="text-xs font-medium leading-snug text-charcoal/75">Hi there! Looking for something? I can help, ask me anything.</span>
@@ -202,7 +202,7 @@ export default function ChatWidget() {
         aria-label={open ? "Close chat" : "Open chat"}
         animate={open ? {} : { y: [0, -5, 0] }}
         transition={open ? {} : { duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="group fixed bottom-6 right-6 z-50 grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-violet to-violet-700 text-white shadow-glow"
+        className="group fixed bottom-[5.75rem] right-6 z-[90] grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-gradient-to-br from-violet to-violet-700 text-white shadow-[0_14px_34px_-12px_rgba(98,0,234,0.85)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-glow"
       >
         {!open && <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-violet/40" />}
         {!open && !opened && <span className="absolute -right-0.5 -top-0.5 grid h-5 w-5 place-items-center rounded-full bg-[#34E0F0] text-[10px] font-bold text-charcoal ring-2 ring-white">1</span>}
@@ -225,7 +225,7 @@ export default function ChatWidget() {
             exit={{ opacity: 0, y: 24, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 320, damping: 26 }}
             style={{ transformOrigin: "bottom right" }}
-            className="fixed bottom-24 right-6 z-50 flex h-[540px] max-h-[calc(100vh-7rem)] w-[374px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-violet/20 bg-white shadow-[0_24px_70px_-20px_rgba(98,0,234,0.45)]"
+            className="fixed bottom-[9.5rem] right-6 z-50 flex h-[540px] max-h-[calc(100vh-10.5rem)] w-[374px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-violet/20 bg-white shadow-[0_24px_70px_-20px_rgba(98,0,234,0.45)]"
           >
             {/* header */}
             <div className="relative overflow-hidden bg-gradient-to-r from-violet via-violet-600 to-violet-800 px-4 py-4 text-white">

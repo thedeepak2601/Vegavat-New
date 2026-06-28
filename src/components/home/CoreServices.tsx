@@ -113,7 +113,7 @@ export default function CoreServices() {
             onScroll={onScroll}
             onMouseEnter={() => { paused.current = true; }}
             onMouseLeave={() => { paused.current = false; }}
-            className="no-scrollbar flex snap-x snap-mandatory items-stretch gap-6 overflow-x-auto pb-2"
+            className="no-scrollbar flex snap-x snap-mandatory items-stretch gap-6 overflow-x-auto overflow-y-hidden pb-2"
           >
             {[...SERVICES, ...SERVICES, ...SERVICES].map((s, i) => (
               <Link
@@ -121,10 +121,17 @@ export default function CoreServices() {
                 href={`/services/${s.slug}`}
                 data-card
                 style={{ backgroundColor: PALETTE[i % PALETTE.length] }}
-                className="group flex w-full shrink-0 snap-start flex-col rounded-3xl p-5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+                className="group flex min-h-[520px] w-full shrink-0 snap-start flex-col overflow-hidden rounded-3xl p-5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
               >
-                <div className="relative h-40 overflow-hidden rounded-2xl bg-white/40">
-                  <Image src={s.image} alt={s.title} fill sizes="(max-width:1024px) 90vw, 360px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="h-40 overflow-hidden rounded-2xl bg-white/40">
+                  <Image
+                    src={s.image}
+                    alt={s.title}
+                    width={720}
+                    height={360}
+                    sizes="(max-width:1024px) 90vw, 360px"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
 
                 {/* icon badge overlapping the image */}
