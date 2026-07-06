@@ -49,10 +49,16 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   const [sent, setSent] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     // Attach global callback for reCAPTCHA v2 token capture
+    if (!mounted) return;
     // @ts-ignore
     (window as any).__onRecaptchaSuccess = (token: string) => {
       setRecaptchaToken(token);
@@ -61,7 +67,7 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       // @ts-ignore
       delete (window as any).__onRecaptchaSuccess;
     };
-  }, []);
+  }, [mounted]);
 
   const update =
     (key: keyof typeof initialForm) =>
@@ -154,8 +160,8 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       </Field>
 
       {/* reCAPTCHA v2 checkbox */}
-      {RECAPTCHA_SITE_KEY && (
-        <div className="my-4">
+      {RECAPTCHA_SITE_KEY && mounted && (
+        <div className="my-4" suppressHydrationWarning>
           <div
             className="g-recaptcha"
             data-sitekey={RECAPTCHA_SITE_KEY}
