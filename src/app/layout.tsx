@@ -34,11 +34,31 @@ export const metadata: Metadata = {
       "Top web and mobile app development company building scalable digital products worldwide.",
     type: "website",
   },
+  verification: {
+    google: "IMJuJQ1rnodjl20xhS9UX0DxCyYAZoWHYB-apI0DOuI",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        {/* Google Tag Manager */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-2LBM9DW8VJ"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-2LBM9DW8VJ');
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen">
         <Loader />
         <ScrollProgress />
