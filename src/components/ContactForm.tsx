@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
 
 const services = [
@@ -50,6 +50,7 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   const [lastError, setLastError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const recaptchaRef = useRef<HTMLDivElement | null>(null);
   const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
   useEffect(() => {
@@ -57,17 +58,43 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   }, []);
 
   useEffect(() => {
-    // Attach global callback for reCAPTCHA v2 token capture
-    if (!mounted) return;
+    if (!mounted || !RECAPTCHA_SITE_KEY || typeof window === "undefined") return;
+
+    // Attach callback for reCAPTCHA v2 token capture
     // @ts-ignore
     (window as any).__onRecaptchaSuccess = (token: string) => {
       setRecaptchaToken(token);
     };
+
+    const renderRecaptcha = () => {
+      if (!(window as any).grecaptcha || !recaptchaRef.current) return;
+      try {
+        // @ts-ignore
+        const widgetId = (window as any).grecaptcha.render(recaptchaRef.current, {
+          sitekey: RECAPTCHA_SITE_KEY,
+          callback: "__onRecaptchaSuccess",
+        });
+        return widgetId;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("reCAPTCHA render failed:", error);
+        return null;
+      }
+    };
+
+    const interval = window.setInterval(() => {
+      if ((window as any).grecaptcha && recaptchaRef.current) {
+        renderRecaptcha();
+        window.clearInterval(interval);
+      }
+    }, 250);
+
     return () => {
+      window.clearInterval(interval);
       // @ts-ignore
       delete (window as any).__onRecaptchaSuccess;
     };
-  }, [mounted]);
+  }, [mounted, RECAPTCHA_SITE_KEY]);
 
   const update =
     (key: keyof typeof initialForm) =>
@@ -162,11 +189,7 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       {/* reCAPTCHA v2 checkbox */}
       {RECAPTCHA_SITE_KEY && mounted && (
         <div className="my-4" suppressHydrationWarning>
-          <div
-            className="g-recaptcha"
-            data-sitekey={RECAPTCHA_SITE_KEY}
-            data-callback="__onRecaptchaSuccess"
-          />
+          <div ref={recaptchaRef} className="g-recaptcha" />
         </div>
       )}
 
