@@ -48,6 +48,7 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
+  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
   const update =
     (key: keyof typeof initialForm) =>
@@ -66,6 +67,24 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
     const templateParams = { ...fields, params: fields };
 
     try {
+      // reCAPTCHA v3: get token and verify on the server before sending email
+      if (RECAPTCHA_SITE_KEY && typeof window !== "undefined" && (window as any).grecaptcha) {
+        // @ts-ignore
+        await (window as any).grecaptcha.ready();
+        // @ts-ignore
+        const token = await (window as any).grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "contact" });
+        const verifyRes = await fetch("/api/verify-recaptcha", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        });
+        const verifyJson = await verifyRes.json();
+        if (!verifyJson.success || (verifyJson.score !== undefined && verifyJson.score < 0.3)) {
+          setLastError("reCAPTCHA verification failed");
+          setStatus("error");
+          return;
+        }
+      }
       // 1. Notification to the Vegavat inbox.
       // Pass the public key as the fourth argument (per @emailjs/browser API).
       await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams, EMAILJS.publicKey);
