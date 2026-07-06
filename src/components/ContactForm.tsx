@@ -18,8 +18,6 @@ const services = [
 const EMAILJS = {
   serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_zdu39qy",
   templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_ie1tk0p",
-  autoReplyTemplateId:
-    process.env.NEXT_PUBLIC_EMAILJS_AUTOREPLY_TEMPLATE_ID || "template_i57bl0f",
   publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "",
 };
 
@@ -34,6 +32,16 @@ const initialForm = {
 };
 
 export default function ContactForm({ compact = false }: { compact?: boolean } = {}) {
+  // Initialize EmailJS with the public key once.
+  if (EMAILJS.publicKey) {
+    try {
+      // emailjs.init is idempotent; safe to call repeatedly during hydration.
+      // @ts-ignore
+      emailjs.init(EMAILJS.publicKey);
+    } catch (err) {
+      // ignore init errors here; send will report them
+    }
+  }
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
@@ -60,19 +68,18 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
         publicKey: EMAILJS.publicKey,
       });
 
-      // 2. Auto-reply to the customer (best effort, does not block success).
-      if (EMAILJS.autoReplyTemplateId) {
-        emailjs
-          .send(EMAILJS.serviceId, EMAILJS.autoReplyTemplateId, templateParams, {
-            publicKey: EMAILJS.publicKey,
-          })
-          .catch(() => {});
-      }
+      // Note: auto-reply template removed. If you want to re-enable an
+      // auto-reply to the customer, add a template ID and call emailjs.send()
+      // here as a best-effort (non-blocking) operation.
 
       setForm(initialForm);
       setSent(true);
       setStatus("idle");
-    } catch {
+    } catch (err) {
+      // Log the error for debugging and show an inline error message.
+      // Keep status at "error" so the UI shows the failure but allows retry.
+      // eslint-disable-next-line no-console
+      console.error("Contact form send failed:", err);
       setStatus("error");
     }
   };
