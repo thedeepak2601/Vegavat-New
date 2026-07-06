@@ -48,8 +48,8 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
 
   const update =
     (key: keyof typeof initialForm) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-      setForm((f) => ({ ...f, [key]: e.target.value }));
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+        setForm((f) => ({ ...f, [key]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,9 +64,8 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
 
     try {
       // 1. Notification to the Vegavat inbox.
-      await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams, {
-        publicKey: EMAILJS.publicKey,
-      });
+      // Pass the public key as the fourth argument (per @emailjs/browser API).
+      await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams, EMAILJS.publicKey);
 
       // Note: auto-reply template removed. If you want to re-enable an
       // auto-reply to the customer, add a template ID and call emailjs.send()
@@ -103,9 +102,8 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   return (
     <form
       onSubmit={handleSubmit}
-      className={`rounded-2xl border border-charcoal/[0.07] bg-white shadow-card ${
-        compact ? "space-y-3 p-4 sm:p-5" : "space-y-5 p-7 sm:p-9"
-      }`}
+      className={`rounded-2xl border border-charcoal/[0.07] bg-white shadow-card ${compact ? "space-y-3 p-4 sm:p-5" : "space-y-5 p-7 sm:p-9"
+        }`}
     >
       <div className={`grid sm:grid-cols-2 ${compact ? "gap-3" : "gap-5"}`}>
         <Field label="Full Name *">
