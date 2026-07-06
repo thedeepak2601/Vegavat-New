@@ -48,7 +48,20 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
+
+  useEffect(() => {
+    // Attach global callback for reCAPTCHA v2 token capture
+    // @ts-ignore
+    (window as any).__onRecaptchaSuccess = (token: string) => {
+      setRecaptchaToken(token);
+    };
+    return () => {
+      // @ts-ignore
+      delete (window as any).__onRecaptchaSuccess;
+    };
+  }, []);
 
   const update =
     (key: keyof typeof initialForm) =>
@@ -67,26 +80,14 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
     const templateParams = { ...fields, params: fields };
 
     try {
-      // reCAPTCHA v3: get token and verify on the server before sending email
-      if (RECAPTCHA_SITE_KEY && typeof window !== "undefined" && (window as any).grecaptcha) {
-        // @ts-ignore
-        await (window as any).grecaptcha.ready();
-        // @ts-ignore
-        const token = await (window as any).grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "contact" });
-        const verifyRes = await fetch("/api/verify-recaptcha", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token }),
-        });
-        const verifyJson = await verifyRes.json();
-        if (!verifyJson.success || (verifyJson.score !== undefined && verifyJson.score < 0.3)) {
-          setLastError("reCAPTCHA verification failed");
-          setStatus("error");
-          return;
-        }
+      // Check reCAPTCHA v2 token if enabled
+      if (RECAPTCHA_SITE_KEY && !recaptchaToken) {
+        setLastError("Please complete the reCAPTCHA");
+        setStatus("error");
+        return;
       }
-      // 1. Notification to the Vegavat inbox.
-      // Pass the public key as the fourth argument (per @emailjs/browser API).
+
+      // Send email notification to Vegavat inbox
       await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams, EMAILJS.publicKey);
 
       // Note: auto-reply template removed. If you want to re-enable an
@@ -96,6 +97,7 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       setForm(initialForm);
       setSent(true);
       setStatus("idle");
+      setRecaptchaToken(null); // Reset for next submission
     } catch (err: any) {
       // Log the error for debugging and show an inline error message.
       // Keep status at "error" so the UI shows the failure but allows retry.
@@ -150,6 +152,17 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       <Field label="Project Details *">
         <textarea required rows={compact ? 3 : 5} value={form.message} onChange={update("message")} placeholder="Tell us about your project, goals and timeline…" className={compact ? compactInputCls : inputCls} />
       </Field>
+
+      {/* reCAPTCHA v2 checkbox */}
+      {RECAPTCHA_SITE_KEY && (
+        <div className="my-4">
+          <div
+            className="g-recaptcha"
+            data-sitekey={RECAPTCHA_SITE_KEY}
+            data-callback="__onRecaptchaSuccess"
+          />
+        </div>
+      )}
 
       {status === "error" && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">

@@ -52,8 +52,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-W0SNEZN898"
         ></script>
-        {/* Google reCAPTCHA */}
-        <script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}></script>
+        {/* Google reCAPTCHA v2 */}
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
