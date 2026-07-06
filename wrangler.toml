@@ -1,4 +1,6 @@
 name = "vegavat"
 compatibility_date = "2026-06-26"
 pages_build_output_dir = "out"
-build = { command = "npm run build" }
+
+[build]
+command = "npm run build"
