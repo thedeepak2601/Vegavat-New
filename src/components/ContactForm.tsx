@@ -44,25 +44,11 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       console.warn("EmailJS init failed:", err);
     }
   }, []);
-
-  // Attach a global callback for reCAPTCHA v2 to capture the token
-  useEffect(() => {
-    // @ts-ignore
-    (window as any).__recaptchaCallback = (token: string) => {
-      setRecaptchaToken(token);
-    };
-    return () => {
-      // @ts-ignore
-      delete (window as any).__recaptchaCallback;
-    };
-  }, []);
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
-  const [recaptchaReady, setRecaptchaReady] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
   const update =
     (key: keyof typeof initialForm) =>
@@ -81,20 +67,19 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
     const templateParams = { ...fields, params: fields };
 
     try {
-      // For reCAPTCHA v2 (checkbox), ensure token present and verify on server
-      if (RECAPTCHA_SITE_KEY) {
-        if (!recaptchaToken) {
-          setLastError("Please complete the reCAPTCHA");
-          setStatus("error");
-          return;
-        }
+      // reCAPTCHA v3: get token and verify on the server before sending email
+      if (RECAPTCHA_SITE_KEY && typeof window !== "undefined" && (window as any).grecaptcha) {
+        // @ts-ignore
+        await (window as any).grecaptcha.ready();
+        // @ts-ignore
+        const token = await (window as any).grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "contact" });
         const verifyRes = await fetch("/api/verify-recaptcha", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token: recaptchaToken }),
+          body: JSON.stringify({ token }),
         });
         const verifyJson = await verifyRes.json();
-        if (!verifyJson.success) {
+        if (!verifyJson.success || (verifyJson.score !== undefined && verifyJson.score < 0.3)) {
           setLastError("reCAPTCHA verification failed");
           setStatus("error");
           return;
@@ -175,13 +160,6 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
               <pre className="whitespace-pre-wrap">{lastError}</pre>
             </details>
           )}
-        </div>
-      )}
-
-      {/* reCAPTCHA v2 checkbox */}
-      {RECAPTCHA_SITE_KEY && (
-        <div className="mt-4">
-          <div className="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY} data-callback="__recaptchaCallback"></div>
         </div>
       )}
 
