@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 
 const services = [
@@ -32,19 +32,22 @@ const initialForm = {
 };
 
 export default function ContactForm({ compact = false }: { compact?: boolean } = {}) {
-  // Initialize EmailJS with the public key once.
-  if (EMAILJS.publicKey) {
+  // Initialize EmailJS with the public key once on the client.
+  useEffect(() => {
+    if (!EMAILJS.publicKey) return;
     try {
-      // emailjs.init is idempotent; safe to call repeatedly during hydration.
       // @ts-ignore
       emailjs.init(EMAILJS.publicKey);
     } catch (err) {
-      // ignore init errors here; send will report them
+      // initialization errors will be surfaced during send
+      // eslint-disable-next-line no-console
+      console.warn("EmailJS init failed:", err);
     }
-  }
+  }, []);
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
+  const [lastError, setLastError] = useState<string | null>(null);
 
   const update =
     (key: keyof typeof initialForm) =>
@@ -74,11 +77,12 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       setForm(initialForm);
       setSent(true);
       setStatus("idle");
-    } catch (err) {
+    } catch (err: any) {
       // Log the error for debugging and show an inline error message.
       // Keep status at "error" so the UI shows the failure but allows retry.
       // eslint-disable-next-line no-console
       console.error("Contact form send failed:", err);
+      setLastError(err?.message ? String(err.message) : String(err));
       setStatus("error");
     }
   };
@@ -129,9 +133,15 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       </Field>
 
       {status === "error" && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-          Something went wrong while sending your message. Please try again or email us directly at contact.vegavat@gmail.com.
-        </p>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <p>Something went wrong while sending your message. Please try again or email us directly at contact.vegavat@gmail.com.</p>
+          {lastError && (
+            <details className="mt-2 text-xs text-red-700">
+              <summary>Show error details</summary>
+              <pre className="whitespace-pre-wrap">{lastError}</pre>
+            </details>
+          )}
+        </div>
       )}
 
       <p className="text-xs text-charcoal/50">
