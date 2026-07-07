@@ -2,9 +2,6 @@ name = "vegavat"
 compatibility_date = "2026-06-26"
 pages_build_output_dir = "out"
 
-[build]
-command = "npm run build"
-
 [vars]
 NEXT_PUBLIC_EMAILJS_PUBLIC_KEY = "zDaXC5UWRhXSKuDk7"
 NEXT_PUBLIC_EMAILJS_SERVICE_ID = "service_zdu39qy"
