@@ -50,7 +50,7 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   const [lastError, setLastError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
-  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
+  const RECAPTCHA_SITE_KEY = "6LedrkctAAAAAGX-NF1BDvk0qNYhnw9qqUGuLoyl";
 
   useEffect(() => {
     setMounted(true);
