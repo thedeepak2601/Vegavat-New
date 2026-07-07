@@ -43,18 +43,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable}>
       <head>
-        {/* Google Tag Manager */}
+        <meta
+          name="google-site-verification"
+          content="IMJuJQ1rnodjl20xhS9UX0DxCyYAZoWHYB-apI0DOuI"
+        />
+        {/* Google Tag */}
         <script
           async
-          src="https://www.googletagmanager.com/gtag/js?id=G-2LBM9DW8VJ"
+          src="https://www.googletagmanager.com/gtag/js?id=G-W0SNEZN898"
         ></script>
+        {/* Google reCAPTCHA v2 */}
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-2LBM9DW8VJ');
+              gtag('config', 'G-W0SNEZN898');
             `,
           }}
         />

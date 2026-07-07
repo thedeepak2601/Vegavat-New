@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 
 const services = [
@@ -18,8 +18,6 @@ const services = [
 const EMAILJS = {
   serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_zdu39qy",
   templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_ie1tk0p",
-  autoReplyTemplateId:
-    process.env.NEXT_PUBLIC_EMAILJS_AUTOREPLY_TEMPLATE_ID || "template_i57bl0f",
   publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "",
 };
 
@@ -34,14 +32,48 @@ const initialForm = {
 };
 
 export default function ContactForm({ compact = false }: { compact?: boolean } = {}) {
+  // Initialize EmailJS with the public key once on the client.
+  useEffect(() => {
+    if (!EMAILJS.publicKey) return;
+    try {
+      // @ts-ignore
+      emailjs.init(EMAILJS.publicKey);
+    } catch (err) {
+      // initialization errors will be surfaced during send
+      // eslint-disable-next-line no-console
+      console.warn("EmailJS init failed:", err);
+    }
+  }, []);
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
+  const [lastError, setLastError] = useState<string | null>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
+
+  useEffect(() => {
+    setMounted(true);
+    (window as any).__onRecaptchaSuccess = (token: string) => {
+      setRecaptchaToken(token);
+    };
+
+    // Dynamically inject reCAPTCHA script if not already present
+    if (!document.querySelector('script[src*="recaptcha/api.js"]')) {
+      const script = document.createElement("script");
+      script.src = "https://www.google.com/recaptcha/api.js";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+
+    return () => { delete (window as any).__onRecaptchaSuccess; };
+  }, []);
 
   const update =
     (key: keyof typeof initialForm) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-      setForm((f) => ({ ...f, [key]: e.target.value }));
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+        setForm((f) => ({ ...f, [key]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,24 +87,32 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
     const templateParams = { ...fields, params: fields };
 
     try {
-      // 1. Notification to the Vegavat inbox.
-      await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams, {
-        publicKey: EMAILJS.publicKey,
-      });
-
-      // 2. Auto-reply to the customer (best effort, does not block success).
-      if (EMAILJS.autoReplyTemplateId) {
-        emailjs
-          .send(EMAILJS.serviceId, EMAILJS.autoReplyTemplateId, templateParams, {
-            publicKey: EMAILJS.publicKey,
-          })
-          .catch(() => {});
+      // Check reCAPTCHA v2 token if enabled
+      if (RECAPTCHA_SITE_KEY && !recaptchaToken) {
+        setLastError("Please complete the reCAPTCHA");
+        setStatus("error");
+        return;
       }
+
+      // Send email notification to Vegavat inbox
+      await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams, EMAILJS.publicKey);
+
+      // Note: auto-reply template removed. If you want to re-enable an
+      // auto-reply to the customer, add a template ID and call emailjs.send()
+      // here as a best-effort (non-blocking) operation.
 
       setForm(initialForm);
       setSent(true);
       setStatus("idle");
-    } catch {
+      setRecaptchaToken(null);
+      // Reset reCAPTCHA widget
+      if ((window as any).grecaptcha) (window as any).grecaptcha.reset();
+    } catch (err: any) {
+      // Log the error for debugging and show an inline error message.
+      // Keep status at "error" so the UI shows the failure but allows retry.
+      // eslint-disable-next-line no-console
+      console.error("Contact form send failed:", err);
+      setLastError(err?.message ? String(err.message) : String(err));
       setStatus("error");
     }
   };
@@ -96,9 +136,8 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   return (
     <form
       onSubmit={handleSubmit}
-      className={`rounded-2xl border border-charcoal/[0.07] bg-white shadow-card ${
-        compact ? "space-y-3 p-4 sm:p-5" : "space-y-5 p-7 sm:p-9"
-      }`}
+      className={`rounded-2xl border border-charcoal/[0.07] bg-white shadow-card ${compact ? "space-y-3 p-4 sm:p-5" : "space-y-5 p-7 sm:p-9"
+        }`}
     >
       <div className={`grid sm:grid-cols-2 ${compact ? "gap-3" : "gap-5"}`}>
         <Field label="Full Name *">
@@ -123,10 +162,27 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
         <textarea required rows={compact ? 3 : 5} value={form.message} onChange={update("message")} placeholder="Tell us about your project, goals and timeline…" className={compact ? compactInputCls : inputCls} />
       </Field>
 
+      {/* reCAPTCHA v2 checkbox — declarative render, no manual JS needed */}
+      {RECAPTCHA_SITE_KEY && mounted && (
+        <div className="my-4" suppressHydrationWarning>
+          <div
+            className="g-recaptcha"
+            data-sitekey={RECAPTCHA_SITE_KEY}
+            data-callback="__onRecaptchaSuccess"
+          />
+        </div>
+      )}
+
       {status === "error" && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-          Something went wrong while sending your message. Please try again or email us directly at contact.vegavat@gmail.com.
-        </p>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <p>Something went wrong while sending your message. Please try again or email us directly at contact.vegavat@gmail.com.</p>
+          {lastError && (
+            <details className="mt-2 text-xs text-red-700">
+              <summary>Show error details</summary>
+              <pre className="whitespace-pre-wrap">{lastError}</pre>
+            </details>
+          )}
+        </div>
       )}
 
       <p className="text-xs text-charcoal/50">
