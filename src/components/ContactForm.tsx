@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 
 const services = [
@@ -50,51 +50,25 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
   const [lastError, setLastError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
-  const recaptchaRef = useRef<HTMLDivElement | null>(null);
   const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted || !RECAPTCHA_SITE_KEY || typeof window === "undefined") return;
-
-    // Attach callback for reCAPTCHA v2 token capture
-    // @ts-ignore
     (window as any).__onRecaptchaSuccess = (token: string) => {
       setRecaptchaToken(token);
     };
 
-    const renderRecaptcha = () => {
-      if (!(window as any).grecaptcha || !recaptchaRef.current) return;
-      try {
-        // @ts-ignore
-        const widgetId = (window as any).grecaptcha.render(recaptchaRef.current, {
-          sitekey: RECAPTCHA_SITE_KEY,
-          callback: "__onRecaptchaSuccess",
-        });
-        return widgetId;
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error("reCAPTCHA render failed:", error);
-        return null;
-      }
-    };
+    // Dynamically inject reCAPTCHA script if not already present
+    if (!document.querySelector('script[src*="recaptcha/api.js"]')) {
+      const script = document.createElement("script");
+      script.src = "https://www.google.com/recaptcha/api.js";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
 
-    const interval = window.setInterval(() => {
-      if ((window as any).grecaptcha && recaptchaRef.current) {
-        renderRecaptcha();
-        window.clearInterval(interval);
-      }
-    }, 250);
-
-    return () => {
-      window.clearInterval(interval);
-      // @ts-ignore
-      delete (window as any).__onRecaptchaSuccess;
-    };
-  }, [mounted, RECAPTCHA_SITE_KEY]);
+    return () => { delete (window as any).__onRecaptchaSuccess; };
+  }, []);
 
   const update =
     (key: keyof typeof initialForm) =>
@@ -130,7 +104,9 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       setForm(initialForm);
       setSent(true);
       setStatus("idle");
-      setRecaptchaToken(null); // Reset for next submission
+      setRecaptchaToken(null);
+      // Reset reCAPTCHA widget
+      if ((window as any).grecaptcha) (window as any).grecaptcha.reset();
     } catch (err: any) {
       // Log the error for debugging and show an inline error message.
       // Keep status at "error" so the UI shows the failure but allows retry.
@@ -186,10 +162,14 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
         <textarea required rows={compact ? 3 : 5} value={form.message} onChange={update("message")} placeholder="Tell us about your project, goals and timeline…" className={compact ? compactInputCls : inputCls} />
       </Field>
 
-      {/* reCAPTCHA v2 checkbox */}
+      {/* reCAPTCHA v2 checkbox — declarative render, no manual JS needed */}
       {RECAPTCHA_SITE_KEY && mounted && (
         <div className="my-4" suppressHydrationWarning>
-          <div ref={recaptchaRef} className="g-recaptcha" />
+          <div
+            className="g-recaptcha"
+            data-sitekey={RECAPTCHA_SITE_KEY}
+            data-callback="__onRecaptchaSuccess"
+          />
         </div>
       )}
 
