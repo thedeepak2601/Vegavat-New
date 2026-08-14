@@ -25,4 +25,6 @@ export const STATS = [
   { value: "10+", label: "Clients Worldwide", icon: "users" },
   { value: "100+", label: "Projects Delivered", icon: "rocket" },
   { value: "15+", label: "Expert Developers", icon: "devops" },
+  // Matches the 12 product pages under /products — change if you count differently.
+  { value: "12+", label: "SaaS Products", icon: "saas" },
 ];

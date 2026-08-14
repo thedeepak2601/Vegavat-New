@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import AnimatedBackground from "@/components/effects/AnimatedBackground";
+import Icon from "@/components/Icon";
 import HeroVideo from "@/components/effects/HeroVideo";
-import { subscribe } from "@/lib/subscribe";
+import { useSubscribe } from "@/lib/useSubscribe";
 import { SITE } from "@/lib/site";
 
 // Ambient hero footage. Hotlinked from a third-party CDN — swap this for a
@@ -13,21 +14,36 @@ import { SITE } from "@/lib/site";
 const HERO_VIDEO =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_115001_bcdaa3b4-03de-47e7-ad63-ae3e392c32d4.mp4";
 
-const badges = ["iOS & Android", "Web Apps", "UI/UX", "AI / GenAI", "Cloud"];
+// Short labels — this strip sits in the hero, so it reads at a glance rather
+// than carrying the full service titles. Icons match the set used in the nav
+// and on the service pages.
+const badges = [
+  { label: "iOS & Android", icon: "mobile", href: "/services/mobile-app-development" },
+  { label: "Web Apps", icon: "web", href: "/services/web-development" },
+  { label: "UI/UX Design", icon: "design", href: "/services/ui-ux-design" },
+  { label: "AI / GenAI", icon: "ai", href: "/services/ai-development" },
+  { label: "Cloud", icon: "cloud", href: "/services/cloud-enablement" },
+  { label: "Cyber Security", icon: "shield", href: "/services/cyber-security" },
+  { label: "DevSecOps", icon: "devops", href: "/services/devsecops" },
+  { label: "ERP & CRM", icon: "erp", href: "/services/erp-implementation" },
+  { label: "WhatsApp Automation", icon: "chat", href: "/services/whatsapp-automation" },
+  { label: "SaaS Products", icon: "saas", href: "/products#saas" },
+];
+
+// Fades both ends against the video, which a gradient overlay can't do.
+const EDGE_FADE =
+  "linear-gradient(to right, transparent, #000 10%, #000 90%, transparent)";
 
 const capabilities = ["AI agents", "mobile apps", "SaaS platforms", "cloud systems"];
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-type SubStatus = "idle" | "sending" | "done" | "error";
-
 export default function Hero() {
   const rootRef = useRef<HTMLElement | null>(null);
-  const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<SubStatus>("idle");
   const [capability, setCapability] = useState(0);
+  // Shared with the mid-page and blog newsletter forms.
+  const { email, setEmail, status, onSubmit } = useSubscribe();
 
   // Cycle the capability word in the sub-headline.
   useEffect(() => {
@@ -54,39 +70,6 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
-  useEffect(
-    () => () => {
-      if (resetTimer.current) clearTimeout(resetTimer.current);
-    },
-    []
-  );
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (status === "sending") return;
-
-    const address = email.trim();
-    if (!address) return;
-
-    // Honeypot: a real person never fills a field they cannot see, so treat a
-    // filled one as a bot and no-op without pestering the inbox.
-    const trap = (new FormData(e.currentTarget).get("company") as string) || "";
-
-    setStatus("sending");
-    try {
-      if (!trap) await subscribe(address);
-      setStatus("done");
-      setEmail("");
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error("Subscription failed:", err);
-      setStatus("error");
-    }
-
-    // Clear the message and hand the field back after 3s.
-    if (resetTimer.current) clearTimeout(resetTimer.current);
-    resetTimer.current = setTimeout(() => setStatus("idle"), 3000);
-  };
 
   return (
     <section
@@ -107,37 +90,10 @@ export default function Hero() {
       {/* settle into the wave divider */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-charcoal via-charcoal/75 to-transparent" />
 
-      {/* Floating capability cards, desktop only. Kept in a middle band so they
-          clear the header and the chat/WhatsApp widgets in the bottom corners. */}
-      <Link
-        href="/services"
-        className="liquid-glass absolute left-8 top-[34%] z-10 hidden w-[188px] rounded-2xl px-4 py-3 transition-transform hover:-translate-y-1 xl:block"
-      >
-        <p className="relative text-[11px] font-bold uppercase tracking-wider text-violet-200">
-          Our Stack
-        </p>
-        <p className="relative mt-0.5 text-xs text-white/70">React · Flutter · AWS</p>
-      </Link>
-      <div className="liquid-glass absolute left-8 top-[59%] z-10 hidden w-[188px] rounded-2xl px-4 py-3 xl:block">
-        <p className="relative text-2xl font-extrabold">6+ yrs</p>
-        <p className="relative text-xs text-white/70">building digital products</p>
-      </div>
-      <div className="liquid-glass absolute right-8 top-[34%] z-10 hidden w-[188px] rounded-2xl px-4 py-3 xl:block">
-        <p className="relative text-2xl font-extrabold text-[#34E0F0]">100+</p>
-        <p className="relative text-xs text-white/70">projects shipped</p>
-      </div>
-      <Link
-        href="/services"
-        className="liquid-glass absolute right-8 top-[59%] z-10 hidden w-[188px] rounded-2xl px-4 py-3 transition-transform hover:-translate-y-1 xl:block"
-      >
-        <p className="relative text-[11px] font-bold uppercase tracking-wider text-[#34E0F0]">
-          Services
-        </p>
-        <p className="relative mt-0.5 text-xs text-white/70">Web · Mobile · AI</p>
-      </Link>
-
-      {/* Centered content */}
-      <div className="container-x relative z-10 flex flex-1 flex-col items-center justify-center pb-24 pt-10 text-center lg:pb-40">
+      {/* Centered content. The floating capability cards that used to flank this
+          moved into the Digital Solutions grid below the hero, where they can
+          carry the full service list instead of four abbreviated ones. */}
+      <div className="container-x relative z-10 flex flex-1 flex-col items-center justify-center pb-28 pt-10 text-center lg:pb-48">
         <span className="hero-blur liquid-glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-white/80 sm:text-xs">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#34E0F0] opacity-75" />
@@ -158,7 +114,7 @@ export default function Hero() {
         </h1>
 
         <p className="hero-blur mt-5 text-lg text-white/75 sm:text-xl">
-          with <span className="font-semibold text-white">{SITE.name}</span> — we engineer{" "}
+          with <span className="font-semibold text-white">{SITE.name}</span> We engineer{" "}
           {/* keyed so each swap replays the fade; gradient + underline make the
               changing word the obvious focal point of the line */}
           {/* pb on the outer box drops the rule clear of the italic descenders */}
@@ -256,21 +212,28 @@ export default function Hero() {
           </Link>
         </div>
 
-        <div className="hero-blur mt-8 flex flex-wrap justify-center gap-2">
-          {badges.map((b) => (
-            <span
-              key={b}
-              className="liquid-glass inline-block rounded-full px-3 py-1 text-xs font-medium text-white/70"
-            >
-              <span className="relative">{b}</span>
-            </span>
-          ))}
-          <Link
-            href="/products#saas"
-            className="liquid-glass inline-block rounded-full px-3 py-1 text-xs font-medium text-violet-200 transition-colors hover:text-white"
-          >
-            <span className="relative">SaaS Products ↗</span>
-          </Link>
+        {/* Capability strip — doubled so the -50% keyframe loops seamlessly */}
+        <div
+          className="hero-blur relative mt-9 w-full max-w-2xl overflow-hidden"
+          style={{ WebkitMaskImage: EDGE_FADE, maskImage: EDGE_FADE }}
+        >
+          <div className="flex w-max animate-marquee items-center gap-2.5 hover:[animation-play-state:paused]">
+            {[...badges, ...badges].map((b, i) => (
+              <Link
+                key={`${b.label}-${i}`}
+                href={b.href}
+                // the duplicated half exists only to make the loop seamless
+                aria-hidden={i >= badges.length}
+                tabIndex={i >= badges.length ? -1 : undefined}
+                className="liquid-glass group inline-flex shrink-0 items-center gap-2 rounded-full py-1.5 pl-1.5 pr-4 text-xs font-semibold text-white/90 transition-colors hover:text-white"
+              >
+                <span className="relative grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-violet to-[#34E0F0] text-white shadow-[0_0_12px_rgba(98,0,234,0.5)] transition-transform duration-300 group-hover:scale-110">
+                  <Icon name={b.icon} className="h-4 w-4" />
+                </span>
+                <span className="relative whitespace-nowrap">{b.label}</span>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 

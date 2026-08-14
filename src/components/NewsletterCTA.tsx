@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Reveal from "./Reveal";
 import AnimatedBackground from "./effects/AnimatedBackground";
+import { useSubscribe, SUBSCRIBE_DONE, SUBSCRIBE_ERROR } from "@/lib/useSubscribe";
 
 export default function NewsletterCTA({
   eyebrow = "Newsletter",
@@ -14,8 +14,9 @@ export default function NewsletterCTA({
   title?: string;
   desc?: string;
 }) {
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
+  // Same helper as the hero bar, so this actually notifies the inbox.
+  const { email, setEmail, status, onSubmit } = useSubscribe();
+  const done = status === "done";
 
   return (
     <section className="section">
@@ -30,12 +31,18 @@ export default function NewsletterCTA({
 
             {/* inline subscribe form */}
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (email) setDone(true);
-              }}
+              onSubmit={onSubmit}
               className="mx-auto mt-8 flex max-w-md flex-col gap-3 rounded-2xl bg-white/10 p-2 ring-1 ring-white/20 backdrop-blur sm:flex-row"
             >
+              {/* bot trap, off-screen rather than display:none so autofill skips it */}
+              <input
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden
+                className="pointer-events-none absolute -left-[9999px] h-px w-px opacity-0"
+              />
               <input
                 type="email"
                 required
@@ -43,15 +50,26 @@ export default function NewsletterCTA({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
                 aria-label="Email address"
-                className="w-full rounded-xl bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none"
+                disabled={status === "sending"}
+                className="w-full rounded-xl bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none disabled:opacity-60"
               />
-              <button type="submit" className="btn-primary btn-glow shrink-0">
-                {done ? "Subscribed ✓" : "Subscribe →"}
+              <button
+                type="submit"
+                disabled={status !== "idle"}
+                className="btn-primary btn-glow shrink-0"
+              >
+                {status === "sending" ? "Sending…" : done ? "Subscribed ✓" : "Subscribe →"}
               </button>
             </form>
 
-            {done ? (
-              <p className="mt-4 text-sm font-medium text-white/90">🎉 Thanks for subscribing! Check your inbox.</p>
+            {done || status === "error" ? (
+              <p
+                role="status"
+                aria-live="polite"
+                className="mt-4 text-sm font-medium text-white/90"
+              >
+                {done ? SUBSCRIBE_DONE : SUBSCRIBE_ERROR}
+              </p>
             ) : (
               <ul className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-white/55">
                 {["Weekly insights", "No spam, ever", "Unsubscribe anytime"].map((f) => (

@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
+import MailArt from "@/components/newsletter/MailArt";
+import { useSubscribe, SUBSCRIBE_DONE, SUBSCRIBE_ERROR } from "@/lib/useSubscribe";
+
+const PERKS = ["Weekly insights", "No spam, ever", "Unsubscribe anytime"];
 
 export default function Newsletter() {
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
+  // Same helper as the hero bar and blog CTA, so this actually notifies the inbox.
+  const { email, setEmail, status, onSubmit } = useSubscribe();
+  const done = status === "done";
 
   return (
     <motion.div
@@ -13,68 +17,92 @@ export default function Newsletter() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet via-violet-600 to-violet-800 px-7 py-12 md:px-14 md:py-16"
+      className="relative overflow-hidden rounded-[32px] border border-violet/10 bg-gradient-to-br from-violet-50 via-[#F6F1FF] to-[#EDF8FC] px-7 py-10 shadow-card sm:px-12 sm:py-12"
     >
-      {/* animated decoration */}
-      <div className="pointer-events-none absolute inset-0 bg-grid-violet bg-[size:38px_38px] opacity-20" />
-      <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 animate-orb-2 rounded-full bg-[#34E0F0]/25 blur-[90px]" />
-      <div className="pointer-events-none absolute -bottom-24 -left-10 h-64 w-64 animate-orb-1 rounded-full bg-white/15 blur-[90px]" />
+      <div className="pointer-events-none absolute -left-20 -top-24 h-72 w-72 rounded-full bg-violet/10 blur-[90px]" />
+      <div className="pointer-events-none absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-[#34E0F0]/15 blur-[90px]" />
 
-      <div className="relative grid items-center gap-8 md:grid-cols-2">
-        <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white ring-1 ring-white/20 backdrop-blur">
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7l9 6 9-6" strokeLinecap="round" strokeLinejoin="round" /><rect x="3" y="5" width="18" height="14" rx="2" /></svg>
-            Newsletter
-          </span>
-          <h3 className="mt-4 text-3xl font-extrabold text-white md:text-4xl">Stay in the loop</h3>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-white/80">
-            Get product updates, engineering insights and useful tech tips in your inbox.
-            We respect your privacy, no spam, unsubscribe anytime.
+      <div className="relative grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+        {/* illustration — drifts gently, which a flat image can't do */}
+        <div className="flex justify-center">
+          <MailArt className="w-full max-w-[360px] animate-float" />
+        </div>
+
+        <div className="text-center lg:text-left">
+          <span className="eyebrow">Newsletter</span>
+
+          {/* one line on wide screens; wraps naturally when there isn't room */}
+          <h3 className="mt-4 text-3xl font-extrabold leading-[1.15] tracking-tight text-charcoal sm:text-[34px]">
+            Subscribe to <span className="heading-gradient">our newsletter</span>
+          </h3>
+
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-charcoal/60 lg:mx-0">
+            Product updates, engineering insights and useful tech tips — one email when there is
+            something genuinely worth reading.
           </p>
 
-          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-white/85">
-            {["Weekly insights", "No spam, ever", "Unsubscribe anytime"].map((f) => (
-              <li key={f} className="inline-flex items-center gap-1.5">
-                <svg className="h-3.5 w-3.5 text-[#34E0F0]" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <form onSubmit={onSubmit} className="mx-auto mt-7 max-w-md space-y-3 lg:mx-0">
+            {/* bot trap, off-screen rather than display:none so autofill skips it */}
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden
+              className="pointer-events-none absolute -left-[9999px] h-px w-px opacity-0"
+            />
+
+            <label className="relative block">
+              <span className="sr-only">Email address</span>
+              <svg className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-charcoal/35" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="m3 7 9 6 9-6" />
+              </svg>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email"
+                disabled={status === "sending"}
+                className="w-full rounded-full border border-white bg-white py-4 pl-14 pr-5 text-sm font-medium text-charcoal shadow-sm outline-none transition-all placeholder:text-charcoal/35 focus:border-violet/40 focus:shadow-card disabled:opacity-60"
+              />
+            </label>
+
+            <button
+              type="submit"
+              disabled={status !== "idle"}
+              className="btn-glow w-full rounded-full bg-violet py-4 text-sm font-extrabold uppercase tracking-wider text-white shadow-soft transition-all hover:bg-violet-600 hover:shadow-glow disabled:opacity-70"
+            >
+              {status === "sending" ? "Sending…" : done ? "Subscribed ✓" : "Subscribe"}
+            </button>
+
+            {/* reserved height so the card doesn't jump when the message appears */}
+            <p
+              role="status"
+              aria-live="polite"
+              className={`min-h-[20px] px-1 text-sm font-medium ${
+                status === "error" ? "text-[#D64545]" : "text-violet"
+              }`}
+            >
+              {done ? SUBSCRIBE_DONE : status === "error" ? SUBSCRIBE_ERROR : ""}
+            </p>
+          </form>
+
+          <ul className="mt-2 flex flex-wrap justify-center gap-x-5 gap-y-2 lg:justify-start">
+            {PERKS.map((f) => (
+              <li
+                key={f}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-charcoal/50"
+              >
+                <svg className="h-3.5 w-3.5 text-violet" viewBox="0 0 12 12" fill="none">
+                  <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
                 {f}
               </li>
             ))}
           </ul>
         </div>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (email) setDone(true);
-          }}
-          className="md:justify-self-end md:w-full md:max-w-md"
-        >
-          <div className="flex flex-col gap-3 rounded-2xl bg-white/10 p-2 ring-1 ring-white/20 backdrop-blur sm:flex-row">
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              className="w-full rounded-xl bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="btn-glow shrink-0 rounded-xl bg-white px-6 py-3 text-sm font-bold text-violet transition-transform hover:-translate-y-0.5"
-            >
-              {done ? "Subscribed ✓" : "Subscribe"}
-            </button>
-          </div>
-          {done && (
-            <motion.p
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-3 pl-2 text-sm font-medium text-white/90"
-            >
-              🎉 Thanks for subscribing! Check your inbox.
-            </motion.p>
-          )}
-        </form>
       </div>
     </motion.div>
   );
