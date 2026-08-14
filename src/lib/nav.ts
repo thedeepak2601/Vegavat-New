@@ -5,15 +5,29 @@ export type NavChild = {
   icon?: string;
 };
 
+/** A column in a grouped mega menu: a heading link plus its sub-links. */
+export type NavGroup = {
+  label: string;
+  href: string;
+  icon?: string;
+  items: { label: string; href: string; desc?: string; icon?: string }[];
+};
+
 export type NavItem = {
   label: string;
   href: string;
   children?: NavChild[];
+  /** When set, the dropdown renders as grouped columns instead of a card grid. */
+  groups?: NavGroup[];
   featured?: { title: string; desc: string; href: string; image: string };
+  /** Overrides the mega-menu footer button. Defaults to "Get Started". */
+  cta?: { label: string; href: string };
+  /** Draws attention to a newly launched section (shimmering label). */
+  highlight?: boolean;
 };
 
+// "Home" is intentionally absent — the logo links there.
 export const NAV: NavItem[] = [
-  { label: "Home", href: "/" },
   {
     label: "Services",
     href: "/services",
@@ -77,6 +91,54 @@ export const NAV: NavItem[] = [
       href: "/products",
       image:
         "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80",
+    },
+  },
+  {
+    label: "Financial Services",
+    href: "/financial-services",
+    highlight: true,
+    cta: { label: "Call +91 88729 76232", href: "tel:+918872976232" },
+    groups: [
+      {
+        label: "Income Tax",
+        href: "/financial-services/income-tax",
+        icon: "finance",
+        items: [
+          { label: "Registration", href: "/financial-services/income-tax/registration", desc: "PAN, TAN & portal setup", icon: "flag" },
+          { label: "ITR Filing", href: "/financial-services/income-tax/itr-filing", desc: "All ITR forms, filed on time", icon: "audit" },
+          { label: "Tax Planning", href: "/financial-services/income-tax/tax-planning", desc: "Regime choice & deductions", icon: "projects" },
+          { label: "Tax Consultancy", href: "/financial-services/income-tax/tax-consultancy", desc: "Notices, TDS & advisory", icon: "users" },
+        ],
+      },
+      {
+        label: "GST",
+        href: "/financial-services/gst",
+        icon: "erp",
+        items: [
+          { label: "Registration", href: "/financial-services/gst/registration", desc: "GSTIN, amendments & composition", icon: "flag" },
+          { label: "GST Filing", href: "/financial-services/gst/gst-filing", desc: "GSTR-1, 3B and annual returns", icon: "sync" },
+          { label: "GST Consultancy", href: "/financial-services/gst/gst-consultancy", desc: "Rates, e-invoicing & notices", icon: "users" },
+          { label: "Reconciliation", href: "/financial-services/gst/reconciliation", desc: "2B matching & audit support", icon: "audit" },
+        ],
+      },
+      {
+        label: "Accounting Services",
+        href: "/financial-services/accounting-services",
+        icon: "projects",
+        items: [
+          { label: "Financial Recording", href: "/financial-services/accounting-services/financial-recording", desc: "Day-to-day bookkeeping", icon: "finance" },
+          { label: "Data Recording", href: "/financial-services/accounting-services/data-recording", desc: "Digitisation & document filing", icon: "inventory" },
+          { label: "Accounts Management", href: "/financial-services/accounting-services/accounts-management", desc: "Reconciliation & monthly close", icon: "crm" },
+          { label: "MIS & Reporting", href: "/financial-services/accounting-services/mis-reporting", desc: "P&L, balance sheet & cash flow", icon: "web" },
+        ],
+      },
+    ],
+    featured: {
+      title: "Talk to a tax expert",
+      desc: "Income tax, GST and accounting handled end to end. Call +91 88729 76232 for a free consultation.",
+      href: "/financial-services",
+      image:
+        "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80",
     },
   },
   { label: "Process", href: "/process" },

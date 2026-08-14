@@ -15,6 +15,7 @@ import PortfolioGrid from "@/components/PortfolioGrid";
 import SectionHeader from "@/components/SectionHeader";
 import Newsletter from "@/components/Newsletter";
 import HomeQuoteModal from "@/components/home/HomeQuoteModal";
+import LinkedInFeed from "@/components/home/LinkedInFeed";
 
 export default function HomePage() {
   return (
@@ -60,6 +61,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Live LinkedIn posts, sits right after Our Work */}
+      <LinkedInFeed count={3} />
 
       <HomeQuoteModal />
     </>

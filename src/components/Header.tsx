@@ -57,28 +57,32 @@ export default function Header() {
           : "bg-white"
       }`}
     >
-      <div className="container-x flex h-[72px] items-center justify-between gap-6">
+      <div className="container-x flex h-[72px] items-center justify-between gap-4">
         <Logo header />
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-1 lg:flex">
+        {/* `relative` lives here, not on each item: mega panels are centred on
+            the whole nav so a left-most trigger can't push one off-screen. */}
+        <nav className="relative hidden items-center gap-1 xl:flex">
           {NAV.map((item) => {
             const active =
               item.href === "/"
                 ? pathname === "/"
                 : pathname.startsWith(item.href);
-            const hasMenu = !!item.children?.length;
+            const hasGroups = !!item.groups?.length;
+            const hasMenu = hasGroups || !!item.children?.length;
             return (
-              <div key={item.label} className="group relative">
+              <div key={item.label} className="group">
                 <Link
                   href={item.href}
-                  className={`flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                    active
-                      ? "text-violet"
-                      : "text-charcoal/80 hover:text-violet"
+                  className={`flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+                    active ? "text-violet" : "text-charcoal/80 hover:text-violet"
                   }`}
                 >
-                  {item.label}
+                  {/* highlighted items share the normal nav colour and simply blink */}
+                  <span className={item.highlight ? "animate-blink" : undefined}>
+                    {item.label}
+                  </span>
                   {hasMenu && (
                     <svg
                       className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180"
@@ -97,6 +101,81 @@ export default function Header() {
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet/[0.05] via-transparent to-[#34E0F0]/[0.05]" />
                       <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-violet/10 blur-3xl" />
 
+                      {hasGroups ? (
+                        // Grouped layout: one column per category, its sub-services listed beneath.
+                        <div className="relative grid grid-cols-3 p-5">
+                          {item.groups!.map((g, gi) => (
+                            <div
+                              key={g.label}
+                              className={`px-3 ${gi > 0 ? "border-l border-charcoal/[0.06]" : ""}`}
+                            >
+                              <Link
+                                href={g.href}
+                                className="group/head flex items-center justify-between gap-2 rounded-xl px-2.5 py-2.5 transition-colors hover:bg-violet/[0.05]"
+                              >
+                                <span className="flex items-center gap-2.5">
+                                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-violet to-violet-700 text-white shadow-soft">
+                                    <Icon name={g.icon} className="h-[18px] w-[18px]" />
+                                  </span>
+                                  <span className="text-[15px] font-extrabold tracking-tight text-charcoal transition-colors group-hover/head:text-violet">
+                                    {g.label}
+                                  </span>
+                                </span>
+                                <span className="text-violet opacity-0 transition-all duration-200 group-hover/head:translate-x-0.5 group-hover/head:opacity-100">
+                                  →
+                                </span>
+                              </Link>
+
+                              <span className="mx-2.5 mb-1 mt-1.5 block h-px bg-gradient-to-r from-violet/25 via-violet/10 to-transparent" />
+
+                              <ul className="space-y-0.5">
+                                {g.items.map((s) => {
+                                  const subActive = pathname === s.href;
+                                  return (
+                                    <li key={s.href}>
+                                      <Link
+                                        href={s.href}
+                                        aria-current={subActive ? "page" : undefined}
+                                        className={`group/sub flex items-start gap-2.5 rounded-xl px-2.5 py-2 transition-all duration-200 ${
+                                          subActive
+                                            ? "bg-violet/[0.07]"
+                                            : "hover:bg-violet/[0.05]"
+                                        }`}
+                                      >
+                                        <span
+                                          className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg transition-all duration-200 group-hover/sub:scale-110 group-hover/sub:bg-violet group-hover/sub:text-white group-hover/sub:shadow-glow ${
+                                            subActive
+                                              ? "bg-violet text-white shadow-glow"
+                                              : "bg-violet/10 text-violet"
+                                          }`}
+                                        >
+                                          <Icon name={s.icon} className="h-4 w-4" />
+                                        </span>
+                                        <span className="min-w-0 pt-px">
+                                          <span
+                                            className={`block text-[13.5px] font-bold leading-tight transition-colors ${
+                                              subActive
+                                                ? "text-violet"
+                                                : "text-charcoal/90 group-hover/sub:text-violet"
+                                            }`}
+                                          >
+                                            {s.label}
+                                          </span>
+                                          {s.desc && (
+                                            <span className="mt-0.5 block text-[11px] leading-snug text-charcoal/45">
+                                              {s.desc}
+                                            </span>
+                                          )}
+                                        </span>
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
                       <div className="relative grid grid-cols-3 gap-1.5 p-4">
                         {item.children!.map((c) => {
                           const childActive = pathname === c.href;
@@ -134,6 +213,7 @@ export default function Header() {
                           );
                         })}
                       </div>
+                      )}
 
                       {/* footer: View all + Get Started */}
                       <div className="relative flex items-center justify-between gap-4 border-t border-charcoal/[0.07] bg-charcoal-50/70 px-5 py-3.5">
@@ -144,12 +224,24 @@ export default function Header() {
                           View all {item.label}
                           <span className="transition-transform group-hover/all:translate-x-0.5">→</span>
                         </Link>
-                        <Link
-                          href="/contact"
-                          className="btn-glow inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet to-violet-700 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-soft transition-all hover:shadow-glow"
-                        >
-                          Get Started →
-                        </Link>
+                        {item.cta ? (
+                          <a
+                            href={item.cta.href}
+                            className="btn-glow inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet to-violet-700 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-soft transition-all hover:shadow-glow"
+                          >
+                            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            {item.cta.label}
+                          </a>
+                        ) : (
+                          <Link
+                            href="/contact"
+                            className="btn-glow inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet to-violet-700 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-soft transition-all hover:shadow-glow"
+                          >
+                            Get Started →
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -159,7 +251,7 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           <Link href="/contact" className="btn-primary">
             Contact
           </Link>
@@ -167,7 +259,7 @@ export default function Header() {
         </div>
 
         {/* Mobile actions */}
-        <div className="flex items-center gap-1 lg:hidden">
+        <div className="flex items-center gap-1 xl:hidden">
           <button
             onClick={() => setSearchOpen(true)}
             className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-charcoal"
@@ -189,20 +281,59 @@ export default function Header() {
 
       {/* Mobile drawer */}
       {open && (
-        <div className="border-t border-charcoal/10 bg-white lg:hidden">
+        <div className="border-t border-charcoal/10 bg-white xl:hidden">
           <nav className="container-x max-h-[78vh] space-y-1 overflow-y-auto py-4">
             {NAV.map((item) => (
               <div key={item.label} className="border-b border-charcoal/[0.06] last:border-0">
-                {item.children?.length ? (
+                {item.children?.length || item.groups?.length ? (
                   <>
                     <button
                       onClick={() => setOpenSub((s) => (s === item.label ? null : item.label))}
                       className="flex w-full items-center justify-between py-3 text-left text-base font-semibold text-charcoal"
                     >
-                      {item.label}
+                      <span className={item.highlight ? "animate-blink" : undefined}>
+                        {item.label}
+                      </span>
                       <svg className={`h-4 w-4 transition-transform ${openSub === item.label ? "rotate-180" : ""}`} viewBox="0 0 12 12" fill="none"><path d="M3 4.5 6 7.5 9 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
                     </button>
-                    {openSub === item.label && (
+                    {openSub === item.label && item.groups?.length ? (
+                      <div className="space-y-4 pb-4 pl-1">
+                        {item.groups.map((g) => (
+                          <div key={g.label}>
+                            <Link
+                              href={g.href}
+                              className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm font-bold text-charcoal"
+                            >
+                              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-violet/10 text-violet">
+                                <Icon name={g.icon} className="h-4 w-4" />
+                              </span>
+                              {g.label}
+                            </Link>
+                            <ul className="ml-[18px] border-l border-violet/15 pl-4">
+                              {g.items.map((s) => {
+                                const subActive = pathname === s.href;
+                                return (
+                                  <li key={s.href}>
+                                    <Link
+                                      href={s.href}
+                                      aria-current={subActive ? "page" : undefined}
+                                      className={`block rounded-lg px-2 py-1.5 text-sm ${
+                                        subActive
+                                          ? "font-semibold text-violet"
+                                          : "text-charcoal/70 hover:text-violet"
+                                      }`}
+                                    >
+                                      {s.label}
+                                    </Link>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                    {openSub === item.label && item.children?.length && (
                       <div className="space-y-1 pb-3 pl-1">
                         {item.children.map((c) => {
                           const childActive = pathname === c.href;

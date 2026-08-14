@@ -10,6 +10,7 @@ const services = [
   "Graphic Design",
   "AI Software Development",
   "Dedicated Hiring",
+  "Financial Services (Tax, GST & Accounting)",
   "Other",
 ];
 
@@ -45,6 +46,15 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
     }
   }, []);
   const [form, setForm] = useState(initialForm);
+
+  // Prefill the email when arriving from the hero quote bar (/contact?email=…).
+  // Read from location rather than useSearchParams: this site is statically
+  // exported, and the hook would force a client-side bailout at build time.
+  useEffect(() => {
+    const prefill = new URLSearchParams(window.location.search).get("email");
+    if (prefill) setForm((f) => (f.email ? f : { ...f, email: prefill }));
+  }, []);
+
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);

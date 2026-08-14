@@ -13,6 +13,7 @@ export default function CoreServices() {
   const trackRef = useRef<HTMLDivElement>(null);
   const wrapTimer = useRef<number | null>(null);
   const paused = useRef(false);
+  const wheelLock = useRef(false);
 
   // Cards render THREE times. We park the viewport in the middle copy and,
   // whenever the scroll drifts toward a neighbouring copy, silently jump back
@@ -56,6 +57,32 @@ export default function CoreServices() {
     const step = card ? card.clientWidth + 24 : 340; // 24 = gap-6
     el.scrollBy({ left: dir * step, behavior: "smooth" });
   };
+
+  // Wheel over the track steps through the cards instead of scrolling the page.
+  // Registered manually because React attaches `wheel` passively at the root,
+  // where preventDefault() is a no-op. One card per gesture: the lock swallows
+  // the burst of events a single wheel flick or trackpad swipe emits.
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      // Sideways gestures already scroll the track natively — leave them alone.
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (Math.abs(e.deltaY) < 2) return;
+
+      e.preventDefault();
+      if (wheelLock.current) return;
+      wheelLock.current = true;
+      scroll(e.deltaY > 0 ? 1 : -1);
+      window.setTimeout(() => {
+        wheelLock.current = false;
+      }, 450);
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   // Autoplay: advance one card every 3.5s, pause on hover. Respects reduced-motion.
   useEffect(() => {

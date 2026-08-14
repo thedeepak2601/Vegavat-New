@@ -1,8 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import Logo from "./Logo";
+import Icon from "./Icon";
 import { SITE } from "@/lib/site";
 import { SERVICES } from "@/lib/content";
+import { FINANCE_CATEGORIES, FINANCE_PHONE, FINANCE_PHONE_HREF } from "@/lib/financial";
 
 // Brand icons for the footer social links, keyed by SITE.socials label.
 const SOCIAL_ICONS: Record<string, ReactNode> = {
@@ -71,6 +73,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+
           </div>
 
           <div>
@@ -97,7 +100,61 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 text-sm text-white/50 sm:flex-row">
+        {/* Financial services — a separate practice, given its own band on one
+            line rather than a column buried among the IT services. */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-violet/25 via-white/[0.04] to-[#34E0F0]/[0.12] px-5 py-4 sm:px-7 sm:py-5">
+          <div className="pointer-events-none absolute -left-10 -top-16 h-40 w-40 rounded-full bg-violet/30 blur-[70px]" />
+
+          <div className="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            {/* whole heading block links through to the practice overview */}
+            <Link href="/financial-services" className="group/fs flex items-center gap-3.5">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-violet to-violet-700 text-white shadow-glow transition-transform duration-300 group-hover/fs:scale-110">
+                <Icon name="finance" className="h-[22px] w-[22px]" />
+              </span>
+              <span>
+                <span className="flex items-center gap-1.5 text-sm font-extrabold uppercase tracking-wider text-white transition-colors group-hover/fs:text-violet-200">
+                  Financial Services
+                  <span className="-translate-x-1 opacity-0 transition-all duration-300 group-hover/fs:translate-x-0 group-hover/fs:opacity-100">
+                    →
+                  </span>
+                </span>
+                <span className="mt-0.5 block text-xs text-white/50">
+                  Income tax, GST &amp; accounting, handled end to end
+                </span>
+              </span>
+            </Link>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {FINANCE_CATEGORIES.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/financial-services/${c.slug}`}
+                  className="group/pill inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] py-2 pl-2 pr-4 text-sm font-semibold text-white/80 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-violet/50 hover:bg-violet hover:text-white hover:shadow-glow"
+                >
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/10 text-violet-200 transition-colors group-hover/pill:bg-white/20 group-hover/pill:text-white">
+                    <Icon name={c.icon} className="h-4 w-4" />
+                  </span>
+                  {c.title}
+                  <span className="w-0 -translate-x-1 overflow-hidden opacity-0 transition-all duration-300 group-hover/pill:w-3 group-hover/pill:translate-x-0 group-hover/pill:opacity-100">
+                    →
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <a
+              href={FINANCE_PHONE_HREF}
+              className="btn-glow inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white px-5 py-2.5 text-sm font-bold text-violet transition-all hover:shadow-glow"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+              {FINANCE_PHONE}
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 text-sm text-white/50 sm:flex-row">
           <p>
             ©{" "}
             <Link href="/" className="transition-colors hover:text-white/80">

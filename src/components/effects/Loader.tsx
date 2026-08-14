@@ -2,8 +2,20 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { LogoMark } from "@/components/Logo";
+import logoSrc from "@/assets/images/Final_Deepak.webp";
 
+// A 3px ring cut out of a conic gradient — one moving element instead of the
+// stack of rings, grids and shimmer the old screen used.
+const RING_MASK =
+  "radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px))";
+
+/**
+ * Everything inside animates with CSS, not Framer Motion. Framer writes its
+ * `initial` state as an inline style during SSR and only animates after
+ * hydration — which left the logo at opacity:0 for the whole time the loader
+ * was on screen on a slow connection. CSS keyframes run at first paint.
+ * Only the exit fade uses motion, and by then hydration has happened.
+ */
 export default function Loader() {
   const [loading, setLoading] = useState(true);
 
@@ -24,82 +36,49 @@ export default function Loader() {
       {loading && (
         <motion.div
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-[#07060b]"
+          transition={{ duration: 0.45, ease: "easeInOut" }}
+          className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-white"
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(98,0,234,0.34),transparent_30%),radial-gradient(circle_at_78%_20%,rgba(52,224,240,0.13),transparent_22%),linear-gradient(135deg,#09070f,#130320_48%,#07060b)]" />
-          <div className="pointer-events-none absolute inset-0 bg-grid-violet bg-[size:46px_46px] opacity-25" />
-          <motion.div
-            aria-hidden
-            animate={{ opacity: [0.25, 0.75, 0.25], scale: [0.95, 1.04, 0.95] }}
-            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-            className="pointer-events-none absolute h-[34rem] w-[34rem] rounded-full border border-[#34E0F0]/15 shadow-[0_0_140px_rgba(98,0,234,0.35)]"
-          />
-          <div className="pointer-events-none absolute h-[22rem] w-[22rem] rounded-full border border-white/10" />
+          {/* brand glow, kept soft so it reads as light rather than decoration */}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(98,0,234,0.10),transparent_58%),radial-gradient(circle_at_82%_78%,rgba(52,224,240,0.10),transparent_52%)]" />
 
-          <div className="relative flex w-full max-w-xl flex-col items-center px-6 text-center">
-            <motion.div
-              aria-hidden
-              initial={{ scaleX: 0, opacity: 0 }}
-              animate={{ scaleX: [0, 1, 1], opacity: [0, 1, 0.55] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-1/2 h-px w-[min(34rem,86vw)] -translate-y-1/2 bg-gradient-to-r from-transparent via-[#34E0F0] to-transparent"
-            />
-
-            <div className="relative grid h-60 w-full place-items-center">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-                className="absolute h-56 w-56 rounded-full border border-dashed border-violet-300/20"
+          <div className="relative flex flex-col items-center px-6">
+            <div className="relative grid h-56 w-56 place-items-center">
+              {/* static track */}
+              <span
+                aria-hidden
+                className="absolute h-52 w-52 rounded-full bg-charcoal/[0.06]"
+                style={{ WebkitMaskImage: RING_MASK, maskImage: RING_MASK }}
               />
-              <motion.div
-                animate={{ scale: [1, 1.05, 1], opacity: [0.45, 0.85, 0.45] }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute h-44 w-44 rounded-full border border-[#34E0F0]/25"
+              {/* sweeping arc */}
+              <span
+                aria-hidden
+                className="absolute h-52 w-52 animate-spin rounded-full [animation-duration:1.6s]"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, transparent 0deg, transparent 210deg, rgba(98,0,234,0.35) 300deg, #6200EA 348deg, #34E0F0 360deg)",
+                  WebkitMaskImage: RING_MASK,
+                  maskImage: RING_MASK,
+                }}
               />
-              <div
-                className="relative grid min-h-36 w-[min(26rem,86vw)] place-items-center rounded-[2rem] border border-white/15 bg-white/[0.07] px-8 py-7 shadow-[0_30px_120px_-45px_rgba(52,224,240,0.95)] backdrop-blur-2xl"
-              >
-                <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/12 via-transparent to-violet/20" />
-                <motion.div
-                  aria-hidden
-                  animate={{ x: ["-120%", "120%"] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
-                  className="absolute inset-y-0 w-24 -skew-x-12 bg-gradient-to-r from-transparent via-white/12 to-transparent"
-                />
-                <LogoMark className="relative h-24 w-auto max-w-full brightness-0 invert sm:h-28" />
-              </div>
+
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={logoSrc.src}
+                width={logoSrc.width}
+                height={logoSrc.height}
+                alt="Vegavat"
+                className="relative h-24 w-auto max-w-[68vw] animate-fade-up sm:h-28"
+              />
             </div>
 
-            <div className="relative -mt-4">
-              <p className="text-[10px] font-bold uppercase tracking-[0.55em] text-[#34E0F0]/85">
-                Initializing Digital Reality
-              </p>
-              <p className="mt-3 text-sm font-medium text-white/60">
-                Strategy. Design. Engineering. Launch.
-              </p>
+            <div className="mt-6 h-[3px] w-64 max-w-[70vw] overflow-hidden rounded-full bg-charcoal/[0.08]">
+              <span className="block h-full w-1/2 animate-loader-sweep rounded-full bg-gradient-to-r from-violet to-[#34E0F0]" />
             </div>
 
-            <div className="relative mt-7 w-80 max-w-[82vw]">
-              <div className="relative h-1 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/10">
-                <motion.div
-                  initial={{ x: "-100%" }}
-                  animate={{ x: ["-100%", "0%", "100%"] }}
-                  transition={{ duration: 1.45, repeat: Infinity, ease: "easeInOut" }}
-                  className="h-full rounded-full bg-gradient-to-r from-violet-300 via-violet to-[#34E0F0] shadow-[0_0_22px_rgba(52,224,240,0.7)]"
-                />
-              </div>
-              <div className="mt-4 flex justify-center gap-2">
-                {[0, 1, 2].map((i) => (
-                  <motion.span
-                    key={i}
-                    animate={{ opacity: [0.25, 1, 0.25] }}
-                    transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.18 }}
-                    className="h-1.5 w-1.5 rounded-full bg-[#34E0F0]"
-                  />
-                ))}
-              </div>
-            </div>
+            <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.32em] text-charcoal/35">
+              Strategy · Design · Engineering · Launch
+            </p>
           </div>
         </motion.div>
       )}
