@@ -12,7 +12,9 @@ export default function Logo({
   className?: string;
 }) {
   return (
-    <Link href="/" className="group inline-flex items-center" aria-label="Vegavat home">
+    // shrink-0: as a flex child the logo would otherwise be squeezed narrower
+    // than its aspect ratio when the nav needs room, distorting the wordmark.
+    <Link href="/" className="group inline-flex shrink-0 items-center" aria-label="Vegavat home">
       {header ? (
         // Header-only brand lockup, src/assets/images/Final_Deepak.webp
         // eslint-disable-next-line @next/next/no-img-element

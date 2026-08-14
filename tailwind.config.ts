@@ -31,6 +31,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
       },
       boxShadow: {
         soft: "0 10px 40px -12px rgba(98, 0, 234, 0.18)",
@@ -86,6 +87,30 @@ const config: Config = {
         "spin-reverse": {
           to: { transform: "rotate(-360deg)" },
         },
+        "role-fade-in": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "scroll-down": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(200%)" },
+        },
+        blink: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.35" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "200% center" },
+          "100%": { backgroundPosition: "-200% center" },
+        },
+        "loader-sweep": {
+          "0%": { transform: "translateX(-110%)" },
+          "100%": { transform: "translateX(210%)" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { filter: "drop-shadow(0 0 0 rgba(98,0,234,0))" },
+          "50%": { filter: "drop-shadow(0 0 8px rgba(98,0,234,0.45))" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.6s ease-out forwards",
@@ -101,6 +126,12 @@ const config: Config = {
         "spin-slow": "spin-slow 14s linear infinite",
         orbit: "spin-slow 45s linear infinite",
         "orbit-reverse": "spin-reverse 45s linear infinite",
+        "role-fade-in": "role-fade-in 0.4s ease-out",
+        "scroll-down": "scroll-down 1.5s ease-in-out infinite",
+        blink: "blink 1.2s ease-in-out infinite",
+        shimmer: "shimmer 3s linear infinite",
+        "loader-sweep": "loader-sweep 1.25s ease-in-out infinite",
+        "glow-pulse": "glow-pulse 2.4s ease-in-out infinite",
       },
       backgroundImage: {
         "grid-violet":

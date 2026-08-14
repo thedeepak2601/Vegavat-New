@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -12,6 +12,15 @@ import CalendlyQRModal from "@/components/effects/CalendlyQRModal";
 import ChatWidget from "@/components/effects/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+
+// Display serif, used italic for the accent words in headings.
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +50,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
       <head>
         <meta
           name="google-site-verification"

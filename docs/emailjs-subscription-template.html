@@ -1,0 +1,52 @@
+<!--
+  EmailJS template for newsletter subscriptions.
+
+  WHERE THIS GOES
+  ---------------
+  This file is not used by the app at build time. Paste it into the EmailJS
+  dashboard, because template markup lives there, not in the codebase:
+
+    1. EmailJS → Email Templates → Create New Template
+    2. Switch the editor to "Code" / HTML view and paste everything below
+       the comment block.
+    3. Set Subject to:  New newsletter subscription — {{email}}
+    4. Set "To Email"  to:  contact.vegavat@gmail.com
+       (or {{to_email}}, which the app already sends)
+    5. Save, copy the new template ID, and add it to .env:
+         NEXT_PUBLIC_EMAILJS_SUBSCRIBE_TEMPLATE_ID=template_xxxxxxx
+       Then rebuild. Without that variable the app falls back to the contact
+       template, which is the one that prints the "Your Submission" block.
+
+  VARIABLES the app sends: {{name}} {{email}} {{message}} {{service}}
+  {{Subject}} {{to_email}}  — plus the same set under {{params.*}}.
+  {{name}} is derived from the address: deepak.aaa65@gmail.com → "Deepak".
+-->
+
+<div style="font-family: Arial, Helvetica, sans-serif; color: #121212; line-height: 1.6; max-width: 600px;">
+
+  <h2 style="margin: 0 0 20px; font-size: 22px; color: #121212;">
+    New Newsletter Subscription
+  </h2>
+
+  <p style="margin: 0 0 16px;">Hi {{name}},</p>
+
+  <p style="margin: 0 0 16px;">
+    Thanks for subscribing to Vegavat Technologies. You are now on the list for
+    our latest updates, LinkedIn posts and new announcements.
+  </p>
+
+  <p style="margin: 0 0 24px;">
+    Subscribed address: <strong>{{email}}</strong>
+  </p>
+
+  <p style="margin: 0 0 24px;">
+    If this was not you, simply ignore this email and you will not hear from us again.
+  </p>
+
+  <p style="margin: 0 0 4px;">Best Regards,</p>
+  <p style="margin: 0 0 4px;"><strong>Vegavat Technologies</strong></p>
+  <p style="margin: 0;">
+    <a href="https://vegavat.com" style="color: #6200EA; text-decoration: none;">https://vegavat.com</a>
+  </p>
+
+</div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
 
 const services = [
@@ -10,6 +10,7 @@ const services = [
   "Graphic Design",
   "AI Software Development",
   "Dedicated Hiring",
+  "Financial Services (Tax, GST & Accounting)",
   "Other",
 ];
 
@@ -45,30 +46,77 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
     }
   }, []);
   const [form, setForm] = useState(initialForm);
+
+  // Prefill the email when arriving from the hero quote bar (/contact?email=…).
+  // Read from location rather than useSearchParams: this site is statically
+  // exported, and the hook would force a client-side bailout at build time.
+  useEffect(() => {
+    const prefill = new URLSearchParams(window.location.search).get("email");
+    if (prefill) setForm((f) => (f.email ? f : { ...f, email: prefill }));
+  }, []);
+
   const [status, setStatus] = useState<Status>("idle");
   const [sent, setSent] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const RECAPTCHA_SITE_KEY = "6LedrkctAAAAAGX-NF1BDvk0qNYhnw9qqUGuLoyl";
+  const recaptchaRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<number | null>(null);
+  const RECAPTCHA_SITE_KEY =
+    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LedrkctAAAAAGX-NF1BDvk0qNYhnw9qqUGuLoyl";
 
   useEffect(() => {
-    setMounted(true);
-    (window as any).__onRecaptchaSuccess = (token: string) => {
-      setRecaptchaToken(token);
+    if (!RECAPTCHA_SITE_KEY) return;
+
+    // Explicitly render the widget once grecaptcha is ready. Explicit render is
+    // reliable in React — unlike the declarative `g-recaptcha` auto-scan, which
+    // only runs once on api.js load and misses divs mounted after that.
+    const renderWidget = () => {
+      const grecaptcha = (window as any).grecaptcha;
+      const container = recaptchaRef.current;
+      if (!grecaptcha?.render || !container) return;
+      // Guard against double-render (React strict-mode remount / client nav).
+      if (widgetIdRef.current !== null || container.childElementCount > 0) return;
+      try {
+        widgetIdRef.current = grecaptcha.render(container, {
+          sitekey: RECAPTCHA_SITE_KEY,
+          callback: (token: string) => setRecaptchaToken(token),
+          "expired-callback": () => setRecaptchaToken(null),
+          "error-callback": () => setRecaptchaToken(null),
+        });
+      } catch {
+        // Ignore "already rendered" races; the guards above cover normal flow.
+      }
     };
 
-    // Dynamically inject reCAPTCHA script if not already present
-    if (!document.querySelector('script[src*="recaptcha/api.js"]')) {
+    // api.js calls this global once it finishes loading (?onload=).
+    (window as any).__recaptchaOnload = renderWidget;
+
+    const SCRIPT_ID = "recaptcha-api";
+    if (!document.getElementById(SCRIPT_ID)) {
       const script = document.createElement("script");
-      script.src = "https://www.google.com/recaptcha/api.js";
+      script.id = SCRIPT_ID;
+      script.src =
+        "https://www.google.com/recaptcha/api.js?render=explicit&onload=__recaptchaOnload";
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
+    } else {
+      // Script already present (e.g. re-mount) — render immediately if ready.
+      renderWidget();
     }
+  }, [RECAPTCHA_SITE_KEY]);
 
-    return () => { delete (window as any).__onRecaptchaSuccess; };
-  }, []);
+  const resetRecaptcha = () => {
+    setRecaptchaToken(null);
+    const grecaptcha = (window as any).grecaptcha;
+    if (grecaptcha?.reset && widgetIdRef.current !== null) {
+      try {
+        grecaptcha.reset(widgetIdRef.current);
+      } catch {
+        // widget not ready — ignore
+      }
+    }
+  };
 
   const update =
     (key: keyof typeof initialForm) =>
@@ -87,11 +135,37 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
     const templateParams = { ...fields, params: fields };
 
     try {
-      // Check reCAPTCHA v2 token if enabled
+      // Require a solved reCAPTCHA before doing anything.
       if (RECAPTCHA_SITE_KEY && !recaptchaToken) {
         setLastError("Please complete the reCAPTCHA");
         setStatus("error");
         return;
+      }
+
+      // Verify the token server-side via the Cloudflare Pages Function, which
+      // holds the secret key (RECAPTCHA_SECRET). This is what actually proves
+      // the challenge was solved. Falls back gracefully when the endpoint is
+      // unavailable (e.g. local `next dev`, which doesn't serve /functions).
+      if (RECAPTCHA_SITE_KEY && recaptchaToken) {
+        try {
+          const res = await fetch("/verify-recaptcha", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: recaptchaToken }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (!data.success) {
+              setLastError("reCAPTCHA verification failed. Please try again.");
+              setStatus("error");
+              resetRecaptcha();
+              return;
+            }
+          }
+          // Non-OK (e.g. 404 in dev) → skip server check, token existence stands.
+        } catch {
+          // Endpoint unreachable (dev/offline) → proceed on client-side token.
+        }
       }
 
       // Send email notification to Vegavat inbox
@@ -104,9 +178,7 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
       setForm(initialForm);
       setSent(true);
       setStatus("idle");
-      setRecaptchaToken(null);
-      // Reset reCAPTCHA widget
-      if ((window as any).grecaptcha) (window as any).grecaptcha.reset();
+      resetRecaptcha();
     } catch (err: any) {
       // Log the error for debugging and show an inline error message.
       // Keep status at "error" so the UI shows the failure but allows retry.
@@ -162,14 +234,10 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
         <textarea required rows={compact ? 3 : 5} value={form.message} onChange={update("message")} placeholder="Tell us about your project, goals and timeline…" className={compact ? compactInputCls : inputCls} />
       </Field>
 
-      {/* reCAPTCHA v2 checkbox — declarative render, no manual JS needed */}
-      {RECAPTCHA_SITE_KEY && mounted && (
-        <div className="my-4" suppressHydrationWarning>
-          <div
-            className="g-recaptcha"
-            data-sitekey={RECAPTCHA_SITE_KEY}
-            data-callback="__onRecaptchaSuccess"
-          />
+      {/* reCAPTCHA v2 checkbox — rendered explicitly via grecaptcha.render() */}
+      {RECAPTCHA_SITE_KEY && (
+        <div className="my-4">
+          <div ref={recaptchaRef} suppressHydrationWarning />
         </div>
       )}
 
