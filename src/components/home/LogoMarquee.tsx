@@ -6,7 +6,9 @@ function Track({ items, reverse = false }: { items: Brand[]; reverse?: boolean }
   const row = [...items, ...items];
   return (
     <div
-      className={`flex w-max items-center gap-2 ${reverse ? "animate-marquee-reverse" : "animate-marquee"}`}
+      className={`flex w-max items-center gap-2 group-hover/marquee:[animation-play-state:paused] ${
+        reverse ? "animate-marquee-reverse" : "animate-marquee"
+      }`}
     >
       {row.map((b, i) => (
         <div
@@ -37,7 +39,7 @@ export default function LogoMarquee() {
 
   return (
     <section className="relative z-10 -mt-px bg-white py-3 dark:bg-[#0b0912]">
-      <div className="relative space-y-1 overflow-hidden">
+      <div className="group/marquee relative space-y-1 overflow-hidden">
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-white to-transparent dark:from-[#0b0912] sm:w-40" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-white to-transparent dark:from-[#0b0912] sm:w-40" />
         <Track items={rowA} />
