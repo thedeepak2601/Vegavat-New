@@ -46,14 +46,14 @@ function PostCard({ post }: { post: LinkedInPost }) {
           {post.createdAt && (
             <>
               <span className="text-charcoal/30">·</span>
-              <span className="font-medium text-charcoal/50">
+              <span className="font-medium text-charcoal/60">
                 {formatPostDate(post.createdAt)}
               </span>
             </>
           )}
         </div>
 
-        <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-charcoal/70">
+        <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-charcoal/75">
           {body}
         </p>
 

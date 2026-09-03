@@ -253,7 +253,7 @@ export default function ContactForm({ compact = false }: { compact?: boolean } =
         </div>
       )}
 
-      <p className="text-xs text-charcoal/50">
+      <p className="text-xs text-charcoal/60">
         By submitting this form you agree to the processing of personal data according to our Privacy Policy.
         An NDA is available before any detailed discussion.
       </p>
@@ -268,7 +268,7 @@ const inputCls =
   "w-full rounded-xl border border-charcoal/15 px-4 py-3 text-sm text-charcoal placeholder:text-charcoal/40 focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20";
 
 const compactInputCls =
-  "w-full rounded-lg border border-charcoal/15 px-3 py-2 text-sm text-charcoal placeholder:text-charcoal/40 focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20";
+  "w-full rounded-xl border border-charcoal/15 px-3 py-2 text-sm text-charcoal placeholder:text-charcoal/40 focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

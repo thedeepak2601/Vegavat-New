@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import Reveal from "@/components/Reveal";
+import Icon from "@/components/Icon";
+import { PRODUCT_ICONS } from "@/lib/icons";
 import FAQ from "@/components/FAQ";
 import CTABanner from "@/components/CTABanner";
+import StatStrip from "@/components/StatStrip";
 import LogoMarquee from "@/components/home/LogoMarquee";
 import { PRODUCTS, TESTIMONIALS } from "@/lib/content";
 
@@ -103,7 +107,7 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
                 className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
                   active
                     ? "border-violet bg-violet text-white shadow-soft"
-                    : "border-charcoal/10 bg-white text-charcoal/70 hover:border-violet/40 hover:text-violet"
+                    : "border-charcoal/10 bg-white text-charcoal/75 hover:border-violet/40 hover:text-violet"
                 }`}
               >
                 <span className="text-base">{p.icon}</span>
@@ -120,16 +124,7 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
       {/* Benefits / metrics */}
       <section className="section">
         <div className="container-x">
-          <div className="grid gap-6 sm:grid-cols-3">
-            {product.benefits.map((b, i) => (
-              <Reveal key={b.label} delay={i * 0.08}>
-                <div className="rounded-2xl border border-charcoal/[0.07] bg-white p-8 text-center shadow-card">
-                  <p className="heading-gradient text-4xl font-extrabold tracking-tight sm:text-5xl">{b.value}</p>
-                  <p className="mt-3 text-sm font-medium text-charcoal/60">{b.label}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <StatStrip items={product.benefits} />
         </div>
       </section>
 
@@ -167,8 +162,8 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
             {INTEGRATIONS.map((it, i) => (
               <Reveal key={it.name} delay={(i % 5) * 0.05}>
                 <div className="flex items-center gap-3 rounded-xl border border-charcoal/[0.07] bg-white px-4 py-3 shadow-card transition-colors hover:border-violet/30">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-violet/10 text-lg">{it.icon}</span>
-                  <span className="text-sm font-semibold text-charcoal/80">{it.name}</span>
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-violet/10 text-lg">{it.icon}</span>
+                  <span className="text-sm font-semibold text-charcoal/75">{it.name}</span>
                   <span className="ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-green-500" />
                 </div>
               </Reveal>
@@ -217,11 +212,11 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
                   plan.featured ? "border-violet shadow-soft ring-1 ring-violet/20" : "border-charcoal/[0.08] shadow-card"
                 }`}>
                   {plan.featured && (
-                    <span className="absolute right-6 top-6 rounded-full bg-violet/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-violet">Most Popular</span>
+                    <span className="absolute right-6 top-6 rounded-full bg-violet/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-violet">Most Popular</span>
                   )}
                   <p className="text-sm font-semibold text-charcoal/60">{plan.name}</p>
                   <p className="mt-3 text-4xl font-extrabold tracking-tight text-charcoal">{plan.price}</p>
-                  <p className="mt-1 text-xs text-charcoal/50">{plan.cadence}</p>
+                  <p className="mt-1 text-xs text-charcoal/60">{plan.cadence}</p>
                   <ul className="mt-6 space-y-2.5 border-t border-charcoal/[0.07] pt-6">
                     {plan.feats.map((f) => (
                       <li key={f} className="flex items-start gap-2.5 text-sm text-charcoal/75">
@@ -233,7 +228,7 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
                     ))}
                   </ul>
                   <Link href={plan.cta.href} className={`mt-7 block rounded-full px-5 py-3 text-center text-sm font-bold transition-all ${
-                    plan.featured ? "btn-glow bg-violet text-white hover:bg-violet-600" : "border border-charcoal/15 text-charcoal/80 hover:border-violet hover:text-violet"
+                    plan.featured ? "btn-glow bg-violet text-white hover:bg-violet-600" : "border border-charcoal/15 text-charcoal/75 hover:border-violet hover:text-violet"
                   }`}>
                     {plan.cta.label}
                   </Link>
@@ -261,14 +256,14 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
                       <svg key={s} className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 15.9l-5.2 2.7 1-5.8L1.5 8.7l5.9-.9z" /></svg>
                     ))}
                   </div>
-                  <p className="mt-4 flex-1 text-sm italic leading-relaxed text-charcoal/70">&ldquo;{t.quote}&rdquo;</p>
+                  <p className="mt-4 flex-1 text-sm italic leading-relaxed text-charcoal/75">&ldquo;{t.quote}&rdquo;</p>
                   <div className="mt-6 flex items-center gap-3 border-t border-charcoal/[0.07] pt-5">
                     <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-violet to-violet-700 text-xs font-bold text-white">
                       {t.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                     </span>
                     <div>
                       <p className="text-sm font-bold text-charcoal">{t.name}</p>
-                      <p className="text-xs text-charcoal/55">{t.role}</p>
+                      <p className="text-xs text-charcoal/60">{t.role}</p>
                     </div>
                   </div>
                 </div>
@@ -295,12 +290,26 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
               <Link
                 key={p.id}
                 href={`/products/${p.id}`}
-                className="card-hover group flex h-full flex-col"
+                className="card-hover group flex h-full flex-col overflow-hidden !p-0"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet/10 text-3xl transition-colors group-hover:bg-violet">{p.icon}</div>
-                <h3 className="mt-5 text-xl font-bold text-charcoal">{p.name}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-charcoal/60">{p.short}</p>
-                <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-violet transition-transform group-hover:translate-x-1">Explore →</span>
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <Image
+                    src={p.image}
+                    alt={p.name}
+                    fill
+                    sizes="(max-width:640px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <span className="absolute inset-0 bg-gradient-to-t from-charcoal/75 via-charcoal/10 to-transparent" />
+                  <span className="absolute bottom-4 left-4 grid h-11 w-11 place-items-center rounded-xl bg-white/95 text-violet shadow-card">
+                    <Icon name={PRODUCT_ICONS[p.id] ?? "default"} className="h-5 w-5" />
+                  </span>
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <h3 className="text-lg font-bold text-charcoal transition-colors group-hover:text-violet">{p.name}</h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-charcoal/60">{p.short}</p>
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-violet transition-transform group-hover:translate-x-1">Explore →</span>
+                </div>
               </Link>
             ))}
           </div>

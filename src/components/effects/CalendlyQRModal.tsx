@@ -46,7 +46,7 @@ export default function CalendlyQRModal() {
                             <span className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-violet via-violet-400 to-[#34E0F0]" />
                             <button
                                 onClick={() => setOpen(false)}
-                                className="absolute right-4 top-4 rounded-full p-2 text-charcoal/55 transition-colors hover:bg-violet/5 hover:text-violet"
+                                className="absolute right-4 top-4 rounded-full p-2 text-charcoal/60 transition-colors hover:bg-violet/5 hover:text-violet"
                                 aria-label="Close modal"
                             >
                                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">

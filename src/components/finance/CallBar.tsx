@@ -25,7 +25,7 @@ export default function CallBar({
     <section className="section">
       <div className="container-x">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[32px] border border-violet/15 bg-white p-8 shadow-soft sm:p-10">
+          <div className="relative overflow-hidden rounded-3xl border border-violet/15 bg-white p-8 shadow-soft sm:p-10">
             {/* accent strip + ambient glow */}
             <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet via-violet-400 to-[#34E0F0]" />
             <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-violet/10 blur-[90px]" />
@@ -47,7 +47,7 @@ export default function CallBar({
                     {ASSURANCES.map((a) => (
                       <li
                         key={a}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-charcoal/55"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-charcoal/75"
                       >
                         <svg className="h-3.5 w-3.5 text-violet" viewBox="0 0 12 12" fill="none">
                           <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

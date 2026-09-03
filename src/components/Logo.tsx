@@ -23,7 +23,8 @@ export default function Logo({
           alt="Vegavat"
           width={headerLogoSrc.width}
           height={headerLogoSrc.height}
-          className={`h-20 w-auto transition-transform duration-300 group-hover:scale-105 sm:h-24 ${className}`}
+          // the lockup has dark navy type, so it needs inverting on a dark header
+          className={`h-20 w-auto transition-transform duration-300 group-hover:scale-105 dark:brightness-0 dark:invert sm:h-24 ${className}`}
         />
       ) : (
         <LogoMark

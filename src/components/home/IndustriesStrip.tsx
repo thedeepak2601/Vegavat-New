@@ -30,7 +30,7 @@ export default function IndustriesStrip() {
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/55 to-charcoal/10 transition-colors duration-300 group-hover:from-violet-900/90 group-hover:via-violet-900/45" />
                 <div className="absolute inset-x-0 bottom-0 p-5">
                   <h3 className="text-lg font-bold text-white">{ind.name}</h3>
-                  <p className="mt-1 max-h-0 overflow-hidden text-sm leading-snug text-white/80 opacity-0 transition-all duration-300 group-hover:max-h-24 group-hover:opacity-100">
+                  <p className="mt-1 max-h-0 overflow-hidden text-sm leading-snug text-white/75 opacity-0 transition-all duration-300 group-hover:max-h-24 group-hover:opacity-100">
                     {ind.desc}
                   </p>
                   <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-violet-200 opacity-0 transition-opacity duration-300 group-hover:opacity-100">

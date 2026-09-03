@@ -26,7 +26,7 @@ export default function ProcessSection() {
                   <span className="text-xs font-bold uppercase tracking-widest text-violet-200/80">{s.week}</span>
                 </div>
                 <h3 className="mt-5 text-xl font-bold">{s.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-white/65">{s.desc}</p>
+                <p className="mt-3 text-sm leading-relaxed text-white/75">{s.desc}</p>
               </div>
             </Reveal>
           ))}

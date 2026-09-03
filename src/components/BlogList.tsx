@@ -47,7 +47,7 @@ export default function BlogList({ posts }: { posts: Post[] }) {
             value={category}
             onChange={(e) => changeCategory(e.target.value)}
             aria-label="Filter by category"
-            className="w-full appearance-none rounded-xl border border-charcoal/15 bg-white px-4 py-2.5 pr-9 text-sm font-medium text-charcoal/80 transition-colors focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20"
+            className="w-full appearance-none rounded-xl border border-charcoal/15 bg-white px-4 py-2.5 pr-9 text-sm font-medium text-charcoal/75 transition-colors focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20"
           >
             <option value="All">All Posts ({posts.length})</option>
             {categories.map(([name, count]) => (
@@ -59,7 +59,7 @@ export default function BlogList({ posts }: { posts: Post[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="mt-16 text-center text-charcoal/50">No posts in this category yet.</p>
+        <p className="mt-16 text-center text-charcoal/60">No posts in this category yet.</p>
       ) : (
         <>
           {/* featured (page 1 only) */}
@@ -73,8 +73,8 @@ export default function BlogList({ posts }: { posts: Post[] }) {
                   <span className="eyebrow w-fit">{featured.category}</span>
                   <h2 className="mt-4 text-2xl font-extrabold leading-tight text-charcoal sm:text-3xl">{featured.title}</h2>
                   <p className="mt-3 text-charcoal/60">{featured.excerpt}</p>
-                  <div className="mt-5 flex items-center gap-3 text-sm text-charcoal/50">
-                    <span className="font-semibold text-charcoal/70">{featured.author}</span>
+                  <div className="mt-5 flex items-center gap-3 text-sm text-charcoal/60">
+                    <span className="font-semibold text-charcoal/75">{featured.author}</span>
                     <span>·</span><span>{featured.date}</span>
                     <span>·</span><span>{featured.readTime}</span>
                   </div>
@@ -92,12 +92,12 @@ export default function BlogList({ posts }: { posts: Post[] }) {
                   <Link href={`/blog/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-charcoal/[0.07] bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft">
                     <div className="relative aspect-[16/10] overflow-hidden">
                       <Image src={p.image} alt={p.title} fill sizes="(max-width:768px) 100vw, 380px" className="object-cover transition-transform duration-500 group-hover:scale-105" unoptimized={isGif(p.image)} />
-                      <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-violet backdrop-blur">{p.category}</span>
+                      <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-violet backdrop-blur">{p.category}</span>
                     </div>
                     <div className="flex flex-1 flex-col p-6">
                       <h3 className="text-lg font-bold leading-snug text-charcoal">{p.title}</h3>
                       <p className="mt-2 flex-1 text-sm leading-relaxed text-charcoal/60 line-clamp-3">{p.excerpt}</p>
-                      <div className="mt-4 flex items-center gap-2 text-xs text-charcoal/50">
+                      <div className="mt-4 flex items-center gap-2 text-xs text-charcoal/60">
                         <span>{p.date}</span><span>·</span><span>{p.readTime}</span>
                       </div>
                     </div>
@@ -110,18 +110,18 @@ export default function BlogList({ posts }: { posts: Post[] }) {
           {/* pagination */}
           {totalPages > 1 && (
             <div className="mt-12 flex items-center justify-center gap-2">
-              <button onClick={() => goTo(page - 1)} disabled={page === 1} aria-label="Previous page" className="grid h-10 w-10 place-items-center rounded-xl border border-charcoal/15 text-charcoal/70 transition-colors hover:border-violet hover:bg-violet hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-charcoal/70">
+              <button onClick={() => goTo(page - 1)} disabled={page === 1} aria-label="Previous page" className="grid h-10 w-10 place-items-center rounded-xl border border-charcoal/15 text-charcoal/75 transition-colors hover:border-violet hover:bg-violet hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-charcoal/75">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
               </button>
               {pageNumbers.map((n) => {
                 const active = n === page;
                 return (
-                  <button key={n} onClick={() => goTo(n)} aria-current={active ? "page" : undefined} className={`grid h-10 min-w-10 place-items-center rounded-xl px-2 text-sm font-semibold transition-colors ${active ? "bg-violet text-white shadow-soft" : "border border-charcoal/15 text-charcoal/70 hover:border-violet hover:text-violet"}`}>
+                  <button key={n} onClick={() => goTo(n)} aria-current={active ? "page" : undefined} className={`grid h-10 min-w-10 place-items-center rounded-xl px-2 text-sm font-semibold transition-colors ${active ? "bg-violet text-white shadow-soft" : "border border-charcoal/15 text-charcoal/75 hover:border-violet hover:text-violet"}`}>
                     {n}
                   </button>
                 );
               })}
-              <button onClick={() => goTo(page + 1)} disabled={page === totalPages} aria-label="Next page" className="grid h-10 w-10 place-items-center rounded-xl border border-charcoal/15 text-charcoal/70 transition-colors hover:border-violet hover:bg-violet hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-charcoal/70">
+              <button onClick={() => goTo(page + 1)} disabled={page === totalPages} aria-label="Next page" className="grid h-10 w-10 place-items-center rounded-xl border border-charcoal/15 text-charcoal/75 transition-colors hover:border-violet hover:bg-violet hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-charcoal/75">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
               </button>
             </div>

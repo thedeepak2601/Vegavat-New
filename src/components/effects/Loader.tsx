@@ -76,7 +76,7 @@ export default function Loader() {
               <span className="block h-full w-1/2 animate-loader-sweep rounded-full bg-gradient-to-r from-violet to-[#34E0F0]" />
             </div>
 
-            <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.32em] text-charcoal/35">
+            <p className="mt-5 text-xs font-bold uppercase tracking-[0.32em] text-charcoal/40">
               Strategy · Design · Engineering · Launch
             </p>
           </div>

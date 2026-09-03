@@ -18,7 +18,7 @@ export default function BrandLogo({
   if (failed) {
     return (
       <span
-        className={`grid shrink-0 place-items-center rounded-lg bg-violet/10 font-extrabold text-violet ${className}`}
+        className={`grid shrink-0 place-items-center rounded-xl bg-violet/10 font-extrabold text-violet ${className}`}
         aria-label={name}
       >
         {name[0]}

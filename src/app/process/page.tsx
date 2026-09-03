@@ -6,6 +6,7 @@ import SectionHeader from "@/components/SectionHeader";
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 import AnimatedBackground from "@/components/effects/AnimatedBackground";
+import InquiryModalButton from "@/components/InquiryModalButton";
 import { SITE } from "@/lib/site";
 import { METHODOLOGIES } from "@/lib/content";
 import {
@@ -56,7 +57,7 @@ export default function ProcessPage() {
                     <div className="flex items-center gap-4">
                       <span className="text-6xl font-extrabold leading-none text-violet">{s.n}</span>
                       <span className="h-px w-10 bg-charcoal/20" />
-                      <span className="text-xs font-bold uppercase tracking-widest text-charcoal/45">Step {Number(s.n)} · {s.week}</span>
+                      <span className="text-xs font-bold uppercase tracking-widest text-charcoal/60">Step {Number(s.n)} · {s.week}</span>
                     </div>
                     <h3 className="mt-5 text-3xl font-extrabold tracking-tight text-charcoal sm:text-4xl">{s.title}</h3>
                     <p className="mt-3 max-w-md text-charcoal/60">{s.desc}</p>
@@ -241,7 +242,7 @@ export default function ProcessPage() {
                 <article className="group h-full overflow-hidden rounded-2xl border border-charcoal/[0.07] bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft">
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <Image src={p.image} alt={p.title} fill sizes="(max-width:768px) 100vw, 380px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <span className="absolute left-4 top-4 rounded-full bg-charcoal/85 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white backdrop-blur">{p.phase}</span>
+                    <span className="absolute left-4 top-4 rounded-full bg-charcoal/85 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur">{p.phase}</span>
                   </div>
                   <div className="p-6">
                     <h3 className="text-lg font-bold text-charcoal">{p.title}</h3>
@@ -264,18 +265,21 @@ export default function ProcessPage() {
               <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-extrabold text-white sm:text-4xl">
                 Ready to transform your idea into a product?
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-white/70">
+              <p className="mx-auto mt-4 max-w-xl text-white/75">
                 Book a free consultation with our experts and discover how we streamline your project from discovery to launch.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link href="/contact" className="btn-primary btn-glow">Book Free Consultation →</Link>
-                <Link href="/contact" className="btn glass text-white hover:bg-white/15">Request a Demo</Link>
+                <InquiryModalButton
+                  label="Request a Demo"
+                  className="btn glass text-white hover:bg-white/15"
+                />
                 <a href={SITE.whatsappHref} target="_blank" rel="noopener noreferrer" className="btn border border-white/25 text-white hover:bg-white/10">
                   <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.6 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5s-1.2-1.6-1.2-3 .7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5-.3.3c-.1.1-.3.3-.1.5.1.3.7 1.1 1.4 1.8.9.8 1.7 1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.4.3.1.1.1.6-.1 1.2z"/></svg>
                   WhatsApp us
                 </a>
               </div>
-              <p className="mt-4 text-sm text-white/50">{SITE.whatsapp}</p>
+              <p className="mt-4 text-sm text-white/60">{SITE.whatsapp}</p>
             </div>
           </Reveal>
         </div>

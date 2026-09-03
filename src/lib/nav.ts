@@ -16,6 +16,8 @@ export type NavGroup = {
 export type NavItem = {
   label: string;
   href: string;
+  /** Shown inside the nav pill, alongside the label. */
+  icon?: string;
   children?: NavChild[];
   /** When set, the dropdown renders as grouped columns instead of a card grid. */
   groups?: NavGroup[];
@@ -30,6 +32,7 @@ export type NavItem = {
 export const NAV: NavItem[] = [
   {
     label: "Services",
+    icon: "wrench",
     href: "/services",
     children: [
       { label: "AI Software Development", href: "/services/ai-development", desc: "We build practical AI applications, copilots...", icon: "ai" },
@@ -55,6 +58,7 @@ export const NAV: NavItem[] = [
   },
   {
     label: "Industries",
+    icon: "factory",
     href: "/industries",
     children: [
       { label: "Manufacturing", href: "/industries/manufacturing", desc: "From raw materials procurement to finished...", icon: "factory" },
@@ -70,6 +74,7 @@ export const NAV: NavItem[] = [
   },
   {
     label: "Products",
+    icon: "erp",
     href: "/products",
     children: [
       { label: "Enterprise CRM", href: "/products/crm", desc: "Omnichannel leads & pipelines.", icon: "crm" },
@@ -95,6 +100,7 @@ export const NAV: NavItem[] = [
   },
   {
     label: "Financial Services",
+    icon: "finance",
     href: "/financial-services",
     highlight: true,
     cta: { label: "Call +91 88729 76232", href: "tel:+918872976232" },
@@ -141,6 +147,6 @@ export const NAV: NavItem[] = [
         "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80",
     },
   },
-  { label: "Process", href: "/process" },
-  { label: "Blog", href: "/blog" },
+  { label: "Process", href: "/process", icon: "sync" },
+  { label: "Blog", href: "/blog", icon: "media" },
 ];

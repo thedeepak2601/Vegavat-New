@@ -56,6 +56,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           name="google-site-verification"
           content="IMJuJQ1rnodjl20xhS9UX0DxCyYAZoWHYB-apI0DOuI"
         />
+        {/* Apply the stored theme before first paint. Light is the default:
+            dark is opt-in only, so system preference is deliberately ignored. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark')}}catch(e){}",
+          }}
+        />
         {/* Google Tag */}
         <script
           async

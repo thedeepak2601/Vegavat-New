@@ -23,7 +23,7 @@ export default function FAQ({ items }: { items: QA[] }) {
             </button>
             <div className={`grid overflow-hidden px-6 transition-all duration-300 ${isOpen ? "grid-rows-[1fr] pb-6 opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
               <div className="overflow-hidden">
-                <p className="text-sm leading-relaxed text-charcoal/65">{item.a}</p>
+                <p className="text-sm leading-relaxed text-charcoal/60">{item.a}</p>
               </div>
             </div>
           </div>

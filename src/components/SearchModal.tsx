@@ -143,19 +143,19 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
             </button>
           )}
-          <button onClick={onClose} className="shrink-0 rounded border border-charcoal/15 px-1.5 py-0.5 text-[10px] font-semibold text-charcoal/40 transition-colors hover:text-charcoal">Esc</button>
+          <button onClick={onClose} className="shrink-0 rounded border border-charcoal/15 px-1.5 py-0.5 text-xs font-semibold text-charcoal/40 transition-colors hover:text-charcoal">Esc</button>
         </div>
 
         {/* recent searches (only when no query) */}
         {!term && recent.length > 0 && (
           <div className="flex flex-wrap items-center gap-2 border-b border-charcoal/[0.07] px-4 py-3">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-charcoal/40">Recent</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-charcoal/40">Recent</span>
             {recent.map((r) => (
-              <button key={r} onClick={() => { setQ(r); inputRef.current?.focus(); }} className="rounded-full border border-charcoal/10 bg-charcoal-50/60 px-3 py-1 text-xs font-medium text-charcoal/70 transition-colors hover:border-violet/40 hover:text-violet">
+              <button key={r} onClick={() => { setQ(r); inputRef.current?.focus(); }} className="rounded-full border border-charcoal/10 bg-charcoal-50/60 px-3 py-1 text-xs font-medium text-charcoal/75 transition-colors hover:border-violet/40 hover:text-violet">
                 {r}
               </button>
             ))}
-            <button onClick={clearRecent} className="ml-auto text-[11px] font-medium text-charcoal/40 transition-colors hover:text-violet">Clear</button>
+            <button onClick={clearRecent} className="ml-auto text-xs font-medium text-charcoal/40 transition-colors hover:text-violet">Clear</button>
           </div>
         )}
 
@@ -164,14 +164,14 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
           {results.length === 0 ? (
             <div className="px-3 py-10 text-center">
               <p className="text-sm font-semibold text-charcoal">No results for &ldquo;{q}&rdquo;</p>
-              <p className="mt-1 text-xs text-charcoal/50">Try a service, product, industry or topic, or <button onClick={() => go("/contact")} className="font-semibold text-violet hover:underline">contact us</button>.</p>
+              <p className="mt-1 text-xs text-charcoal/60">Try a service, product, industry or topic, or <button onClick={() => go("/contact")} className="font-semibold text-violet hover:underline">contact us</button>.</p>
             </div>
           ) : (
             <>
-              {!term && <p className="px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-wider text-charcoal/40">Suggestions</p>}
+              {!term && <p className="px-3 pb-1 pt-2 text-xs font-bold uppercase tracking-wider text-charcoal/40">Suggestions</p>}
               {groups.map((g) => (
                 <div key={g.name} className="mb-1">
-                  <p className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-charcoal/40">{g.name}</p>
+                  <p className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-charcoal/40">{g.name}</p>
                   {g.items.map((it) => {
                     flatIdx += 1;
                     const isActive = flatIdx === active;
@@ -180,12 +180,12 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
                         key={it.href}
                         onClick={() => go(it.href, it.title)}
                         onMouseEnter={() => setActive(results.indexOf(it))}
-                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${isActive ? "bg-violet/10" : "hover:bg-violet/5"}`}
+                        className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${isActive ? "bg-violet/10" : "hover:bg-violet/5"}`}
                       >
-                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-violet/10 text-base text-violet">{it.icon ?? "•"}</span>
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-violet/10 text-base text-violet">{it.icon ?? "•"}</span>
                         <span className="min-w-0 flex-1">
                           <span className="block truncate text-sm font-semibold text-charcoal">{highlight(it.title, term)}</span>
-                          {it.sub && <span className="block truncate text-xs text-charcoal/50">{it.sub}</span>}
+                          {it.sub && <span className="block truncate text-xs text-charcoal/60">{it.sub}</span>}
                         </span>
                         <svg className={`h-4 w-4 shrink-0 transition-opacity ${isActive ? "text-violet opacity-100" : "opacity-0"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                       </button>
@@ -198,7 +198,7 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
         </div>
 
         {/* footer hints */}
-        <div className="flex items-center justify-between border-t border-charcoal/[0.07] bg-charcoal-50/60 px-4 py-2.5 text-[11px] text-charcoal/45">
+        <div className="flex items-center justify-between border-t border-charcoal/[0.07] bg-charcoal-50/60 px-4 py-2.5 text-xs text-charcoal/60">
           <span className="flex items-center gap-3">
             <span className="flex items-center gap-1"><kbd className="rounded border border-charcoal/15 bg-white px-1">↑</kbd><kbd className="rounded border border-charcoal/15 bg-white px-1">↓</kbd> navigate</span>
             <span className="flex items-center gap-1"><kbd className="rounded border border-charcoal/15 bg-white px-1.5">↵</kbd> open</span>

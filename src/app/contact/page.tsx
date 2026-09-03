@@ -48,7 +48,7 @@ export default function ContactPage() {
                   <a href={c.href} className="flex items-center gap-4 rounded-2xl border border-charcoal/[0.07] bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-violet/30 hover:shadow-card">
                     <span className="grid h-12 w-12 place-items-center rounded-xl bg-violet/10 text-xl">{c.icon}</span>
                     <span>
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-charcoal/50">{c.label}</span>
+                      <span className="block text-xs font-semibold uppercase tracking-wider text-charcoal/60">{c.label}</span>
                       <span className="block font-semibold text-charcoal">{c.value}</span>
                     </span>
                   </a>
@@ -59,7 +59,7 @@ export default function ContactPage() {
             <Reveal delay={0.2}>
               <div className="mt-8 rounded-2xl bg-charcoal p-6 text-white">
                 <p className="text-sm font-bold uppercase tracking-wider text-violet-200">Quick response</p>
-                <p className="mt-2 text-sm text-white/70">
+                <p className="mt-2 text-sm text-white/75">
                   Free project estimate within <span className="font-bold text-white">24 hours</span>.
                   Maximum 2-hour response time on all support requests.
                 </p>

@@ -26,7 +26,7 @@ export default function WhoWeAre() {
               </div>
               <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-charcoal/[0.07] bg-white p-5 text-center shadow-card">
                 <p className="heading-gradient text-4xl font-extrabold leading-none">100+</p>
-                <p className="mt-2 text-xs font-medium text-charcoal/55">Projects delivered</p>
+                <p className="mt-2 text-xs font-medium text-charcoal/60">Projects delivered</p>
               </div>
             </div>
 
@@ -38,7 +38,7 @@ export default function WhoWeAre() {
               <div className="relative flex flex-1 flex-col justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-violet to-violet-700 p-5 text-white shadow-soft">
                 <span className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#34E0F0]/20 blur-2xl" />
                 <p className="relative text-3xl font-extrabold leading-none">Since 2024</p>
-                <p className="relative mt-2 text-sm leading-relaxed text-white/85">Founded by Deepak Kumar, a trusted technology partner, not just a vendor.</p>
+                <p className="relative mt-2 text-sm leading-relaxed text-white/90">Founded by Deepak Kumar, a trusted technology partner, not just a vendor.</p>
               </div>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default function WhoWeAre() {
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-5 text-base leading-relaxed text-charcoal/65">
+            <p className="mt-5 text-base leading-relaxed text-charcoal/60">
               Founded in 2024 by Deepak Kumar, Vegavat is a software development company
               that empowers startups and businesses to create impactful digital products. Our core
               services include mobile app development, web development, UI/UX design,
@@ -61,7 +61,7 @@ export default function WhoWeAre() {
             </p>
           </Reveal>
           <Reveal delay={0.16}>
-            <p className="mt-4 text-base leading-relaxed text-charcoal/65">
+            <p className="mt-4 text-base leading-relaxed text-charcoal/60">
               We bring hands-on experience from diverse industries, prioritising a deep
               understanding of your business needs to deliver practical, structured
               solutions designed for lasting performance. As your true technology partner,
@@ -71,7 +71,7 @@ export default function WhoWeAre() {
           <Reveal delay={0.22}>
             <ul className="mt-7 grid gap-3 sm:grid-cols-2">
               {offerings.map((o) => (
-                <li key={o} className="flex items-center gap-2.5 text-sm font-medium text-charcoal/80">
+                <li key={o} className="flex items-center gap-2.5 text-sm font-medium text-charcoal/75">
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-violet/10 text-violet">
                     <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>

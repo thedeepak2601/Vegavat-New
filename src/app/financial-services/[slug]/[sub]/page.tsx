@@ -49,7 +49,7 @@ export default function FinanceSubPage({
   return (
     <>
       <PageHero
-        breadcrumb={`Financial Services / ${category.title} / ${sub.label}`}
+        breadcrumb={`Home / Financial Services / ${category.title} / ${sub.label}`}
         eyebrow={category.title}
         title={sub.label}
         desc={sub.desc}
@@ -66,7 +66,7 @@ export default function FinanceSubPage({
               <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-charcoal sm:text-4xl">
                 What {sub.label} involves
               </h2>
-              <p className="mt-5 leading-relaxed text-charcoal/65">{sub.intro}</p>
+              <p className="mt-5 leading-relaxed text-charcoal/60">{sub.intro}</p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href={FINANCE_PHONE_HREF} className="btn-primary btn-glow">
@@ -84,13 +84,13 @@ export default function FinanceSubPage({
                   <Icon name="sync" className="h-5 w-5" />
                 </span>
                 <h3 className="mt-4 text-base font-bold text-charcoal">Typical timeline</h3>
-                <p className="mt-2 text-sm leading-relaxed text-charcoal/65">{sub.timeline}</p>
+                <p className="mt-2 text-sm leading-relaxed text-charcoal/60">{sub.timeline}</p>
 
                 <div className="mt-6 border-t border-violet/15 pt-5">
                   <h3 className="text-base font-bold text-charcoal">Who it&apos;s for</h3>
                   <ul className="mt-3 space-y-2">
                     {sub.who.map((w) => (
-                      <li key={w} className="flex items-start gap-2 text-sm text-charcoal/70">
+                      <li key={w} className="flex items-start gap-2 text-sm text-charcoal/75">
                         <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-violet" viewBox="0 0 12 12" fill="none">
                           <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -118,12 +118,12 @@ export default function FinanceSubPage({
             {sub.includes.map((item, i) => (
               <Reveal key={item.t} delay={i * 0.05}>
                 <div className="flex h-full gap-4 rounded-2xl border border-charcoal/[0.07] bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-violet/25 hover:shadow-soft">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-violet text-sm font-extrabold text-white">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-violet text-sm font-extrabold text-white">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div>
                     <h3 className="text-base font-bold text-charcoal">{item.t}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-charcoal/65">{item.d}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-charcoal/60">{item.d}</p>
                   </div>
                 </div>
               </Reveal>
@@ -161,7 +161,7 @@ export default function FinanceSubPage({
                         <span className="absolute left-1/2 top-7 h-[calc(100%+1rem)] w-px -translate-x-1/2 bg-violet/20" />
                       )}
                     </span>
-                    <span className="text-sm font-semibold text-charcoal/85">{d}</span>
+                    <span className="text-sm font-semibold text-charcoal">{d}</span>
                   </div>
                 ))}
               </div>
@@ -259,7 +259,7 @@ export default function FinanceSubPage({
                   <h3 className="relative mt-5 text-lg font-bold text-white">{m.t}</h3>
                   <p className="mt-2.5 text-sm leading-relaxed text-white/60">{m.d}</p>
 
-                  <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#34E0F0]">
+                  <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#34E0F0]">
                     <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">
                       <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>

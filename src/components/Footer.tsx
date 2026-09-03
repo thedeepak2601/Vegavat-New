@@ -53,7 +53,7 @@ export default function Footer() {
                     title={s.label}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-violet hover:bg-violet hover:text-white"
+                    className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/75 transition-colors hover:border-violet hover:bg-violet hover:text-white"
                   >
                     <SocialIcon label={s.label} />
                   </a>
@@ -63,7 +63,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-bold uppercase tracking-wider text-white/90">Services</h4>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-white/90">Services</h2>
             <ul className="mt-4 space-y-2.5 text-sm text-white/60">
               {SERVICES.slice(0, 6).map((s) => (
                 <li key={s.slug}>
@@ -77,7 +77,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-bold uppercase tracking-wider text-white/90">Company</h4>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-white/90">Company</h2>
             <ul className="mt-4 space-y-2.5 text-sm text-white/60">
               {company.map((c) => (
                 <li key={c.label}>
@@ -90,7 +90,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-bold uppercase tracking-wider text-white/90">Get in touch</h4>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-white/90">Get in touch</h2>
             <ul className="mt-4 space-y-3 text-sm text-white/60">
               <li><a href={`mailto:${SITE.email}`} className="hover:text-violet-200">{SITE.email}</a></li>
               <li><a href={SITE.phoneHref} className="hover:text-violet-200">{SITE.phone}</a></li>
@@ -118,7 +118,7 @@ export default function Footer() {
                     →
                   </span>
                 </span>
-                <span className="mt-0.5 block text-xs text-white/50">
+                <span className="mt-0.5 block text-xs text-white/60">
                   Income tax, GST &amp; accounting, handled end to end
                 </span>
               </span>
@@ -129,7 +129,7 @@ export default function Footer() {
                 <Link
                   key={c.slug}
                   href={`/financial-services/${c.slug}`}
-                  className="group/pill inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] py-2 pl-2 pr-4 text-sm font-semibold text-white/80 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-violet/50 hover:bg-violet hover:text-white hover:shadow-glow"
+                  className="group/pill inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] py-2 pl-2 pr-4 text-sm font-semibold text-white/75 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-violet/50 hover:bg-violet hover:text-white hover:shadow-glow"
                 >
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/10 text-violet-200 transition-colors group-hover/pill:bg-white/20 group-hover/pill:text-white">
                     <Icon name={c.icon} className="h-4 w-4" />
@@ -144,7 +144,7 @@ export default function Footer() {
 
             <a
               href={FINANCE_PHONE_HREF}
-              className="btn-glow inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white px-5 py-2.5 text-sm font-bold text-violet transition-all hover:shadow-glow"
+              className="btn-glow btn-invert shrink-0 whitespace-nowrap"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -154,17 +154,17 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 text-sm text-white/50 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 text-sm text-white/60 sm:flex-row">
           <p>
             ©{" "}
-            <Link href="/" className="transition-colors hover:text-white/80">
+            <Link href="/" className="transition-colors hover:text-white/75">
               {new Date().getFullYear()} {SITE.name} Technologies
             </Link>
             . All rights reserved.
           </p>
           <div className="flex gap-5">
-            <Link href="/privacy" className="hover:text-white/80">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white/80">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-white/75">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white/75">Terms of Service</Link>
           </div>
         </div>
       </div>

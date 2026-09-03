@@ -4,6 +4,7 @@ import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import Reveal from "@/components/Reveal";
+import StatStrip from "@/components/StatStrip";
 import Icon from "@/components/Icon";
 import CTABanner from "@/components/CTABanner";
 import CallBar from "@/components/finance/CallBar";
@@ -66,19 +67,9 @@ export default function FinancialServicesPage() {
         image="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80"
       />
 
-      {/* Trust strip */}
-      <section className="border-b border-charcoal/[0.06] bg-white py-10">
-        <div className="container-x grid grid-cols-2 gap-6 lg:grid-cols-4">
-          {TRUST.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.05} className="text-center">
-              <p className="text-3xl font-extrabold tracking-tight text-violet sm:text-4xl">
-                {s.value}
-              </p>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-charcoal/50">
-                {s.label}
-              </p>
-            </Reveal>
-          ))}
+      <section className="py-8 lg:py-10">
+        <div className="container-x">
+          <StatStrip items={TRUST} />
         </div>
       </section>
 

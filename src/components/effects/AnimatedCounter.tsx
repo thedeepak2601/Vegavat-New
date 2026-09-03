@@ -6,11 +6,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Splits a value like "1500+" into prefix number + suffix ("+", "k", etc.)
+// Splits a value like "1500+" or "3.2x" into number + suffix.
 function parse(value: string) {
-  const match = value.match(/^(\d+)(.*)$/);
-  if (!match) return { num: 0, suffix: value };
-  return { num: parseInt(match[1], 10), suffix: match[2] };
+  const match = value.match(/^(\d+(?:\.\d+)?)(.*)$/);
+  if (!match) return { num: 0, decimals: 0, suffix: value };
+  return {
+    num: Number(match[1]),
+    decimals: match[1].includes(".") ? match[1].split(".")[1].length : 0,
+    suffix: match[2],
+  };
 }
 
 export default function AnimatedCounter({
@@ -21,7 +25,7 @@ export default function AnimatedCounter({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const { num, suffix } = parse(value);
+  const { num, decimals, suffix } = parse(value);
 
   useEffect(() => {
     const el = ref.current;
@@ -33,14 +37,17 @@ export default function AnimatedCounter({
       ease: "power2.out",
       scrollTrigger: { trigger: el, start: "top 85%", once: true },
       onUpdate: () => {
-        el.textContent = Math.round(obj.n).toLocaleString() + suffix;
+        el.textContent = obj.n.toLocaleString(undefined, {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }) + suffix;
       },
     });
     return () => {
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, [num, suffix]);
+  }, [num, decimals, suffix]);
 
   return (
     <span ref={ref} className={className}>

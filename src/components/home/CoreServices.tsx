@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Reveal from "@/components/Reveal";
@@ -14,6 +14,7 @@ export default function CoreServices() {
   const wrapTimer = useRef<number | null>(null);
   const paused = useRef(false);
   const wheelLock = useRef(false);
+  const [active, setActive] = useState(0);
 
   // Cards render THREE times. We park the viewport in the middle copy and,
   // whenever the scroll drifts toward a neighbouring copy, silently jump back
@@ -46,6 +47,15 @@ export default function CoreServices() {
   };
 
   const onScroll = () => {
+    const el = trackRef.current;
+    if (el) {
+      const card = el.querySelector<HTMLElement>("[data-card]");
+      if (card) {
+        const step = card.clientWidth + 24; // 24 = gap-6
+        // Cards render three times; modulo maps back to the real service list.
+        setActive(Math.round(el.scrollLeft / step) % SERVICES.length);
+      }
+    }
     if (wrapTimer.current) window.clearTimeout(wrapTimer.current);
     wrapTimer.current = window.setTimeout(normalize, 80);
   };
@@ -117,26 +127,14 @@ export default function CoreServices() {
         </div>
 
         {/* ---- Slider ---- */}
-        <div className="relative mt-9">
-          {/* side arrows, vertically centered over the slider */}
-          <button
-            onClick={() => scroll(-1)}
-            aria-label="Previous services"
-            className="absolute -left-3 top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-charcoal/10 bg-white text-charcoal/70 shadow-card transition-colors hover:bg-violet hover:text-white lg:-left-5"
-          >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
-          </button>
-          <button
-            onClick={() => scroll(1)}
-            aria-label="Next services"
-            className="absolute -right-3 top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-charcoal/10 bg-white text-charcoal/70 shadow-card transition-colors hover:bg-violet hover:text-white lg:-right-5"
-          >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
-          </button>
-
+        <div className="mt-9">
           {/* track */}
           <div
             ref={trackRef}
+            id="core-services-track"
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Core services"
             onScroll={onScroll}
             onMouseEnter={() => { paused.current = true; }}
             onMouseLeave={() => { paused.current = false; }}
@@ -148,9 +146,11 @@ export default function CoreServices() {
                 href={`/services/${s.slug}`}
                 data-card
                 style={{ backgroundColor: PALETTE[i % PALETTE.length] }}
-                className="group flex min-h-[520px] w-full shrink-0 snap-start flex-col overflow-hidden rounded-3xl p-5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+                // The pastel is an inline style, which normal dark utilities
+                // can't beat — the important modifier is what overrides it.
+                className="group flex min-h-[440px] w-full shrink-0 snap-start flex-col overflow-hidden rounded-3xl p-5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft dark:!bg-[#16131f] dark:ring-1 dark:ring-white/10 sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
               >
-                <div className="h-40 overflow-hidden rounded-2xl bg-white/40">
+                <div className="h-40 overflow-hidden rounded-2xl bg-white/40 dark:bg-white/[0.06]">
                   <Image
                     src={s.image}
                     alt={s.title}
@@ -162,25 +162,27 @@ export default function CoreServices() {
                 </div>
 
                 {/* icon badge overlapping the image */}
-                <div className="relative z-10 -mt-7 ml-1 grid h-12 w-12 place-items-center rounded-2xl bg-white text-xl shadow-card ring-1 ring-charcoal/[0.04]">
+                <div className="relative z-10 -mt-7 ml-1 grid h-12 w-12 place-items-center rounded-2xl bg-white text-xl shadow-card ring-1 ring-charcoal/[0.04] dark:bg-[#221e30] dark:ring-white/10">
                   {s.icon}
                 </div>
 
                 <h3 className="mt-4 text-xl font-bold text-charcoal">{s.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-charcoal/70">{s.body}</p>
+                <p className="mt-3 text-sm leading-relaxed text-charcoal/75">{s.body}</p>
 
+                {/* A carousel card is for discovery, not detail — three
+                    capability chips instead of the full task list, which now
+                    lives on the service page itself. */}
                 {s.points && (
-                  <>
-                    <p className="mt-4 text-sm font-semibold text-charcoal/80">It covers key tasks including:</p>
-                    <ul className="mt-2 space-y-1.5">
-                      {s.points.map((p) => (
-                        <li key={p} className="flex items-start gap-2 text-sm text-charcoal/70">
-                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet/70" />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
+                  <ul className="mt-4 flex flex-wrap gap-1.5">
+                    {s.points.slice(0, 3).map((p) => (
+                      <li
+                        key={p}
+                        className="rounded-full bg-white/70 px-2.5 py-1 text-xs font-semibold text-charcoal/75 ring-1 ring-charcoal/[0.06] dark:bg-white/[0.06] dark:text-white/75 dark:ring-white/10"
+                      >
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
                 )}
 
                 <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-violet transition-transform group-hover:translate-x-1">
@@ -188,6 +190,42 @@ export default function CoreServices() {
                 </span>
               </Link>
             ))}
+          </div>
+
+          {/* Controls sit below the track so nothing overlaps card content. */}
+          <div className="mt-7 flex items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <p aria-live="polite" className="text-sm font-bold tabular-nums text-charcoal">
+                <span className="text-violet">{String(active + 1).padStart(2, "0")}</span>
+                <span className="text-charcoal/60"> / {String(SERVICES.length).padStart(2, "0")}</span>
+                <span className="sr-only"> services</span>
+              </p>
+              <div className="h-1 w-28 overflow-hidden rounded-full bg-charcoal/10 sm:w-44 dark:bg-white/15">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-violet to-[#34E0F0] transition-all duration-300"
+                  style={{ width: `${((active + 1) / SERVICES.length) * 100}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={() => scroll(-1)}
+                aria-label="Previous services"
+                aria-controls="core-services-track"
+                className="grid h-11 w-11 place-items-center rounded-full border border-charcoal/10 bg-white text-charcoal/75 shadow-card transition-colors hover:bg-violet hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet focus-visible:ring-offset-2 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/75"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
+              </button>
+              <button
+                onClick={() => scroll(1)}
+                aria-label="Next services"
+                aria-controls="core-services-track"
+                className="grid h-11 w-11 place-items-center rounded-full border border-charcoal/10 bg-white text-charcoal/75 shadow-card transition-colors hover:bg-violet hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet focus-visible:ring-offset-2 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/75"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>

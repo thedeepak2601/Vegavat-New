@@ -27,7 +27,7 @@ export default function NewsletterCTA({
           <div className="relative">
             <span className="eyebrow border-violet/40 bg-violet/15 text-violet-200">{eyebrow}</span>
             <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-extrabold text-white sm:text-4xl">{title}</h2>
-            <p className="mx-auto mt-4 max-w-xl text-white/70">{desc}</p>
+            <p className="mx-auto mt-4 max-w-xl text-white/75">{desc}</p>
 
             {/* inline subscribe form */}
             <form
@@ -51,7 +51,7 @@ export default function NewsletterCTA({
                 placeholder="you@company.com"
                 aria-label="Email address"
                 disabled={status === "sending"}
-                className="w-full rounded-xl bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none disabled:opacity-60"
+                className="w-full rounded-xl bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/60 focus:outline-none disabled:opacity-60"
               />
               <button
                 type="submit"
@@ -71,7 +71,7 @@ export default function NewsletterCTA({
                 {done ? SUBSCRIBE_DONE : SUBSCRIBE_ERROR}
               </p>
             ) : (
-              <ul className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-white/55">
+              <ul className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-white/60">
                 {["Weekly insights", "No spam, ever", "Unsubscribe anytime"].map((f) => (
                   <li key={f} className="inline-flex items-center gap-1.5">
                     <svg className="h-3.5 w-3.5 text-violet-300" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -81,7 +81,7 @@ export default function NewsletterCTA({
               </ul>
             )}
 
-            <p className="mt-6 text-sm text-white/45">
+            <p className="mt-6 text-sm text-white/60">
               Prefer to talk?{" "}
               <Link href="/contact" className="font-semibold text-violet-200 hover:text-white">
                 Get in touch →

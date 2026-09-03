@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Reveal from "./Reveal";
 import AnimatedBackground from "./effects/AnimatedBackground";
+import InquiryModalButton from "./InquiryModalButton";
+import { opensInquiry } from "@/lib/cta";
 
 export default function CTABanner({
   eyebrow = "Get Started",
@@ -15,6 +17,9 @@ export default function CTABanner({
   primary?: { label: string; href: string };
   secondary?: { label: string; href: string };
 }) {
+  const primaryOpensInquiry = opensInquiry(primary.label);
+  const secondaryOpensInquiry = opensInquiry(secondary.label);
+
   return (
     <section className="section">
       <div className="container-x">
@@ -26,14 +31,29 @@ export default function CTABanner({
             <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-extrabold text-white sm:text-4xl">
               {title}
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-white/70">{desc}</p>
+            <p className="mx-auto mt-4 max-w-xl text-white/75">{desc}</p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href={primary.href} className="btn-primary btn-glow">{primary.label} →</Link>
-              <Link href={secondary.href} className="btn border border-white/25 text-white transition-colors hover:bg-white/10">
-                {secondary.label}
-              </Link>
+              {primaryOpensInquiry ? (
+                <InquiryModalButton
+                  label={primary.label}
+                  showArrow
+                  className="btn-primary btn-glow"
+                />
+              ) : (
+                <Link href={primary.href} className="btn-primary btn-glow">{primary.label} →</Link>
+              )}
+              {secondaryOpensInquiry ? (
+                <InquiryModalButton
+                  label={secondary.label}
+                  className="btn border border-white/25 text-white transition-colors hover:bg-white/10"
+                />
+              ) : (
+                <Link href={secondary.href} className="btn border border-white/25 text-white transition-colors hover:bg-white/10">
+                  {secondary.label}
+                </Link>
+              )}
             </div>
-            <ul className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-white/55">
+            <ul className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-white/60">
               {["Reply within 24 hours", "Free, no-obligation estimate", "NDA available on request"].map((f) => (
                 <li key={f} className="inline-flex items-center gap-1.5">
                   <svg className="h-3.5 w-3.5 text-violet-300" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>

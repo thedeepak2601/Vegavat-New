@@ -12,6 +12,7 @@ import FAQ from "@/components/FAQ";
 import AnimatedBackground from "@/components/effects/AnimatedBackground";
 import LogoMarquee from "@/components/home/LogoMarquee";
 import CTABanner from "@/components/CTABanner";
+import InquiryModalButton from "@/components/InquiryModalButton";
 import { SERVICES, SERVICE_HERO_IMAGES } from "@/lib/content";
 
 export function generateStaticParams() {
@@ -57,6 +58,68 @@ const SERVICE_TECH: Record<string, string[]> = {
   "erp-audit-recovery": ["ERPNext", "SQL", "Python", "Frappe", "Data Tools"],
 };
 
+const SERVICE_ICONS: Record<string, string> = {
+  "ai-development": "ai",
+  "mobile-app-development": "mobile",
+  "web-development": "web",
+  "ui-ux-design": "design",
+  "graphic-design": "image",
+  "dedicated-hiring": "hiring",
+  "cyber-security": "shield",
+  "cloud-enablement": "cloud",
+  "whatsapp-automation": "chat",
+  devsecops: "devops",
+  "it-consulting": "users",
+  "erp-implementation": "erp",
+  "erp-migration": "sync",
+  "erp-customization": "wrench",
+  "annual-support-amc": "helpdesk",
+  "erp-audit-recovery": "audit",
+};
+
+const SERVICE_METRICS: Record<string, { value: string; label: string }[]> = {
+  "ai-development": [
+    { value: "40%", label: "Less manual effort" },
+    { value: "24/7", label: "AI-assisted workflows" },
+    { value: "3x", label: "Faster internal responses" },
+  ],
+  "web-development": [
+    { value: "90+", label: "Performance targets" },
+    { value: "100%", label: "Responsive layouts" },
+    { value: "4w", label: "Typical MVP launch" },
+  ],
+  "ui-ux-design": [
+    { value: "30%", label: "Clearer user journeys" },
+    { value: "2x", label: "Faster design decisions" },
+    { value: "100%", label: "Responsive handoff" },
+  ],
+  "graphic-design": [
+    { value: "50+", label: "Brand assets delivered" },
+    { value: "3x", label: "Faster campaign rollout" },
+    { value: "100%", label: "Multi-format files" },
+  ],
+  "dedicated-hiring": [
+    { value: "7d", label: "Typical onboarding" },
+    { value: "15+", label: "Expert developers" },
+    { value: "100%", label: "Transparent reporting" },
+  ],
+};
+
+const DEFAULT_SERVICE_METRICS = [
+  { value: "6+", label: "Years Experience" },
+  { value: "100+", label: "Projects Delivered" },
+  { value: "24h", label: "Estimate turnaround" },
+];
+
+const DELIVERABLES = [
+  "Discovery summary",
+  "Technical roadmap",
+  "Sprint milestones",
+  "Quality checklist",
+  "Launch handover",
+  "Support plan",
+];
+
 const WHY = [
   { n: "01", t: "End-to-End Delivery", d: "From discovery to launch and beyond, one team owns strategy, design, build, testing and support." },
   { n: "02", t: "Transparent Communication", d: "Regular updates, direct access to your team and clear progress at every stage. No surprises." },
@@ -87,6 +150,8 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
 
   const related = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
   const tech = SERVICE_TECH[service.slug] ?? DEFAULT_TECH;
+  const metrics = SERVICE_METRICS[service.slug] ?? DEFAULT_SERVICE_METRICS;
+  const iconName = SERVICE_ICONS[service.slug] ?? "default";
 
   return (
     <>
@@ -105,21 +170,54 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
       </section>
 
       {/* Overview */}
-      <section className="section">
-        <div className="container-x grid items-center gap-12 lg:grid-cols-2">
-          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-card">
-            <Image src={service.image} alt={service.title} fill sizes="(max-width:1024px) 90vw, 560px" className="object-cover" />
+      <section className="section overflow-hidden">
+        <div className="container-x grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+          <Reveal className="relative">
+            <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-violet/20 via-transparent to-[#34E0F0]/20 blur-3xl" />
+            <div className="relative overflow-hidden rounded-3xl border border-charcoal/[0.08] bg-white p-3 shadow-soft">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+                <Image src={service.image} alt={service.title} fill sizes="(max-width:1024px) 90vw, 560px" className="object-cover" />
+                <span className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/10 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/15 bg-white/12 p-4 text-white backdrop-blur-md">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-violet shadow-card">
+                      <Icon name={iconName} className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-bold">{service.title}</p>
+                      <p className="mt-0.5 text-xs text-white/75">Strategy, design, build and support</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Reveal>
+
           <div>
             <Reveal>
               <span className="eyebrow">Overview</span>
-              <h2 className="mt-4 text-3xl font-extrabold tracking-tight">{service.title}</h2>
+              <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-charcoal sm:text-4xl">
+                A clearer path from idea to working product
+              </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-5 text-base leading-relaxed text-charcoal/65">{service.body}</p>
+              <p className="mt-5 text-base leading-relaxed text-charcoal/60">{service.body}</p>
             </Reveal>
-            <Reveal delay={0.18}>
-              <Link href="/contact" className="btn-primary btn-glow mt-7">Discuss your project →</Link>
+            <Reveal delay={0.16}>
+              <div className="mt-7 grid gap-3 sm:grid-cols-3">
+                {metrics.map((m) => (
+                  <div key={m.label} className="rounded-2xl border border-charcoal/[0.07] bg-charcoal-50/70 p-4 text-center">
+                    <p className="bg-gradient-to-r from-violet to-[#34E0F0] bg-clip-text text-2xl font-extrabold text-transparent">{m.value}</p>
+                    <p className="mt-1 text-xs font-semibold text-charcoal/60">{m.label}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <InquiryModalButton label="Discuss your project" showArrow className="btn-primary btn-glow" />
+                <Link href="#capabilities" className="btn-outline">View capabilities</Link>
+              </div>
             </Reveal>
           </div>
         </div>
@@ -147,8 +245,9 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {PROBLEMS.map((p, i) => (
                 <Reveal key={p.t} delay={(i % 2) * 0.08}>
-                  <div className="h-full rounded-2xl border border-charcoal/[0.07] bg-white p-5 shadow-card">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-violet/10 text-violet">
+                  <div className="group relative h-full overflow-hidden rounded-2xl border border-charcoal/[0.07] bg-white p-5 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-violet/25 hover:shadow-soft">
+                    <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet to-[#34E0F0] opacity-0 transition-opacity group-hover:opacity-100" />
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-violet/10 text-violet transition-colors group-hover:bg-violet group-hover:text-white">
                       <Icon name={p.icon} className="h-5 w-5" />
                     </span>
                     <h3 className="mt-4 font-bold text-charcoal">{p.t}</h3>
@@ -163,7 +262,7 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
 
       {/* Core Capabilities */}
       {service.points && (
-        <section className="section">
+        <section id="capabilities" className="section scroll-mt-24">
           <div className="container-x">
             <SectionHeader
               eyebrow="Core Capabilities"
@@ -173,11 +272,18 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {service.points.map((p, i) => (
                 <Reveal key={p} delay={(i % 3) * 0.06}>
-                  <div className="card-hover flex h-full items-start gap-3">
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-violet/10 text-violet">
-                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <div className="group relative h-full overflow-hidden rounded-2xl border border-charcoal/[0.07] bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-violet/25 hover:shadow-soft">
+                    <span className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-violet/10 blur-2xl transition-transform duration-300 group-hover:scale-150" />
+                    <span className="text-xs font-extrabold uppercase tracking-[0.22em] text-charcoal/40">
+                      Capability {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="pt-1 font-semibold text-charcoal">{p}</span>
+                    <span className="mt-4 grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-violet to-violet-700 text-white shadow-glow">
+                      <Icon name={iconName} className="h-5 w-5" />
+                    </span>
+                    <h3 className="relative mt-5 text-lg font-bold leading-snug text-charcoal">{p}</h3>
+                    <p className="relative mt-2 text-sm leading-relaxed text-charcoal/60">
+                      Planned, designed and delivered with handover-ready documentation.
+                    </p>
                   </div>
                 </Reveal>
               ))}
@@ -196,16 +302,14 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
             title="How your project moves forward"
             desc="A clear, transparent path from first conversation to a live, supported product."
           />
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="relative mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <span className="absolute left-[10%] right-[10%] top-5 hidden h-px bg-gradient-to-r from-transparent via-violet/45 to-transparent lg:block" />
             {FLOW.map((f, i) => (
               <Reveal key={f.t} delay={i * 0.07}>
-                <div className="relative h-full rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-violet/40 hover:bg-white/[0.06]">
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-violet text-sm font-extrabold text-white">{i + 1}</span>
+                <div className="relative h-full rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-violet/40 hover:bg-white/[0.08]">
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-violet to-[#34E0F0] text-sm font-extrabold text-white shadow-glow">{i + 1}</span>
                   <h3 className="mt-4 font-bold">{f.t}</h3>
                   <p className="mt-1 text-sm text-white/60">{f.d}</p>
-                  {i < FLOW.length - 1 && (
-                    <span className="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 text-violet-300 lg:block">→</span>
-                  )}
                 </div>
               </Reveal>
             ))}
@@ -216,18 +320,25 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
       {/* Technologies We Use */}
       <section className="section pb-6">
         <div className="container-x">
-          <SectionHeader
-            eyebrow="Technologies We Use"
-            title="Modern, proven tools for the job"
-            desc={`The core stack we rely on to deliver reliable, scalable ${service.title.toLowerCase()}.`}
-          />
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            {tech.map((t) => (
-              <span key={t} className="inline-flex items-center gap-2 rounded-full border border-charcoal/10 bg-white px-4 py-2 text-sm font-semibold text-charcoal/75 shadow-sm">
-                <span className="h-2 w-2 rounded-full bg-violet" />
-                {t}
-              </span>
-            ))}
+          <div className="relative overflow-hidden rounded-3xl border border-charcoal/[0.07] bg-white p-7 shadow-card sm:p-10">
+            <div className="pointer-events-none absolute inset-0 bg-grid-violet bg-[size:34px_34px] opacity-35" />
+            <div className="pointer-events-none absolute right-0 top-0 h-56 w-56 rounded-full bg-[#34E0F0]/15 blur-3xl" />
+            <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+              <SectionHeader
+                align="left"
+                eyebrow="Technologies We Use"
+                title="Modern, proven tools for the job"
+                desc={`The core stack we rely on to deliver reliable, scalable ${service.title.toLowerCase()}.`}
+              />
+              <div className="flex flex-wrap gap-3 lg:justify-end">
+                {tech.map((t) => (
+                  <span key={t} className="inline-flex items-center gap-2 rounded-full border border-charcoal/10 bg-white/85 px-4 py-2 text-sm font-semibold text-charcoal/75 shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:border-violet/35 hover:text-violet">
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-violet to-[#34E0F0]" />
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -244,8 +355,8 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {WHY.map((w, i) => (
               <Reveal key={w.n} delay={(i % 3) * 0.07}>
-                <div className="h-full rounded-2xl border-l-2 border-violet/30 bg-charcoal-50/50 p-6 transition-colors hover:border-violet">
-                  <span className="text-2xl font-extrabold text-violet/30">{w.n}</span>
+                <div className="group h-full rounded-2xl border border-charcoal/[0.07] bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-violet/25 hover:shadow-soft">
+                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-charcoal-50 text-sm font-extrabold text-violet transition-colors group-hover:bg-violet group-hover:text-white">{w.n}</span>
                   <h3 className="mt-1 text-lg font-bold text-charcoal">{w.t}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-charcoal/60">{w.d}</p>
                 </div>
@@ -267,14 +378,43 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
             {ENGAGEMENT.map((e, i) => (
               <Reveal key={e.title} delay={i * 0.08}>
                 <div className={`relative h-full rounded-2xl border p-7 transition-all duration-300 hover:-translate-y-1 ${e.popular ? "border-violet bg-white shadow-soft" : "border-charcoal/[0.07] bg-white shadow-card hover:shadow-soft"}`}>
-                  {e.popular && <span className="absolute -top-3 right-6 rounded-full bg-violet px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">★ Most Popular</span>}
+                  {e.popular && <span className="absolute -top-3 right-6 rounded-full bg-violet px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">★ Most Popular</span>}
                   <span className="text-3xl">{e.icon}</span>
                   <h3 className="mt-4 text-lg font-bold text-charcoal">{e.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-charcoal/60">{e.desc}</p>
-                  <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-violet">Best for: <span className="text-charcoal/70">{e.best}</span></p>
+                  <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-violet">Best for: <span className="text-charcoal/75">{e.best}</span></p>
                 </div>
               </Reveal>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Deliverables */}
+      <section className="section">
+        <div className="container-x">
+          <div className="grid gap-10 rounded-3xl bg-charcoal p-7 text-white shadow-soft sm:p-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+            <Reveal>
+              <span className="eyebrow border-violet/40 bg-violet/15 text-violet-200">What You Receive</span>
+              <h2 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
+                Clear deliverables at every stage
+              </h2>
+              <p className="mt-4 text-white/75">
+                You always know what is being made, what is approved, and what moves into the next sprint.
+              </p>
+            </Reveal>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {DELIVERABLES.map((item, i) => (
+                <Reveal key={item} delay={(i % 2) * 0.05}>
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-xs font-extrabold text-violet">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm font-semibold text-white/90">{item}</span>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>

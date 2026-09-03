@@ -8,6 +8,7 @@ import FAQ from "@/components/FAQ";
 import PortfolioGrid from "@/components/PortfolioGrid";
 import LogoMarquee from "@/components/home/LogoMarquee";
 import CTABanner from "@/components/CTABanner";
+import InquiryModalButton from "@/components/InquiryModalButton";
 import { PROCESS_STEPS } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -118,16 +119,23 @@ export default function MobileAppPage() {
           <div className="mt-14 space-y-6">
             {offered.map((o, i) => (
               <Reveal key={o.title} delay={(i % 2) * 0.06}>
-                <div className="grid items-center gap-6 rounded-2xl border border-charcoal/[0.07] bg-white p-7 shadow-card md:grid-cols-[1fr_1.4fr] md:p-9">
+                <div className="group relative grid items-center gap-6 overflow-hidden rounded-3xl border border-charcoal/[0.07] bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-violet/25 hover:shadow-soft md:grid-cols-[1fr_1.4fr] md:p-9">
+                  <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet to-[#34E0F0] opacity-0 transition-opacity group-hover:opacity-100" />
+                  <span className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-violet/10 blur-3xl transition-transform duration-300 group-hover:scale-150" />
                   <div>
                     <span className="eyebrow">{o.tag}</span>
                     <h3 className="mt-3 text-xl font-bold text-charcoal">{o.title}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-charcoal/65">{o.body}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-charcoal/60">{o.body}</p>
                   </div>
                   <ul className="grid gap-3 sm:grid-cols-2">
                     {o.points.map((p) => (
-                      <li key={p} className="flex items-start gap-2.5 rounded-xl bg-violet/5 p-3 text-sm font-medium text-charcoal/80">
-                        <span className="mt-0.5 text-violet">✓</span> {p}
+                      <li key={p} className="flex items-start gap-2.5 rounded-2xl border border-charcoal/[0.06] bg-charcoal-50/70 p-3 text-sm font-medium text-charcoal/75">
+                        <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-violet/10 text-violet">
+                          <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+                            <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        {p}
                       </li>
                     ))}
                   </ul>
@@ -144,12 +152,12 @@ export default function MobileAppPage() {
           <Reveal>
             <span className="eyebrow border-violet/40 bg-violet/15 text-violet-200">Why Custom?</span>
             <h2 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">Built around your business</h2>
-            <p className="mt-5 text-white/70">
+            <p className="mt-5 text-white/75">
               Off-the-shelf apps rarely fit perfectly. We build custom applications from scratch,
               designed specifically around your goals, your users and your operations, pairing
               strong UX thinking with every project.
             </p>
-            <Link href="/contact" className="btn-primary mt-7">Start your project →</Link>
+            <InquiryModalButton label="Start your project" showArrow className="btn-primary mt-7" />
           </Reveal>
           <Reveal delay={0.1}>
             <ul className="grid gap-3 sm:grid-cols-2">
@@ -163,8 +171,8 @@ export default function MobileAppPage() {
                 "NDA available before discussion",
                 "Dedicated project manager",
               ].map((p) => (
-                <li key={p} className="flex items-start gap-2.5 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/85">
-                  <span className="text-violet-200">✓</span> {p}
+                <li key={p} className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/90 transition-colors hover:border-violet/40 hover:bg-white/[0.08]">
+                  <span className="mt-0.5 text-violet-200">✓</span> {p}
                 </li>
               ))}
             </ul>
@@ -183,10 +191,10 @@ export default function MobileAppPage() {
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {industries.map((ind, i) => (
               <Reveal key={ind.name} delay={(i % 4) * 0.06}>
-                <div className="card-hover h-full">
-                  <span className="text-3xl">{ind.icon}</span>
+                <div className="group h-full rounded-2xl border border-charcoal/[0.07] bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-violet/25 hover:shadow-soft">
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-violet/10 to-[#34E0F0]/10 text-3xl transition-transform group-hover:scale-110">{ind.icon}</span>
                   <h3 className="mt-4 text-base font-bold text-charcoal">{ind.name}</h3>
-                  <p className="mt-2 text-sm leading-snug text-charcoal/55">{ind.desc}</p>
+                  <p className="mt-2 text-sm leading-snug text-charcoal/60">{ind.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -205,8 +213,8 @@ export default function MobileAppPage() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {PROCESS_STEPS.map((s, i) => (
               <Reveal key={s.n} delay={(i % 3) * 0.07}>
-                <div className="card-hover h-full">
-                  <span className="text-3xl font-extrabold text-violet/25">{s.n}</span>
+                <div className="group h-full rounded-2xl border border-charcoal/[0.07] bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-violet/25 hover:shadow-soft">
+                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-charcoal-50 text-sm font-extrabold text-violet transition-colors group-hover:bg-violet group-hover:text-white">{s.n}</span>
                   <h3 className="mt-2 text-lg font-bold text-charcoal">{s.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-charcoal/60">{s.desc}</p>
                 </div>
@@ -232,12 +240,12 @@ export default function MobileAppPage() {
               <Reveal key={e.title} delay={i * 0.08}>
                 <div className={`relative h-full rounded-2xl border p-7 transition-all duration-300 hover:-translate-y-1 ${e.popular ? "border-violet bg-white shadow-soft" : "border-charcoal/[0.07] bg-white shadow-card hover:shadow-soft"}`}>
                   {e.popular && (
-                    <span className="absolute -top-3 right-6 rounded-full bg-violet px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">★ Most Popular</span>
+                    <span className="absolute -top-3 right-6 rounded-full bg-violet px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">★ Most Popular</span>
                   )}
                   <span className="text-3xl">{e.icon}</span>
                   <h3 className="mt-4 text-lg font-bold text-charcoal">{e.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-charcoal/60">{e.desc}</p>
-                  <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-violet">Best for: <span className="text-charcoal/70">{e.best}</span></p>
+                  <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-violet">Best for: <span className="text-charcoal/75">{e.best}</span></p>
                 </div>
               </Reveal>
             ))}
@@ -256,8 +264,8 @@ export default function MobileAppPage() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {whyUs.map((w, i) => (
               <Reveal key={w.n} delay={(i % 3) * 0.07}>
-                <div className="h-full rounded-2xl border-l-2 border-violet/30 bg-charcoal-50/50 p-6 transition-colors hover:border-violet">
-                  <span className="text-2xl font-extrabold text-violet/30">{w.n}</span>
+                <div className="group h-full rounded-2xl border border-charcoal/[0.07] bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-violet/25 hover:shadow-soft">
+                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-charcoal-50 text-sm font-extrabold text-violet transition-colors group-hover:bg-violet group-hover:text-white">{w.n}</span>
                   <h3 className="mt-1 text-lg font-bold text-charcoal">{w.t}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-charcoal/60">{w.d}</p>
                 </div>

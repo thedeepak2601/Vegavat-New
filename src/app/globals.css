@@ -44,6 +44,16 @@ body {
     @apply btn bg-charcoal text-white hover:bg-charcoal-800 hover:-translate-y-0.5;
   }
 
+  /* White pill on a dark ground — footer, call bars, inverted CTA banners. */
+  .btn-invert {
+    @apply btn bg-white text-violet hover:-translate-y-0.5 hover:shadow-glow;
+  }
+
+  /* Compact gradient pill used inside the header mega-menu panels. */
+  .btn-compact {
+    @apply inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet to-violet-700 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-soft transition-all hover:shadow-glow;
+  }
+
   .section {
     @apply py-12 lg:py-16;
   }
@@ -146,6 +156,15 @@ body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Marquees must rest at their START offset. The blanket rule above ends the
+     animation on its last keyframe (-50%), which would leave the strip visibly
+     shifted half a loop out of place. */
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 /* Hide scrollbar for horizontal marquees */
@@ -156,3 +175,135 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ─────────────────────────── Dark theme ───────────────────────────
+   The site was built light-only (≈600 charcoal/white utilities across 45
+   components), so rather than adding `dark:` variants to every one, the shared
+   surfaces are remapped here. Attribute selectors are used instead of escaped
+   class names (.text-charcoal\/60) because Tailwind's slash syntax is painful
+   to escape, and `.dark [class~="x"]` also outranks the plain `.x` utility on
+   specificity, so no !important is needed.
+
+   `text-white`, `bg-charcoal` and `border-white/*` are left alone — those are
+   already dark-surface styles on the hero, CTA banner and footer. */
+.dark body {
+  background-color: #0b0912;
+  color: #e9e7f2;
+}
+
+/* surfaces */
+.dark [class~="bg-white"] { background-color: #15131f; }
+.dark [class~="bg-white/60"],
+.dark [class~="bg-white/80"],
+.dark [class~="bg-white/90"] { background-color: rgba(255, 255, 255, 0.05); }
+.dark [class~="bg-charcoal-50/40"],
+.dark [class~="bg-charcoal-50/50"],
+.dark [class~="bg-charcoal-50/60"],
+.dark [class~="bg-charcoal-50/70"],
+.dark [class~="bg-charcoal-50"] { background-color: #100e19; }
+.dark [class~="bg-white/70"] { background-color: rgba(255, 255, 255, 0.05); }
+/* mega-menu card lifts to white on hover in light mode */
+.dark [class~="hover:bg-white"]:hover { background-color: #221e30; }
+
+/* text */
+.dark [class~="text-charcoal"] { color: #e9e7f2; }
+.dark [class~="text-charcoal/75"] { color: rgba(233, 231, 242, 0.82); }
+.dark [class~="text-charcoal/75"] { color: rgba(233, 231, 242, 0.78); }
+.dark [class~="text-charcoal/75"] { color: rgba(233, 231, 242, 0.74); }
+.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.7); }
+.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.66); }
+.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.6); }
+.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.55); }
+.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.5); }
+.dark [class~="text-charcoal/40"] { color: rgba(233, 231, 242, 0.45); }
+.dark [class~="text-charcoal/40"] { color: rgba(233, 231, 242, 0.4); }
+.dark [class~="text-charcoal/30"] { color: rgba(233, 231, 242, 0.34); }
+
+/* borders and rules */
+.dark [class~="border-charcoal/[0.07]"],
+.dark [class~="border-charcoal/[0.08]"],
+.dark [class~="border-charcoal/10"] { border-color: rgba(255, 255, 255, 0.09); }
+.dark [class~="border-charcoal/15"],
+.dark [class~="border-charcoal/20"] { border-color: rgba(255, 255, 255, 0.15); }
+.dark [class~="divide-charcoal/[0.07]"] > * + * { border-color: rgba(255, 255, 255, 0.09); }
+
+/* violet tints read too faint on a dark ground */
+.dark [class~="bg-violet/5"],
+.dark [class~="bg-violet/[0.04]"],
+.dark [class~="bg-violet/[0.06]"] { background-color: rgba(138, 69, 255, 0.14); }
+.dark [class~="bg-violet/10"] { background-color: rgba(138, 69, 255, 0.2); }
+.dark [class~="text-violet"] { color: #b98cff; }
+/* Opacity variants of text-violet resolve to dark violet, which is unreadable
+   on a dark ground — remap each to the lighter tint at a similar strength. */
+.dark [class~="text-violet/80"] { color: rgba(185, 140, 255, 0.85); }
+.dark [class~="text-violet/70"] { color: rgba(185, 140, 255, 0.8); }
+.dark [class~="text-violet/55"] { color: rgba(185, 140, 255, 0.7); }
+.dark [class~="text-violet/30"] { color: rgba(185, 140, 255, 0.5); }
+.dark [class~="text-violet/25"] { color: rgba(185, 140, 255, 0.45); }
+.dark [class~="text-violet/10"] { color: rgba(185, 140, 255, 0.28); }
+.dark [class~="text-violet-200"] { color: #d6bcff; }
+
+/* Violet borders sit too dark against a dark surface to register as edges */
+.dark [class~="border-violet/10"],
+.dark [class~="border-violet/15"] { border-color: rgba(185, 140, 255, 0.22); }
+.dark [class~="border-violet/20"],
+.dark [class~="border-violet/25"] { border-color: rgba(185, 140, 255, 0.3); }
+.dark [class~="border-violet/30"],
+.dark [class~="border-violet/35"],
+.dark [class~="border-violet/40"] { border-color: rgba(185, 140, 255, 0.42); }
+
+/* Violet fills likewise need lifting to stay visible */
+.dark [class~="bg-violet/15"],
+.dark [class~="bg-violet/20"] { background-color: rgba(138, 69, 255, 0.26); }
+
+/* component classes defined above */
+.dark .card,
+.dark .card-hover { background-color: #15131f; border-color: rgba(255, 255, 255, 0.09); }
+.dark .btn-outline {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #d7cbff;
+}
+.dark .btn-outline:hover { border-color: #b98cff; background-color: rgba(138, 69, 255, 0.12); }
+.dark .btn-dark { background-color: #221f33; }
+.dark .eyebrow {
+  background-color: rgba(138, 69, 255, 0.16);
+  border-color: rgba(138, 69, 255, 0.32);
+  color: #cbb2ff;
+}
+.dark .heading-gradient {
+  /* the light gradient ends on #8A45FF, which is only ~3:1 on this ground */
+  background-image: linear-gradient(to right, #dcc7ff, #a877ff);
+}
+
+/* header sits on a solid ground so the mega panels stay readable */
+.dark header { background-color: rgba(11, 9, 18, 0.92) !important; }
+.dark [class~="shadow-card"] { box-shadow: 0 4px 24px -8px rgba(0, 0, 0, 0.6); }
+
+/* Form fields: placeholders and native controls don't inherit the utility
+   remaps above, so they stay near-invisible without explicit rules. */
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgba(233, 231, 242, 0.38);
+}
+.dark input,
+.dark textarea,
+.dark select {
+  color: #e9e7f2;
+  background-color: #15131f;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.dark select option {
+  background-color: #15131f;
+  color: #e9e7f2;
+}
+/* white-bordered inputs read as a hard outline on dark */
+.dark [class~="border-white"] { border-color: rgba(255, 255, 255, 0.14); }
+
+/* Images with light-on-transparent artwork need no change, but the footer and
+   loader logos are already inverted; the pastel image wells are not. */
+.dark [class~="bg-white/40"] { background-color: rgba(255, 255, 255, 0.06); }
+.dark [class~="bg-white/95"] { background-color: rgba(34, 30, 48, 0.95); }
+
+/* Dividers between grid cells */
+.dark [class~="divide-white/10"] > * + * { border-color: rgba(255, 255, 255, 0.09); }

@@ -27,7 +27,7 @@ export default function TableOfContents({ items }: { items: Item[] }) {
 
   return (
     <nav aria-label="Table of contents" className="rounded-2xl border border-charcoal/[0.07] bg-white p-5 shadow-card">
-      <h3 className="text-sm font-bold uppercase tracking-wider text-charcoal/70">On this page</h3>
+      <h3 className="text-sm font-bold uppercase tracking-wider text-charcoal/75">On this page</h3>
       <ul className="mt-3 space-y-1">
         {items.map((it) => {
           const isActive = it.id === active;
@@ -35,8 +35,8 @@ export default function TableOfContents({ items }: { items: Item[] }) {
             <li key={it.id}>
               <a
                 href={`#${it.id}`}
-                className={`flex items-start gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
-                  isActive ? "bg-violet/10 font-semibold text-violet" : "text-charcoal/65 hover:bg-charcoal-50 hover:text-charcoal"
+                className={`flex items-start gap-2.5 rounded-xl px-3 py-2 text-sm transition-colors ${
+                  isActive ? "bg-violet/10 font-semibold text-violet" : "text-charcoal/60 hover:bg-charcoal-50 hover:text-charcoal"
                 }`}
               >
                 <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${isActive ? "bg-violet" : "bg-charcoal/25"}`} />

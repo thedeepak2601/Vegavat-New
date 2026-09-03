@@ -16,6 +16,7 @@ import SectionHeader from "@/components/SectionHeader";
 import Newsletter from "@/components/Newsletter";
 import HomeQuoteModal from "@/components/home/HomeQuoteModal";
 import LinkedInFeed from "@/components/home/LinkedInFeed";
+import BlogSection from "@/components/home/BlogSection";
 
 export default function HomePage() {
   return (
@@ -57,12 +58,15 @@ export default function HomePage() {
             <PortfolioGrid limit={6} />
           </div>
           <div className="mt-12 text-center">
-            <Link href="/contact" className="btn-outline">View More Work</Link>
+            <Link href="/contact" className="btn-outline">View more work →</Link>
           </div>
         </div>
       </section>
 
-      {/* Live LinkedIn posts, sits right after Our Work */}
+      {/* Latest writing, then LinkedIn — content cluster after the portfolio */}
+      <BlogSection limit={3} />
+
+      {/* Live LinkedIn posts */}
       <LinkedInFeed count={3} />
 
       <HomeQuoteModal />

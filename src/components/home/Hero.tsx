@@ -94,7 +94,7 @@ export default function Hero() {
           moved into the Digital Solutions grid below the hero, where they can
           carry the full service list instead of four abbreviated ones. */}
       <div className="container-x relative z-10 flex flex-1 flex-col items-center justify-center pb-28 pt-10 text-center lg:pb-48">
-        <span className="hero-blur liquid-glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-white/80 sm:text-xs">
+        <span className="hero-blur liquid-glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold tracking-wide text-white/75">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#34E0F0] opacity-75" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#34E0F0]" />
@@ -132,12 +132,25 @@ export default function Hero() {
           Let&apos;s work together to bring your vision to life.
         </p>
 
-        {/* Subscribe. The confirmation replaces the field inside the pill so the
-            hero never reflows, then reverts to the input after 3s. The radius is
-            pinned rather than `full` so a wrapped message keeps a sane shape. */}
+        <div className="hero-blur mt-9 flex flex-col gap-3 sm:flex-row">
+          <Link href="/contact" className="btn-primary btn-glow">
+            Get Free Quote →
+          </Link>
+          <Link
+            href="/services"
+            className="btn liquid-glass text-white hover:bg-white/10"
+          >
+            <span className="relative">Explore Services</span>
+          </Link>
+        </div>
+
+        {/* Subscribe — deliberately secondary to the two CTAs above it: the
+            primary hero intent is a quote, not a newsletter. The confirmation
+            replaces the field inside the pill so the hero never reflows, then
+            reverts to the input after 3s. */}
         <form
           onSubmit={onSubmit}
-          className="hero-blur liquid-glass-strong mt-9 flex w-full max-w-xl items-center gap-3 rounded-[30px] py-2 pl-6 pr-2"
+          className="hero-blur liquid-glass mt-6 flex w-full max-w-md items-center gap-3 rounded-3xl py-1.5 pl-5 pr-1.5"
         >
           {/* bot trap, off-screen rather than display:none so autofill skips it */}
           <input
@@ -153,7 +166,7 @@ export default function Hero() {
             <p
               role="status"
               aria-live="polite"
-              className="relative flex-1 text-left text-sm text-white sm:text-[15px]"
+              className="relative flex-1 text-left text-sm text-white sm:text-base"
             >
               {status === "done" ? (
                 <>
@@ -181,7 +194,7 @@ export default function Hero() {
             type="submit"
             disabled={status !== "idle"}
             aria-label="Subscribe"
-            className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-charcoal transition-transform hover:scale-105 disabled:hover:scale-100"
+            className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-charcoal transition-transform hover:scale-105 disabled:hover:scale-100"
           >
             {status === "sending" ? (
               <svg viewBox="0 0 24 24" className="h-5 w-5 animate-spin" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
@@ -199,19 +212,6 @@ export default function Hero() {
             )}
           </button>
         </form>
-
-        <div className="hero-blur mt-6 flex flex-col gap-3 sm:flex-row">
-          <Link href="/contact" className="btn-primary btn-glow">
-            Get Free Quote →
-          </Link>
-          <Link
-            href="/services"
-            className="btn liquid-glass text-white hover:bg-white/10"
-          >
-            <span className="relative">Explore Services</span>
-          </Link>
-        </div>
-
         {/* Capability strip — doubled so the -50% keyframe loops seamlessly */}
         <div
           className="hero-blur relative mt-9 w-full max-w-2xl overflow-hidden"
@@ -239,7 +239,7 @@ export default function Hero() {
 
       {/* Scroll cue and wave sit out of flow so the hero is exactly one screen tall */}
       <div className="pointer-events-none absolute bottom-[100px] left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex">
-        <span className="text-[10px] uppercase tracking-[0.2em] text-white/40">Scroll</span>
+        <span className="text-xs uppercase tracking-[0.2em] text-white/40">Scroll</span>
         <span className="relative block h-8 w-px overflow-hidden bg-white/15">
           <span className="absolute inset-x-0 top-0 h-1/2 animate-scroll-down bg-white/70" />
         </span>
@@ -248,7 +248,8 @@ export default function Hero() {
       {/* wave divider into white body */}
       <div className="absolute inset-x-0 bottom-0 z-10">
         <svg viewBox="0 0 1440 80" className="block w-full" preserveAspectRatio="none">
-          <path d="M0 80 L1440 80 L1440 0 C1080 60 360 60 0 0 Z" fill="white" />
+          {/* fill follows the page ground, not a hardcoded white */}
+          <path d="M0 80 L1440 80 L1440 0 C1080 60 360 60 0 0 Z" className="fill-white dark:fill-[#0b0912]" />
         </svg>
       </div>
     </section>

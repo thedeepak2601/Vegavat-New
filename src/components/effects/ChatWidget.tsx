@@ -205,7 +205,7 @@ export default function ChatWidget() {
         className="group fixed bottom-[5.75rem] right-6 z-[90] grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-gradient-to-br from-violet to-violet-700 text-white shadow-[0_14px_34px_-12px_rgba(98,0,234,0.85)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-glow"
       >
         {!open && <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-violet/40" />}
-        {!open && !opened && <span className="absolute -right-0.5 -top-0.5 grid h-5 w-5 place-items-center rounded-full bg-[#34E0F0] text-[10px] font-bold text-charcoal ring-2 ring-white">1</span>}
+        {!open && !opened && <span className="absolute -right-0.5 -top-0.5 grid h-5 w-5 place-items-center rounded-full bg-[#34E0F0] text-xs font-bold text-charcoal ring-2 ring-white">1</span>}
         <AnimatePresence mode="wait" initial={false}>
           {open ? (
             <motion.svg key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></motion.svg>
@@ -238,7 +238,7 @@ export default function ChatWidget() {
                 </span>
                 <div className="flex-1">
                   <p className="text-sm font-bold leading-tight">Vega Assistant</p>
-                  <p className="flex items-center gap-1.5 text-[11px] text-white/80"><span className="h-1.5 w-1.5 rounded-full bg-green-400 shadow-[0_0_6px_#4ade80]" />Online, replies instantly</p>
+                  <p className="flex items-center gap-1.5 text-xs text-white/75"><span className="h-1.5 w-1.5 rounded-full bg-green-400 shadow-[0_0_6px_#4ade80]" />Online, replies instantly</p>
                 </div>
                 <button onClick={() => setOpen(false)} aria-label="Close chat" className="rounded-full p-1.5 transition-colors hover:bg-white/15">
                   <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
@@ -250,13 +250,13 @@ export default function ChatWidget() {
             <div className="flex-1 space-y-3 overflow-y-auto bg-charcoal-50/40 p-4">
               {msgs.map((m, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}>
-                  <div className={`max-w-[82%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${m.role === "user" ? "rounded-br-sm bg-violet text-white" : "rounded-bl-sm border border-charcoal/[0.07] bg-white text-charcoal/80 shadow-sm"}`}>
+                  <div className={`max-w-[82%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${m.role === "user" ? "rounded-br-sm bg-violet text-white" : "rounded-bl-sm border border-charcoal/[0.07] bg-white text-charcoal/75 shadow-sm"}`}>
                     {m.role === "bot" ? renderText(m.text, () => setOpen(false)) : m.text}
                     {m.cta && (
                       m.cta.external ? (
-                        <a href={m.cta.href} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 rounded-lg bg-violet/10 px-3 py-1.5 text-xs font-bold text-violet transition-colors hover:bg-violet hover:text-white">{m.cta.label} →</a>
+                        <a href={m.cta.href} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 rounded-xl bg-violet/10 px-3 py-1.5 text-xs font-bold text-violet transition-colors hover:bg-violet hover:text-white">{m.cta.label} →</a>
                       ) : (
-                        <Link href={m.cta.href} onClick={() => setOpen(false)} className="mt-2 inline-flex items-center gap-1 rounded-lg bg-violet/10 px-3 py-1.5 text-xs font-bold text-violet transition-colors hover:bg-violet hover:text-white">{m.cta.label} →</Link>
+                        <Link href={m.cta.href} onClick={() => setOpen(false)} className="mt-2 inline-flex items-center gap-1 rounded-xl bg-violet/10 px-3 py-1.5 text-xs font-bold text-violet transition-colors hover:bg-violet hover:text-white">{m.cta.label} →</Link>
                       )
                     )}
                   </div>
@@ -274,8 +274,8 @@ export default function ChatWidget() {
                           className="group flex w-full items-center gap-2 rounded-xl border border-charcoal/[0.08] bg-white px-3 py-2 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-violet/40 hover:shadow-card"
                         >
                           <span className="min-w-0 flex-1">
-                            <span className="block truncate text-[13px] font-bold text-charcoal">{it.label}</span>
-                            {it.sub && <span className="block truncate text-[11px] text-charcoal/50">{it.sub}</span>}
+                            <span className="block truncate text-sm font-bold text-charcoal">{it.label}</span>
+                            {it.sub && <span className="block truncate text-xs text-charcoal/60">{it.sub}</span>}
                           </span>
                           <span className="shrink-0 text-violet transition-transform group-hover:translate-x-0.5">→</span>
                         </motion.button>
@@ -283,7 +283,7 @@ export default function ChatWidget() {
                     </div>
                   )}
 
-                  <span className="mt-1 px-1 text-[10px] text-charcoal/35">{m.time}</span>
+                  <span className="mt-1 px-1 text-xs text-charcoal/40">{m.time}</span>
                 </motion.div>
               ))}
 
@@ -319,7 +319,7 @@ export default function ChatWidget() {
                   <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z" /></svg>
                 </button>
               </div>
-              <p className="mt-2 text-center text-[10px] text-charcoal/35">⚡ Powered by Vega AI · we reply within 24h</p>
+              <p className="mt-2 text-center text-xs text-charcoal/40">⚡ Powered by Vega AI · we reply within 24h</p>
             </form>
           </motion.div>
         )}

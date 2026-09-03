@@ -5,6 +5,7 @@ import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import Reveal from "@/components/Reveal";
+import StatStrip from "@/components/StatStrip";
 import Icon from "@/components/Icon";
 import FAQ from "@/components/FAQ";
 import CTABanner from "@/components/CTABanner";
@@ -49,19 +50,9 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
         image={cat.image}
       />
 
-      {/* Stat strip */}
-      <section className="border-b border-charcoal/[0.06] bg-white py-10">
-        <div className="container-x grid grid-cols-2 gap-6 lg:grid-cols-4">
-          {cat.stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.05} className="text-center">
-              <p className="text-3xl font-extrabold tracking-tight text-violet sm:text-4xl">
-                {s.value}
-              </p>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-charcoal/50">
-                {s.label}
-              </p>
-            </Reveal>
-          ))}
+      <section className="py-8 lg:py-10">
+        <div className="container-x">
+          <StatStrip items={cat.stats} />
         </div>
       </section>
 
@@ -74,10 +65,10 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
               <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-charcoal sm:text-4xl">
                 What we do for {cat.title}
               </h2>
-              <p className="mt-5 leading-relaxed text-charcoal/65">{cat.intro}</p>
+              <p className="mt-5 leading-relaxed text-charcoal/60">{cat.intro}</p>
 
               <div className="mt-7 flex items-start gap-3 rounded-2xl border border-violet/15 bg-violet/[0.04] p-4">
-                <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-violet/10 text-violet">
+                <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-violet/10 text-violet">
                   <Icon name="sync" className="h-4 w-4" />
                 </span>
                 <p className="text-sm font-medium text-charcoal/75">{cat.turnaround}</p>
@@ -152,12 +143,12 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
                       <h3 className="text-2xl font-extrabold tracking-tight text-charcoal transition-colors group-hover:text-violet">
                         {s.label}
                       </h3>
-                      <span className="rounded-full bg-violet/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-violet">
+                      <span className="rounded-full bg-violet/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-violet">
                         {s.includes.length} services
                       </span>
                     </div>
 
-                    <p className="mt-3 text-sm leading-relaxed text-charcoal/65">{s.desc}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-charcoal/60">{s.desc}</p>
 
                     {/* every covered item, titles only — the full explanation is on the page */}
                     <div className="mt-5 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
@@ -170,13 +161,13 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
                               clipRule="evenodd"
                             />
                           </svg>
-                          <span className="text-sm font-semibold text-charcoal/80">{inc.t}</span>
+                          <span className="text-sm font-semibold text-charcoal/75">{inc.t}</span>
                         </div>
                       ))}
                     </div>
 
                     <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-charcoal/[0.07] pt-5">
-                      <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-bold uppercase tracking-wider text-charcoal/40">
+                      <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-bold uppercase tracking-wider text-charcoal/60">
                         <span>{s.documents.length} documents</span>
                         <span className="text-violet/30">•</span>
                         <span>{s.faqs.length} FAQs</span>
@@ -241,7 +232,7 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
       <section className="section bg-charcoal-50/60">
         <div className="container-x">
           <Reveal>
-            <div className="grid overflow-hidden rounded-[32px] shadow-soft lg:grid-cols-2">
+            <div className="grid overflow-hidden rounded-3xl shadow-soft lg:grid-cols-2">
               {/* left: what you bring */}
               <div className="relative overflow-hidden bg-charcoal p-8 sm:p-10">
                 <Image
@@ -254,7 +245,7 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-charcoal via-charcoal/95 to-violet-900/80" />
 
                 <div className="relative">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white/80 backdrop-blur">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-white/75 backdrop-blur">
                     You bring
                   </span>
                   <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-white">
@@ -271,10 +262,10 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
                         key={d}
                         className="flex items-center gap-4 border-b border-white/10 py-3.5 last:border-0"
                       >
-                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white/10 text-xs font-extrabold text-white/70">
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-white/10 text-xs font-extrabold text-white/75">
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <span className="text-sm font-medium text-white/85">{d}</span>
+                        <span className="text-sm font-medium text-white/90">{d}</span>
                       </li>
                     ))}
                   </ol>
@@ -286,7 +277,7 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
                 <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-violet/10 blur-[80px]" />
 
                 <div className="relative">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-violet/20 bg-violet/[0.06] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-violet">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-violet/20 bg-violet/[0.06] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-violet">
                     You get back
                   </span>
                   <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-charcoal">
@@ -309,7 +300,7 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
                             <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </span>
-                        <span className="text-sm font-semibold text-charcoal/80">{b}</span>
+                        <span className="text-sm font-semibold text-charcoal/75">{b}</span>
                       </li>
                     ))}
                   </ul>

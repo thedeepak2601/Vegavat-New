@@ -35,7 +35,7 @@ export default function Testimonials() {
   const visible = TESTIMONIALS.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
 
   return (
-    <section className="section relative overflow-hidden bg-gradient-to-b from-violet-50/60 via-white to-white">
+    <section className="section relative overflow-hidden bg-gradient-to-b from-violet-50/60 via-white to-white dark:from-violet-900/25 dark:via-[#0b0912] dark:to-[#0b0912]">
       <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-violet/10 blur-[100px]" />
       <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#34E0F0]/10 blur-[100px]" />
 
@@ -59,7 +59,7 @@ export default function Testimonials() {
               <Stars />
               <p className="text-sm font-semibold text-charcoal">
                 4.9/5{" "}
-                <span className="font-normal text-charcoal/55">across 100+ projects</span>
+                <span className="font-normal text-charcoal/60">across 100+ projects</span>
               </p>
             </div>
 
@@ -81,14 +81,14 @@ export default function Testimonials() {
                 <button
                   onClick={() => go(-1)}
                   aria-label="Previous testimonials"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-charcoal/15 text-charcoal/70 transition-all hover:-translate-y-0.5 hover:border-violet hover:bg-violet hover:text-white"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-charcoal/15 text-charcoal/75 transition-all hover:-translate-y-0.5 hover:border-violet hover:bg-violet hover:text-white"
                 >
                   ←
                 </button>
                 <button
                   onClick={() => go(1)}
                   aria-label="Next testimonials"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-charcoal/15 text-charcoal/70 transition-all hover:-translate-y-0.5 hover:border-violet hover:bg-violet hover:text-white"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-charcoal/15 text-charcoal/75 transition-all hover:-translate-y-0.5 hover:border-violet hover:bg-violet hover:text-white"
                 >
                   →
                 </button>
@@ -124,7 +124,7 @@ export default function Testimonials() {
 
                   <Stars />
 
-                  <blockquote className="relative mt-4 flex-1 text-[15px] leading-relaxed text-charcoal/75">
+                  <blockquote className="relative mt-4 flex-1 text-base leading-relaxed text-charcoal/75">
                     {t.quote}
                   </blockquote>
 
@@ -134,7 +134,7 @@ export default function Testimonials() {
                     </span>
                     <span className="min-w-0">
                       <span className="block truncate font-bold text-charcoal">{t.name}</span>
-                      <span className="block truncate text-sm text-charcoal/55">{t.role}</span>
+                      <span className="block truncate text-sm text-charcoal/60">{t.role}</span>
                     </span>
                   </figcaption>
                 </figure>

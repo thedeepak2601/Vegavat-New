@@ -49,7 +49,7 @@ export default function ProductsSection() {
                   <span className="grid h-12 w-12 place-items-center rounded-xl bg-violet/10 text-violet transition-all group-hover:scale-110 group-hover:bg-violet group-hover:text-white">
                     <Icon name={meta.icon} className="h-6 w-6" />
                   </span>
-                  <span className="mt-5 text-[11px] font-bold uppercase tracking-widest text-violet/70">{meta.label}</span>
+                  <span className="mt-5 text-xs font-bold uppercase tracking-widest text-violet/70">{meta.label}</span>
                   <h3 className="mt-1 text-lg font-bold leading-snug text-charcoal">{p.name}</h3>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-charcoal/60 line-clamp-4">{p.desc}</p>
                   <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-violet transition-transform group-hover:translate-x-1">

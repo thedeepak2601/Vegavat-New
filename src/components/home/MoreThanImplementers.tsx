@@ -33,7 +33,7 @@ export default function MoreThanImplementers() {
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-5 text-base leading-relaxed text-charcoal/65">
+            <p className="mt-5 text-base leading-relaxed text-charcoal/60">
               We sit with your team and understand how work actually flows, on your shop
               floor, in your warehouse, or in your accounts office, and then design the
               solution around it. No jargon. No vanity dashboards. Just clean processes that scale.
@@ -42,7 +42,7 @@ export default function MoreThanImplementers() {
           <Reveal delay={0.16}>
             <ul className="mt-7 grid gap-3 sm:grid-cols-2">
               {points.map((p) => (
-                <li key={p} className="flex items-start gap-2.5 text-sm font-medium text-charcoal/80">
+                <li key={p} className="flex items-start gap-2.5 text-sm font-medium text-charcoal/75">
                   <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-violet/10 text-violet">
                     <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>
@@ -58,7 +58,7 @@ export default function MoreThanImplementers() {
               </div>
               <div>
                 <p className="text-sm font-bold text-charcoal">Hands-on industry experience</p>
-                <p className="text-sm text-charcoal/55">Manufacturing · Trading · Services · Healthcare</p>
+                <p className="text-sm text-charcoal/60">Manufacturing · Trading · Services · Healthcare</p>
               </div>
             </div>
           </Reveal>

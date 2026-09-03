@@ -87,7 +87,7 @@ export default function BlogSidebar({
   };
 
   const cardClass = "rounded-2xl border border-charcoal/[0.07] bg-white p-5 shadow-card";
-  const headingClass = "text-sm font-bold uppercase tracking-wider text-charcoal/70";
+  const headingClass = "text-sm font-bold uppercase tracking-wider text-charcoal/75";
 
   return (
     <div className="space-y-6">
@@ -114,7 +114,7 @@ export default function BlogSidebar({
             value={cat ?? ""}
             onChange={(e) => setCat(e.target.value || null)}
             aria-label="Filter by category"
-            className="w-full appearance-none rounded-xl border border-charcoal/15 bg-white px-3 py-2.5 pr-9 text-sm font-medium text-charcoal/80 transition-colors focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20"
+            className="w-full appearance-none rounded-xl border border-charcoal/15 bg-white px-3 py-2.5 pr-9 text-sm font-medium text-charcoal/75 transition-colors focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20"
           >
             <option value="">All Posts ({posts.length})</option>
             {categories.map(([name, count]) => (
@@ -130,17 +130,17 @@ export default function BlogSidebar({
         <h3 className={headingClass}>{term || cat ? "Matching Posts" : "Recent Posts"}</h3>
         <ul className="mt-4 space-y-4">
           {recent.length === 0 && (
-            <li className="text-sm text-charcoal/50">No posts found.</li>
+            <li className="text-sm text-charcoal/60">No posts found.</li>
           )}
           {recent.map((p) => (
             <li key={p.slug}>
               <Link href={`/blog/${p.slug}`} className="group flex gap-3">
-                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg">
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
                   <Image src={p.image} alt={p.title} fill sizes="56px" className="object-cover transition-transform duration-300 group-hover:scale-105" />
                 </div>
                 <div className="min-w-0">
                   <p className="line-clamp-2 text-sm font-semibold leading-snug text-charcoal transition-colors group-hover:text-violet">{p.title}</p>
-                  <p className="mt-1 text-xs text-charcoal/45">{p.date}</p>
+                  <p className="mt-1 text-xs text-charcoal/60">{p.date}</p>
                 </div>
               </Link>
             </li>
