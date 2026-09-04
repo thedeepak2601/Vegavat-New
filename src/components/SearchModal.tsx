@@ -119,14 +119,23 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
   let flatIdx = -1;
 
   return (
-    // click anywhere outside the card closes it
-    <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12vh]" onClick={onClose}>
-      <div className="absolute inset-0 bg-charcoal/40 backdrop-blur-sm" />
-
+    <div
+      className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12vh]"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Site search"
+    >
+      {/* The backdrop closes on mousedown and is its own hit target, rather
+          than the panel stopping propagation on a wrapper click. That way a
+          drag that starts inside the panel — selecting text, say — and ends
+          out here no longer counts as an outside click. */}
       <div
-        className="animate-menu-in relative w-full max-w-xl overflow-hidden rounded-2xl border border-charcoal/10 bg-white shadow-soft"
-        onClick={(e) => e.stopPropagation()}
-      >
+        className="absolute inset-0 bg-charcoal/40 backdrop-blur-sm"
+        onMouseDown={onClose}
+        aria-hidden
+      />
+
+      <div className="animate-menu-in relative w-full max-w-xl overflow-hidden rounded-2xl border border-charcoal/10 bg-white shadow-soft">
         {/* input */}
         <div className="flex items-center gap-3 border-b border-charcoal/[0.07] px-4">
           <svg className="h-5 w-5 shrink-0 text-charcoal/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" strokeLinecap="round" /></svg>
