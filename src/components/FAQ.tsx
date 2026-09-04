@@ -3,20 +3,20 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import ThoughtfulFAQ from "@/assets/images/ThoughtfulFAQ.png";
 
 export type QA = { q: string; a: string };
 
 /**
- * Single source for the FAQ portrait.
+ * Supplied artwork: 1254x1254, and it already contains its own soft circle
+ * behind the subject — so this composition adds no circle of its own.
  *
- * To use a cutout PNG instead, drop it at `public/faq-person.png` and point
- * this at "/faq-person.png". A cutout sits inside the circle with no photo
- * edge, which is what the reference art does; a photograph brings its own
- * background, so the circle keeps a wash and ring to make that read as
- * deliberate rather than accidental.
+ * It is RGB with no alpha, i.e. a white square rather than a cutout. On the
+ * light sections `mix-blend-multiply` makes that white disappear into the
+ * page (white x anything = anything). Multiply would crush the subject on a
+ * dark ground, so dark mode drops the blend and frames the artwork on a soft
+ * lavender panel — pure white here reads as a glaring box.
  */
-const ASIDE_IMAGE =
-  "https://images.unsplash.com/photo-1758521540744-83f97766e971?auto=format&fit=crop&crop=faces&w=760&h=760&q=80";
 
 /** Cycled per question, so rows read as distinct topics. */
 const ICONS = [
@@ -35,26 +35,25 @@ const ICONS = [
 ];
 
 /**
- * Bubble palette taken from the reference: blue, green, orange, red. Glyph
- * colour is measured rather than chosen — white on the orange reaches only 2.3:1
- * and on the green 2.5:1, so those two carry charcoal (8.2:1 and 7.4:1). The
- * blue and red were darkened a step so white clears AA on them (5.7:1 and
- * 5.2:1 rather than 4.8 and 4.1).
+ * Violet and cyan lead, so the group sits in the site palette, with amber
+ * picking up the coral in the artwork and a deeper blue for the fourth.
+ * Glyph colour is measured per background: white manages only 1.6:1 on the
+ * cyan and 2.3:1 on the amber, so those two carry charcoal.
  */
 const BUBBLES = [
-  { bg: "bg-[#2A5FD4]", fg: "text-white", size: "h-14 w-14 text-xl", pos: "left-0 top-8", delay: "0s" },
-  { bg: "bg-[#3BB964]", fg: "text-charcoal", size: "h-12 w-12 text-lg", pos: "left-1 bottom-28", delay: "1.1s" },
-  { bg: "bg-[#F0972B]", fg: "text-charcoal", size: "h-12 w-12 text-lg", pos: "right-0 top-1/2", delay: "0.6s" },
-  { bg: "bg-[#CE2A43]", fg: "text-white", size: "h-10 w-10 text-base", pos: "right-5 bottom-16", delay: "1.7s" },
+  { bg: "bg-violet", fg: "text-white", size: "h-14 w-14 text-xl", pos: "left-1 top-10", delay: "0s" },
+  { bg: "bg-[#34E0F0]", fg: "text-charcoal", size: "h-12 w-12 text-lg", pos: "left-0 bottom-32", delay: "1.1s" },
+  { bg: "bg-[#F0972B]", fg: "text-charcoal", size: "h-12 w-12 text-lg", pos: "right-1 top-[46%]", delay: "0.6s" },
+  { bg: "bg-[#2A5FD4]", fg: "text-white", size: "h-10 w-10 text-base", pos: "right-6 bottom-20", delay: "1.7s" },
 ];
 
 /** Small solid dots, purely decorative. */
 const DOTS = [
-  "left-20 top-1 h-3 w-3 bg-[#2A5FD4]",
-  "right-16 top-8 h-2.5 w-2.5 bg-[#CE2A43]",
-  "left-8 top-[38%] h-2.5 w-2.5 bg-[#F0972B]",
-  "right-6 bottom-[38%] h-2.5 w-2.5 bg-[#3BB964]",
-  "left-16 bottom-8 h-2.5 w-2.5 bg-[#CE2A43]",
+  "left-24 top-3 h-3 w-3 bg-violet",
+  "right-16 top-12 h-2.5 w-2.5 bg-[#34E0F0]",
+  "left-10 top-[42%] h-2.5 w-2.5 bg-[#F0972B]",
+  "right-8 bottom-[42%] h-2.5 w-2.5 bg-violet-400",
+  "left-20 bottom-10 h-2.5 w-2.5 bg-[#2A5FD4]",
 ];
 
 export default function FAQ({
@@ -172,19 +171,29 @@ export default function FAQ({
           phone it would push the answers off the first screen. */}
       <div className="relative hidden lg:block">
         {/* padding leaves room for the bubbles to sit outside the circle */}
-        <div className="relative mx-auto aspect-square w-full max-w-[440px] px-12 py-6">
-          <div className="relative h-full w-full overflow-hidden rounded-full bg-charcoal-50 ring-8 ring-charcoal-50 dark:bg-white/[0.06] dark:ring-white/[0.06]">
+        <div className="relative mx-auto aspect-square w-full max-w-[460px] px-10 py-4">
+          {/* soft theme glow, standing in for a hard grey disc */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-[10%] rounded-full bg-gradient-to-br from-violet/20 via-violet/5 to-[#34E0F0]/20 blur-2xl"
+          />
+
+          {/* In dark mode the artwork's white square becomes a rounded panel.
+              Padding here would show lavender AROUND a white square, so the
+              white is tinted in place instead: an overlay multiplied over it
+              turns it lavender while barely touching the subject. */}
+          <div className="relative h-full w-full dark:overflow-hidden dark:rounded-[2.5rem] dark:ring-1 dark:ring-violet/20">
             <Image
-              src={ASIDE_IMAGE}
+              src={ThoughtfulFAQ}
               alt=""
               aria-hidden
-              fill
-              sizes="(max-width:1024px) 0px, 380px"
-              className="object-cover"
+              sizes="(max-width:1024px) 0px, 460px"
+              className="h-full w-full object-contain mix-blend-multiply dark:mix-blend-normal"
             />
-            {/* pulls the photo's own background into the palette */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet/25 via-violet/5 to-[#34E0F0]/20 mix-blend-multiply" />
-            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-charcoal/[0.06] dark:ring-white/10" />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 hidden bg-violet-50 mix-blend-multiply dark:block"
+            />
           </div>
 
           {BUBBLES.map((b, i) => (
