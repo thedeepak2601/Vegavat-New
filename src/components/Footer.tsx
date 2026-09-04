@@ -124,15 +124,15 @@ export default function Footer() {
               </span>
             </Link>
 
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap">
               {FINANCE_CATEGORIES.map((c) => (
                 <Link
                   key={c.slug}
                   href={`/financial-services/${c.slug}`}
-                  className="group/pill inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] py-2 pl-2 pr-4 text-sm font-semibold text-white/75 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-violet/50 hover:bg-violet hover:text-white hover:shadow-glow"
+                  className="group/pill inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.06] py-1.5 pl-1.5 pr-3 text-sm font-semibold text-white/75 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-violet/50 hover:bg-violet hover:text-white hover:shadow-glow"
                 >
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/10 text-violet-200 transition-colors group-hover/pill:bg-white/20 group-hover/pill:text-white">
-                    <Icon name={c.icon} className="h-4 w-4" />
+                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/10 text-violet-200 transition-colors group-hover/pill:bg-white/20 group-hover/pill:text-white">
+                    <Icon name={c.icon} className="h-3.5 w-3.5" />
                   </span>
                   {c.title}
                   <span className="w-0 -translate-x-1 overflow-hidden opacity-0 transition-all duration-300 group-hover/pill:w-3 group-hover/pill:translate-x-0 group-hover/pill:opacity-100">
