@@ -1,19 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 export type QA = { q: string; a: string };
 
 /**
- * Hand on chin, looking up — the questioning expression the section is
- * about. Face-cropped square so she centres in the circle, and her light
- * neutral backdrop blends into it rather than showing a hard photo edge.
+ * Single source for the FAQ portrait.
+ *
+ * To use a cutout PNG instead, drop it at `public/faq-person.png` and point
+ * this at "/faq-person.png". A cutout sits inside the circle with no photo
+ * edge, which is what the reference art does; a photograph brings its own
+ * background, so the circle keeps a wash and ring to make that read as
+ * deliberate rather than accidental.
  */
 const ASIDE_IMAGE =
   "https://images.unsplash.com/photo-1758521540744-83f97766e971?auto=format&fit=crop&crop=faces&w=760&h=760&q=80";
 
-/** Cycled per question, so each row reads as its own topic. */
+/** Cycled per question, so rows read as distinct topics. */
 const ICONS = [
   // check badge
   <path key="a" d="m9 12 2 2 4-4M12 3l2.1 1.6 2.6-.3 1 2.4 2.3 1.2-.6 2.6.6 2.6-2.3 1.2-1 2.4-2.6-.3L12 21l-2.1-1.6-2.6.3-1-2.4L4 15.7l.6-2.6L4 10.5l2.3-1.2 1-2.4 2.6.3z" />,
@@ -30,24 +35,26 @@ const ICONS = [
 ];
 
 /**
- * Floating question bubbles around the portrait. Glyph colour is picked per
- * background, not by taste: white on amber-400 measures 1.67:1 and on cyan
- * 1.61:1, so those two carry charcoal (11.2:1 and 11.7:1) instead.
+ * Bubble palette taken from the reference: blue, green, orange, red. Glyph
+ * colour is measured rather than chosen — white on the orange reaches only 2.3:1
+ * and on the green 2.5:1, so those two carry charcoal (8.2:1 and 7.4:1). The
+ * blue and red were darkened a step so white clears AA on them (5.7:1 and
+ * 5.2:1 rather than 4.8 and 4.1).
  */
 const BUBBLES = [
-  { cls: "bg-violet text-white", size: "h-14 w-14 text-xl", pos: "left-0 top-10", delay: "0s" },
-  { cls: "bg-[#34E0F0] text-charcoal", size: "h-11 w-11 text-base", pos: "left-2 bottom-24", delay: "1.1s" },
-  { cls: "bg-amber-400 text-charcoal", size: "h-12 w-12 text-lg", pos: "right-0 top-1/2", delay: "0.6s" },
-  { cls: "bg-violet-400 text-white", size: "h-9 w-9 text-sm", pos: "right-6 bottom-14", delay: "1.7s" },
+  { bg: "bg-[#2A5FD4]", fg: "text-white", size: "h-14 w-14 text-xl", pos: "left-0 top-8", delay: "0s" },
+  { bg: "bg-[#3BB964]", fg: "text-charcoal", size: "h-12 w-12 text-lg", pos: "left-1 bottom-28", delay: "1.1s" },
+  { bg: "bg-[#F0972B]", fg: "text-charcoal", size: "h-12 w-12 text-lg", pos: "right-0 top-1/2", delay: "0.6s" },
+  { bg: "bg-[#CE2A43]", fg: "text-white", size: "h-10 w-10 text-base", pos: "right-5 bottom-16", delay: "1.7s" },
 ];
 
 /** Small solid dots, purely decorative. */
 const DOTS = [
-  "left-16 top-2 h-3 w-3 bg-violet",
-  "right-14 top-6 h-2.5 w-2.5 bg-[#34E0F0]",
-  "left-6 top-1/2 h-2 w-2 bg-amber-400",
-  "right-4 bottom-1/3 h-2.5 w-2.5 bg-violet-300",
-  "left-24 bottom-4 h-2 w-2 bg-[#34E0F0]",
+  "left-20 top-1 h-3 w-3 bg-[#2A5FD4]",
+  "right-16 top-8 h-2.5 w-2.5 bg-[#CE2A43]",
+  "left-8 top-[38%] h-2.5 w-2.5 bg-[#F0972B]",
+  "right-6 bottom-[38%] h-2.5 w-2.5 bg-[#3BB964]",
+  "left-16 bottom-8 h-2.5 w-2.5 bg-[#CE2A43]",
 ];
 
 export default function FAQ({
@@ -64,38 +71,78 @@ export default function FAQ({
   desc?: string;
   aside?: boolean;
 }) {
-  /**
-   * Answers stay open. These lists are short, and hiding them behind a click
-   * buries the one thing the section exists to deliver. `dl/dt/dd` is the
-   * correct structure for question and answer pairs.
-   */
-  const list = (
-    <dl className="space-y-7">
-      {items.map((item, i) => (
-        <div key={i} className="group flex gap-4 sm:gap-5">
-          <span
-            aria-hidden
-            className="mt-0.5 grid h-11 w-11 shrink-0 place-items-center rounded-full bg-violet/10 text-violet ring-1 ring-violet/10 transition-all duration-300 group-hover:bg-violet group-hover:text-white group-hover:ring-violet/30"
-          >
-            <svg className="h-[19px] w-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-              {ICONS[i % ICONS.length]}
-            </svg>
-          </span>
+  /** First answer open, the rest closed; clicking an open row closes it. */
+  const [open, setOpen] = useState<number | null>(0);
 
-          <div className="min-w-0">
-            <dt className="text-base font-bold leading-snug text-charcoal sm:text-lg">
-              {item.q}
-            </dt>
-            <dd className="mt-2 text-sm leading-relaxed text-charcoal/65">{item.a}</dd>
+  const list = (
+    <div className="divide-y divide-charcoal/[0.08] dark:divide-white/10">
+      {items.map((item, i) => {
+        const isOpen = open === i;
+        return (
+          <div key={i} className="group py-5 first:pt-0">
+            <button
+              onClick={() => setOpen(isOpen ? null : i)}
+              aria-expanded={isOpen}
+              className="flex w-full items-start gap-4 text-left sm:gap-5"
+            >
+              <span
+                aria-hidden
+                className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-all duration-300 ${
+                  isOpen
+                    ? "bg-violet text-white shadow-glow"
+                    : "bg-violet/10 text-violet ring-1 ring-violet/10 group-hover:bg-violet/20 dark:bg-white/[0.07] dark:text-violet-200 dark:ring-white/10"
+                }`}
+              >
+                <svg className="h-[19px] w-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                  {ICONS[i % ICONS.length]}
+                </svg>
+              </span>
+
+              <span
+                className={`flex-1 pt-2.5 text-base font-bold leading-snug transition-colors sm:text-lg ${
+                  isOpen ? "text-violet dark:text-violet-200" : "text-charcoal"
+                }`}
+              >
+                {item.q}
+              </span>
+
+              <span
+                aria-hidden
+                className={`mt-2 grid h-8 w-8 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
+                  isOpen
+                    ? "rotate-45 border-violet bg-violet text-white"
+                    : "border-charcoal/15 text-charcoal/50 group-hover:border-violet/40 group-hover:text-violet dark:border-white/15 dark:text-white/60"
+                }`}
+              >
+                <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 2v10M2 7h10" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+                </svg>
+              </span>
+            </button>
+
+            <div
+              className={`grid transition-all duration-300 ${
+                isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+              }`}
+            >
+              <div className="overflow-hidden">
+                {/* indented to sit under the question, clear of the icon */}
+                <p className="pl-[3.75rem] pt-2 text-sm leading-relaxed text-charcoal/60 sm:pl-16">
+                  {item.a}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      ))}
-    </dl>
+        );
+      })}
+    </div>
   );
 
   const heading = title ? (
     <div className="max-w-xl">
-      <span className="text-sm font-bold tracking-wide text-violet">{eyebrow}</span>
+      <span className="text-sm font-bold tracking-wide text-violet dark:text-violet-200">
+        {eyebrow}
+      </span>
       <h2 className="mt-3 text-3xl font-extrabold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[42px]">
         {title}
       </h2>
@@ -109,7 +156,7 @@ export default function FAQ({
     return (
       <div className="mx-auto max-w-3xl">
         {heading}
-        <div className={title ? "mt-10" : ""}>{list}</div>
+        <div className={title ? "mt-9" : ""}>{list}</div>
       </div>
     );
   }
@@ -118,7 +165,7 @@ export default function FAQ({
     <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,44%)] lg:items-center lg:gap-16">
       <div>
         {heading}
-        <div className={title ? "mt-10" : ""}>{list}</div>
+        <div className={title ? "mt-9" : ""}>{list}</div>
       </div>
 
       {/* Desktop only — the bubble composition needs room to read, and on a
@@ -126,9 +173,7 @@ export default function FAQ({
       <div className="relative hidden lg:block">
         {/* padding leaves room for the bubbles to sit outside the circle */}
         <div className="relative mx-auto aspect-square w-full max-w-[440px] px-12 py-6">
-          {/* the circle the portrait sits in — her white backdrop dissolves
-              into it, so no photo edge is visible */}
-          <div className="relative h-full w-full overflow-hidden rounded-full bg-charcoal-50 ring-8 ring-charcoal-50">
+          <div className="relative h-full w-full overflow-hidden rounded-full bg-charcoal-50 ring-8 ring-charcoal-50 dark:bg-white/[0.06] dark:ring-white/[0.06]">
             <Image
               src={ASIDE_IMAGE}
               alt=""
@@ -137,11 +182,9 @@ export default function FAQ({
               sizes="(max-width:1024px) 0px, 380px"
               className="object-cover"
             />
-            {/* The reference art is a cutout on flat grey; this is a real
-                photograph, so a light violet wash pulls its background into
-                the palette instead of reading as an unrelated wall. */}
+            {/* pulls the photo's own background into the palette */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet/25 via-violet/5 to-[#34E0F0]/20 mix-blend-multiply" />
-            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-charcoal/[0.06]" />
+            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-charcoal/[0.06] dark:ring-white/10" />
           </div>
 
           {BUBBLES.map((b, i) => (
@@ -149,7 +192,7 @@ export default function FAQ({
               key={i}
               aria-hidden
               style={{ animationDelay: b.delay }}
-              className={`animate-float absolute grid place-items-center rounded-full font-extrabold shadow-soft ${b.cls} ${b.size} ${b.pos}`}
+              className={`animate-float absolute grid place-items-center rounded-full font-extrabold shadow-soft ${b.bg} ${b.fg} ${b.size} ${b.pos}`}
             >
               ?
             </span>
@@ -167,7 +210,7 @@ export default function FAQ({
 
         <p className="mt-4 text-center text-sm text-charcoal/60">
           Can&apos;t spot your question?{" "}
-          <Link href="/contact" className="font-bold text-violet hover:underline">
+          <Link href="/contact" className="font-bold text-violet hover:underline dark:text-violet-200">
             Ask us directly →
           </Link>
         </p>

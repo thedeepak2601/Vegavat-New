@@ -214,14 +214,8 @@ body {
 
 /* text */
 .dark [class~="text-charcoal"] { color: #e9e7f2; }
-.dark [class~="text-charcoal/75"] { color: rgba(233, 231, 242, 0.82); }
-.dark [class~="text-charcoal/75"] { color: rgba(233, 231, 242, 0.78); }
 .dark [class~="text-charcoal/75"] { color: rgba(233, 231, 242, 0.74); }
-.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.7); }
-.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.66); }
 .dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.6); }
-.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.55); }
-.dark [class~="text-charcoal/60"] { color: rgba(233, 231, 242, 0.5); }
 .dark [class~="text-charcoal/40"] { color: rgba(233, 231, 242, 0.45); }
 .dark [class~="text-charcoal/40"] { color: rgba(233, 231, 242, 0.4); }
 .dark [class~="text-charcoal/30"] { color: rgba(233, 231, 242, 0.34); }
