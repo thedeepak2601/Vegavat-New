@@ -278,7 +278,7 @@ export default function MobileAppPage() {
       {/* FAQ */}
       <section className="section bg-charcoal-50/60">
         <div className="container-x">
-          <FAQ items={faqs} title="Frequently Asked Questions" />
+          <FAQ items={faqs} />
         </div>
       </section>
 

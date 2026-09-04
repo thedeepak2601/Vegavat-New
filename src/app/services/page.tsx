@@ -263,7 +263,6 @@ export default function ServicesPage() {
         <div className="container-x">
           <FAQ
             items={FAQS}
-            title="Questions we get asked before starting"
             desc="If yours isn't here, ask us directly — we answer straight."
           />
         </div>

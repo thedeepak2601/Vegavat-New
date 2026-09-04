@@ -422,7 +422,7 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
       {/* FAQ */}
       <section className="section">
         <div className="container-x">
-          <FAQ items={FAQS} title="Frequently asked questions" />
+          <FAQ items={FAQS} />
         </div>
       </section>
 

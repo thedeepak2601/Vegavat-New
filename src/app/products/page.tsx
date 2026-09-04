@@ -276,7 +276,6 @@ export default function ProductsPage() {
         <div className="container-x">
           <FAQ
             items={FAQS}
-            title="What teams ask before choosing a platform"
             desc="If yours isn't here, ask us directly — we answer straight."
           />
         </div>

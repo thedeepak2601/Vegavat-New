@@ -6,12 +6,12 @@ import Link from "next/link";
 export type QA = { q: string; a: string };
 
 /**
- * Thinking pose on a plain white studio background, focal-cropped square so
- * she sits centred in the circle. The white background is the point — it
- * dissolves into the circle behind her instead of showing a photo edge.
+ * Hand on chin, looking up — the questioning expression the section is
+ * about. Face-cropped square so she centres in the circle, and her light
+ * neutral backdrop blends into it rather than showing a hard photo edge.
  */
 const ASIDE_IMAGE =
-  "https://images.unsplash.com/photo-1770918655026-c2204eb65ae9?auto=format&fit=crop&crop=focalpoint&fp-x=0.66&fp-y=0.45&w=760&h=760&q=80";
+  "https://images.unsplash.com/photo-1758521540744-83f97766e971?auto=format&fit=crop&crop=faces&w=760&h=760&q=80";
 
 /** Cycled per question, so each row reads as its own topic. */
 const ICONS = [
@@ -53,8 +53,8 @@ const DOTS = [
 export default function FAQ({
   items,
   eyebrow = "Help & Support",
-  title,
-  desc,
+  title = "Frequently asked questions",
+  desc = "Everything you need to know before getting started. Can't spot the answer you need? Our team is only a message away.",
   /** Set false where the layout has no room for the portrait column. */
   aside = true,
 }: {
@@ -128,7 +128,7 @@ export default function FAQ({
         <div className="relative mx-auto aspect-square w-full max-w-[440px] px-12 py-6">
           {/* the circle the portrait sits in — her white backdrop dissolves
               into it, so no photo edge is visible */}
-          <div className="relative h-full w-full overflow-hidden rounded-full bg-charcoal-50">
+          <div className="relative h-full w-full overflow-hidden rounded-full bg-charcoal-50 ring-8 ring-charcoal-50">
             <Image
               src={ASIDE_IMAGE}
               alt=""
@@ -137,6 +137,11 @@ export default function FAQ({
               sizes="(max-width:1024px) 0px, 380px"
               className="object-cover"
             />
+            {/* The reference art is a cutout on flat grey; this is a real
+                photograph, so a light violet wash pulls its background into
+                the palette instead of reading as an unrelated wall. */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet/25 via-violet/5 to-[#34E0F0]/20 mix-blend-multiply" />
+            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-charcoal/[0.06]" />
           </div>
 
           {BUBBLES.map((b, i) => (

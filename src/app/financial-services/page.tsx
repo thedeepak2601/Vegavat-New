@@ -203,7 +203,6 @@ export default function FinancialServicesPage() {
         <div className="container-x">
           <FAQ
             items={TOP_FAQS}
-            title="Common questions"
             desc="More detail on each practice area is on its own page."
           />
         </div>

@@ -355,7 +355,7 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
       {/* FAQ */}
       <section className="section pt-0">
         <div className="container-x">
-          <FAQ items={cat.faqs} title={`${cat.title} questions, answered`} />
+          <FAQ items={cat.faqs} />
         </div>
       </section>
 
