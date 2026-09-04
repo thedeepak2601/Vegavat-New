@@ -128,7 +128,7 @@ export default function IndustryDetail({ params }: { params: { slug: string } })
       </section>
 
       {/* Implementation workflow */}
-      <section className="section relative overflow-hidden bg-charcoal text-white">
+      <section className="section relative overflow-hidden section-dark text-white">
         <AnimatedBackground variant="dark" />
         <div className="container-x relative">
           <SectionHeader

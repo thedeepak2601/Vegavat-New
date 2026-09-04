@@ -231,11 +231,11 @@ export default function FinanceSubPage({
         <ReasonStack subject={sub.label} reasons={sub.reasons} image={sub.image} />
       ) : null}
 
-      {/* Common mistakes — dark, so the warning reads as a warning and the page
-          gets a visual break from the run of light sections. */}
-      <section className="relative overflow-hidden bg-charcoal py-16 lg:py-20">
+      {/* Common mistakes — uses the shared .section-dark band. */}
+      <section className="section-dark relative overflow-hidden py-16 lg:py-20">
         <AnimatedBackground variant="dark" />
-        <div className="pointer-events-none absolute -left-32 top-0 h-80 w-80 rounded-full bg-violet/20 blur-[120px]" />
+        <div className="pointer-events-none absolute -left-32 top-0 h-80 w-80 rounded-full bg-violet/25 blur-[120px]" />
+        <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#F87171]/10 blur-[120px]" />
 
         <div className="container-x relative">
           <Reveal className="mx-auto max-w-3xl text-center">
@@ -250,26 +250,43 @@ export default function FinanceSubPage({
             </p>
           </Reveal>
 
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {sub.mistakes.map((m, i) => (
               <Reveal key={m.t} delay={i * 0.06}>
-                <div className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#F87171]/30 hover:bg-white/[0.07]">
-                  <span className="absolute right-6 top-5 text-5xl font-extrabold leading-none text-white/5">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#F87171]/15 text-[#FCA5A5] ring-1 ring-[#F87171]/25">
-                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                      <path d="M12 9v4M12 17h.01" />
-                    </svg>
-                  </span>
-                  <h3 className="relative mt-5 text-lg font-bold text-white">{m.t}</h3>
+                {/* flex column + mt-auto on the footer keeps the "we check for
+                    this" chip on one line across all four cards, however long
+                    the copy runs. */}
+                <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.05] p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1.5 hover:border-[#F87171]/35 hover:bg-white/[0.08] hover:shadow-[0_22px_50px_-24px_rgba(248,113,113,0.4)]">
+                  {/* hairline that lights up on hover */}
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#F87171]/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  />
+
+                  <div className="flex items-start justify-between gap-3">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#F87171]/15 text-[#FCA5A5] ring-1 ring-[#F87171]/25 transition-all duration-300 group-hover:bg-[#F87171]/25 group-hover:ring-[#F87171]/40">
+                      <svg className="h-[22px] w-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <path d="M12 9v4M12 17h.01" />
+                      </svg>
+                    </span>
+                    <span
+                      aria-hidden
+                      className="text-2xl font-extrabold tabular-nums leading-none text-white/20 transition-colors duration-300 group-hover:text-[#FCA5A5]/60"
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-5 text-base font-bold leading-snug text-white">{m.t}</h3>
                   <p className="mt-2.5 text-sm leading-relaxed text-white/60">{m.d}</p>
 
-                  <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#34E0F0]">
-                    <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">
-                      <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                  <span className="mt-auto flex items-center gap-2 pt-5 text-xs font-bold uppercase tracking-wider text-[#34E0F0]">
+                    <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#34E0F0]/15 ring-1 ring-[#34E0F0]/25">
+                      <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+                        <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
                     We check for this
                   </span>
                 </div>

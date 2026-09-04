@@ -203,7 +203,7 @@ export default function ServicesPage() {
       ))}
 
       {/* How we work */}
-      <section className="section bg-charcoal text-white">
+      <section className="section section-dark text-white">
         <div className="container-x">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="eyebrow border-violet/40 bg-violet/15 text-violet-200">How We Work</span>

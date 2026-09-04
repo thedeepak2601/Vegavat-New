@@ -147,7 +147,7 @@ export default function MobileAppPage() {
       </section>
 
       {/* Why custom */}
-      <section className="section bg-charcoal text-white">
+      <section className="section section-dark text-white">
         <div className="container-x grid items-center gap-12 lg:grid-cols-2">
           <Reveal>
             <span className="eyebrow border-violet/40 bg-violet/15 text-violet-200">Why Custom?</span>

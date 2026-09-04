@@ -44,6 +44,13 @@ body {
     @apply btn bg-charcoal text-white hover:bg-charcoal-800 hover:-translate-y-0.5;
   }
 
+  /* The site's dark band. A violet-tinted slate rather than near-black:
+     flat #121212 over a full-width section reads heavy and dead. White
+     holds ~14:1 here and white/60 ~6:1, so both stay well past AA. */
+  .section-dark {
+    @apply bg-gradient-to-br from-[#2b2545] via-[#241f39] to-[#1e1a30];
+  }
+
   /* White pill on a dark ground — footer, call bars, inverted CTA banners. */
   .btn-invert {
     @apply btn bg-white text-violet hover:-translate-y-0.5 hover:shadow-glow;

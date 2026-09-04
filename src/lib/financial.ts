@@ -144,6 +144,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Name mismatch across documents", d: "A single character of difference between PAN, Aadhaar and bank records is enough to block e-verification and stall refunds for months." },
           { t: "Wrong applicant category", d: "Selecting individual instead of firm, or the wrong company type, means a fresh application rather than an edit." },
           { t: "A personal email on a business PAN", d: "Department notices then arrive in an inbox nobody monitors. We set contact details someone will actually see." },
+          { t: "Letting the DSC expire unnoticed", d: "A Class 3 signature lapses after two or three years and nothing warns you. Audit-case filings then stall until it is renewed." },
         ],
         dueDates: [
           { label: "TAN application", when: "Before the first TDS deduction is made" },
@@ -202,6 +203,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Filing before Form 26AS settles", d: "Deductors revise their returns through the year. Filing early against incomplete data is a leading cause of mismatch notices." },
           { t: "Leaving out AIS entries", d: "Interest, dividends and high-value transactions are already reported to the department. Omitting them guarantees a query." },
           { t: "Forgetting to e-verify", d: "An unverified return is treated as never filed at all — the most common self-inflicted error we see." },
+          { t: "Not e-verifying after filing", d: "An unverified return is treated as never filed. It has to be verified within 30 days or the filing simply does not count." },
         ],
         dueDates: [
           { label: "ITR — non-audit cases", when: "31 July following the financial year, unless extended" },
@@ -259,6 +261,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Investing in March without a plan", d: "Last-minute purchases lock money into products that may not suit you, often for a deduction limit you had already filled." },
           { t: "Assuming the new regime is cheaper", d: "With a home loan, HRA and 80C in play the old regime frequently wins. It has to be computed, not assumed." },
           { t: "Ignoring advance tax", d: "Interest under sections 234B and 234C accrues quietly and is entirely avoidable with quarterly estimates." },
+          { t: "Buying tax-saving products in March", d: "Rushed year-end purchases lock money into policies chosen for the deduction rather than the return. Planned earlier, the same relief costs less." },
         ],
         dueDates: [
           { label: "Advance tax — 1st instalment", when: "15 June — 15% of estimated liability" },
@@ -317,6 +320,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Ignoring a notice and hoping", d: "Reply windows are short. Missing one turns a routine query into an ex-parte order that is far harder to undo." },
           { t: "Replying without reading the section", d: "The section quoted defines exactly what is being asked. A generic reply to a specific query simply invites a second notice." },
           { t: "Paying a demand that is wrong", d: "Many demands arise from unmatched TDS credit. Rectification is often the correct answer, not payment." },
+          { t: "Replying to a notice without reading the section", d: "Different sections demand very different responses. A generic reply to a specific query invites a second, harder notice." },
         ],
         dueDates: [
           { label: "TDS return — Q1", when: "31 July" },
@@ -429,6 +433,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Weak address proof", d: "An unclear electricity bill, or a rent agreement without an NOC, is the single most common cause of rejection." },
           { t: "Wrong business constitution", d: "Selecting proprietorship for a partnership, or the wrong entity type, means refiling rather than editing." },
           { t: "Missing the clarification window", d: "Officers raise queries with a short reply period. Miss it and the application is rejected outright." },
+          { t: "Registering at an address you cannot prove", d: "Physical verification fails if the premises do not match the documents, and the application is rejected rather than queried." },
         ],
         dueDates: [
           { label: "Registration application", when: "Within 30 days of becoming liable to register" },
@@ -488,6 +493,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Claiming credit before checking 2B", d: "Credit not reflected in GSTR-2B is liable to be reversed with interest. Checking first costs nothing." },
           { t: "Skipping nil returns", d: "No activity does not mean no filing. Late fees accrue on a nil return exactly the same way." },
           { t: "GSTR-1 and 3B not agreeing", d: "A difference between the two is a standard trigger for scrutiny at annual return stage." },
+          { t: "Filing 3B without checking 1 first", d: "If GSTR-1 and 3B disagree, the portal flags it and the mismatch follows you into annual reconciliation." },
         ],
         dueDates: [
           { label: "GSTR-1 (monthly filers)", when: "11th of the following month" },
@@ -546,6 +552,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "One rate across a mixed catalogue", d: "Different products attract different rates. A single blanket rate creates exposure in both directions — short payment and over-collection." },
           { t: "Getting place of supply wrong", d: "Charging CGST and SGST where IGST applied, or the reverse, means the tax paid does not count and has to be paid again." },
           { t: "Assuming e-invoicing does not apply", d: "The turnover threshold has been reduced several times. Businesses cross it without noticing." },
+          { t: "Guessing the HSN rate", d: "A wrong classification underpays or overpays tax for every invoice until someone catches it, and the correction is retrospective." },
         ],
         faqs: [
           { q: "Am I required to issue e-invoices?", a: "It depends on your aggregate turnover, and the threshold has been lowered several times. We will check your position against the current rule rather than an outdated one." },
@@ -598,6 +605,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Reconciling once a year", d: "By the time an annual reconciliation runs, the window to claim missing credit for the early months may already have closed." },
           { t: "Chasing suppliers too late", d: "A supplier is far more responsive about last month's invoice than one from fourteen months ago." },
           { t: "Treating 2A and 2B as the same", d: "2B is the static statement that determines credit. Reconciling against the wrong one produces the wrong answer." },
+          { t: "Reconciling only at year end", d: "Twelve months of mismatches found in one sitting cannot be fixed — the suppliers have already filed and the credit window has closed." },
         ],
         dueDates: [
           { label: "Credit claim cut-off", when: "Time-barred after the deadline for that financial year — which is why monthly reconciliation matters" },
@@ -708,6 +716,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "A catch-all expense ledger", d: "'Miscellaneous expenses' destroys month-on-month comparability and is precisely what an assessing officer asks about." },
           { t: "Mixing personal and business spending", d: "It inflates expenses, weakens the books at audit, and makes the owner's drawings impossible to track." },
           { t: "Entering without the GST treatment", d: "Recording an invoice without its tax treatment means the books and the return disagree from the very start." },
+          { t: "Recording GST-inclusive amounts as revenue", d: "It inflates turnover and understates the tax payable, and it is one of the first things a reviewer tests." },
         ],
         dueDates: [
           { label: "Monthly document cut-off", when: "Shared by the 5th, books closed by the 7th" },
@@ -763,6 +772,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Keeping only physical copies", d: "Thermal paper fades and files get lost — which becomes a real problem when a notice arrives three years later." },
           { t: "Inconsistent naming", d: "A folder of files called 'scan_001' is technically stored and practically lost." },
           { t: "Duplicate party masters", d: "The same supplier entered three different ways splits balances and makes reconciliation impossible." },
+          { t: "Keeping the only copy in one place", d: "A single laptop or drawer is a single point of failure. Statutory records must survive a theft, a crash or a flood." },
         ],
         faqs: [
           { q: "Do we have to send you original documents?", a: "No. Clear scans or photographs are sufficient for almost everything, and originals stay with you." },
@@ -815,6 +825,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Carrying unexplained reconciling items", d: "An entry that has sat unreconciled for months is almost always an error, not a timing difference." },
           { t: "Never agreeing party balances", d: "A dispute found at year end is far harder to resolve than one caught in the month it arose." },
           { t: "Reopening closed periods", d: "Editing a closed month changes numbers already reported and acted on. It is a standard audit finding." },
+          { t: "Writing off old balances quietly", d: "Unexplained adjustments to party ledgers are exactly what auditors probe. Every write-off needs a reason on record." },
         ],
         dueDates: [
           { label: "Monthly close", when: "Within 7 working days of month end" },
@@ -870,6 +881,7 @@ export const FINANCE_CATEGORIES: FinanceCategory[] = [
           { t: "Reading profit as cash", d: "A profitable month with every sale on credit can still leave you unable to pay salaries." },
           { t: "Reporting without comparatives", d: "A number on its own carries very little meaning. The comparison is where the information actually is." },
           { t: "Waiting for the annual audit", d: "Discovering a margin problem eleven months late removes every option you had to fix it." },
+          { t: "Reporting profit without cash", d: "A profitable month can still run out of money. Reports that omit the cash position hide the problem that actually stops a business." },
         ],
         faqs: [
           { q: "How is this different from what my accountant already gives me?", a: "Many accountants produce statements once a year for filing. This is a monthly pack designed to be read and used, with comparatives and commentary on what moved." },
