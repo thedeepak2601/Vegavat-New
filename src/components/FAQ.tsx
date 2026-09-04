@@ -6,9 +6,13 @@ import Link from "next/link";
 
 export type QA = { q: string; a: string };
 
-/** Verified to resolve; portrait crop, so it fills a tall column cleanly. */
+/**
+ * She points up and to her right — the viewer's left — which is where the
+ * questions sit. Pinned to a 4:3 crop deliberately: a portrait crop of this
+ * frame clips the fingertip, which is the whole point of the picture.
+ */
 const ASIDE_IMAGE =
-  "https://images.unsplash.com/photo-1600275669439-14e40452d20b?auto=format&fit=crop&w=900&q=80";
+  "https://images.unsplash.com/photo-1758600587766-24c6ed25576e?auto=format&fit=crop&w=880&h=660&q=80";
 
 export default function FAQ({
   items,
@@ -79,8 +83,8 @@ export default function FAQ({
       </div>
 
       {/* Desktop only — stacked on mobile this just pushes the answers down. */}
-      <aside className="hidden lg:block">
-        <div className="relative h-full min-h-[520px] overflow-hidden rounded-3xl border border-charcoal/[0.07] shadow-card">
+      <aside className="hidden lg:flex lg:flex-col lg:gap-5">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-charcoal/[0.07] shadow-card">
           <Image
             src={ASIDE_IMAGE}
             alt=""
@@ -89,29 +93,32 @@ export default function FAQ({
             sizes="(max-width:1024px) 0px, 380px"
             className="object-cover"
           />
-          {/* scrim keeps the card legible over whatever the crop lands on */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/45 to-transparent" />
+          {/* the studio grey is cool and flat; a light violet wash ties it to
+              the rest of the palette without touching the subject */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet/20 via-transparent to-[#34E0F0]/10" />
+        </div>
 
-          <div className="absolute inset-x-5 bottom-5">
-            {/* Opaque ground, not a translucent one: over a near-white section
-                a failed image request would otherwise leave white on white. */}
-            <div className="rounded-2xl border border-white/10 bg-charcoal/85 p-5 backdrop-blur-md">
-              <p className="text-lg font-bold leading-snug text-white">
-                Still have a question?
-              </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-white/70">
-                Talk to someone who does this every day. The first
-                consultation is free.
-              </p>
-              <Link
-                href="/contact"
-                className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-violet transition-all hover:-translate-y-0.5 hover:shadow-glow"
-              >
-                Talk to us
-                <span aria-hidden>→</span>
-              </Link>
-            </div>
-          </div>
+        {/* Own card rather than an overlay, so nothing sits on top of the
+            gesture and the copy never depends on the photo loading. */}
+        <div className="flex flex-1 flex-col justify-center rounded-3xl border border-violet/15 bg-gradient-to-br from-violet/[0.07] via-white to-[#34E0F0]/[0.06] p-6 shadow-card">
+          <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-violet to-violet-700 text-white shadow-glow">
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+          </span>
+          <p className="mt-4 text-lg font-bold leading-snug text-charcoal">
+            Still have a question?
+          </p>
+          <p className="mt-1.5 text-sm leading-relaxed text-charcoal/60">
+            Talk to someone who does this every day. The first consultation is
+            free, with no obligation.
+          </p>
+          <Link
+            href="/contact"
+            className="btn-primary btn-glow mt-5 w-full"
+          >
+            Talk to us →
+          </Link>
         </div>
       </aside>
     </div>
