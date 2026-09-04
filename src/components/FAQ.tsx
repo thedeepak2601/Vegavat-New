@@ -1,22 +1,58 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 export type QA = { q: string; a: string };
 
 /**
- * She points up and to her right — the viewer's left, where the questions sit.
- * Pinned to 4:3: a portrait crop of this frame clips the fingertip, which is
- * the only reason to use the photo.
+ * Thinking pose on a plain white studio background, focal-cropped square so
+ * she sits centred in the circle. The white background is the point — it
+ * dissolves into the circle behind her instead of showing a photo edge.
  */
 const ASIDE_IMAGE =
-  "https://images.unsplash.com/photo-1758600587766-24c6ed25576e?auto=format&fit=crop&w=880&h=660&q=80";
+  "https://images.unsplash.com/photo-1770918655026-c2204eb65ae9?auto=format&fit=crop&crop=focalpoint&fp-x=0.66&fp-y=0.45&w=760&h=760&q=80";
+
+/** Cycled per question, so each row reads as its own topic. */
+const ICONS = [
+  // check badge
+  <path key="a" d="m9 12 2 2 4-4M12 3l2.1 1.6 2.6-.3 1 2.4 2.3 1.2-.6 2.6.6 2.6-2.3 1.2-1 2.4-2.6-.3L12 21l-2.1-1.6-2.6.3-1-2.4L4 15.7l.6-2.6L4 10.5l2.3-1.2 1-2.4 2.6.3z" />,
+  // two-way arrows
+  <path key="b" d="M7 7h11l-3-3m3 3-3 3M17 17H6l3-3m-3 3 3 3" />,
+  // document
+  <path key="c" d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zm0 0v5h5M9 13h6M9 17h4" />,
+  // clock
+  <path key="d" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zm0-13v5l3.5 2" />,
+  // shield
+  <path key="e" d="M12 3l7.5 3v5.5c0 4.3-3 8.2-7.5 9.5-4.5-1.3-7.5-5.2-7.5-9.5V6z" />,
+  // chat
+  <path key="f" d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />,
+];
+
+/**
+ * Floating question bubbles around the portrait. Glyph colour is picked per
+ * background, not by taste: white on amber-400 measures 1.67:1 and on cyan
+ * 1.61:1, so those two carry charcoal (11.2:1 and 11.7:1) instead.
+ */
+const BUBBLES = [
+  { cls: "bg-violet text-white", size: "h-14 w-14 text-xl", pos: "left-0 top-10", delay: "0s" },
+  { cls: "bg-[#34E0F0] text-charcoal", size: "h-11 w-11 text-base", pos: "left-2 bottom-24", delay: "1.1s" },
+  { cls: "bg-amber-400 text-charcoal", size: "h-12 w-12 text-lg", pos: "right-0 top-1/2", delay: "0.6s" },
+  { cls: "bg-violet-400 text-white", size: "h-9 w-9 text-sm", pos: "right-6 bottom-14", delay: "1.7s" },
+];
+
+/** Small solid dots, purely decorative. */
+const DOTS = [
+  "left-16 top-2 h-3 w-3 bg-violet",
+  "right-14 top-6 h-2.5 w-2.5 bg-[#34E0F0]",
+  "left-6 top-1/2 h-2 w-2 bg-amber-400",
+  "right-4 bottom-1/3 h-2.5 w-2.5 bg-violet-300",
+  "left-24 bottom-4 h-2 w-2 bg-[#34E0F0]",
+];
 
 export default function FAQ({
   items,
-  eyebrow = "FAQ",
+  eyebrow = "Help & Support",
   title,
   desc,
   /** Set false where the layout has no room for the portrait column. */
@@ -28,172 +64,108 @@ export default function FAQ({
   desc?: string;
   aside?: boolean;
 }) {
-  const [open, setOpen] = useState<number | null>(0);
-
   /**
-   * Separate cards rather than one divided panel. Each question then has its
-   * own edge and hover, and the open one can lift out of the stack instead of
-   * merely tinting a row inside a shared box.
+   * Answers stay open. These lists are short, and hiding them behind a click
+   * buries the one thing the section exists to deliver. `dl/dt/dd` is the
+   * correct structure for question and answer pairs.
    */
   const list = (
-    <ul className="space-y-3.5">
-      {items.map((item, i) => {
-        const isOpen = open === i;
-        return (
-          <li key={i}>
-            <div
-              className={`group overflow-hidden rounded-2xl border transition-all duration-300 ${
-                isOpen
-                  ? "border-violet/35 bg-white shadow-soft"
-                  : "border-charcoal/[0.08] bg-white shadow-card hover:-translate-y-0.5 hover:border-violet/25 hover:shadow-soft"
-              }`}
-            >
-              <button
-                onClick={() => setOpen(isOpen ? null : i)}
-                aria-expanded={isOpen}
-                className="flex w-full items-center gap-4 px-5 py-4 text-left sm:px-6 sm:py-5"
-              >
-                <span
-                  aria-hidden
-                  className={`grid h-8 w-8 shrink-0 place-items-center rounded-xl text-xs font-extrabold tabular-nums transition-all duration-300 ${
-                    isOpen
-                      ? "bg-gradient-to-br from-violet to-violet-700 text-white shadow-glow"
-                      : "bg-violet/10 text-violet group-hover:bg-violet/15"
-                  }`}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+    <dl className="space-y-7">
+      {items.map((item, i) => (
+        <div key={i} className="group flex gap-4 sm:gap-5">
+          <span
+            aria-hidden
+            className="mt-0.5 grid h-11 w-11 shrink-0 place-items-center rounded-full bg-violet/10 text-violet ring-1 ring-violet/10 transition-all duration-300 group-hover:bg-violet group-hover:text-white group-hover:ring-violet/30"
+          >
+            <svg className="h-[19px] w-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              {ICONS[i % ICONS.length]}
+            </svg>
+          </span>
 
-                <span
-                  className={`flex-1 text-base font-semibold leading-snug transition-colors ${
-                    isOpen ? "text-violet" : "text-charcoal"
-                  }`}
-                >
-                  {item.q}
-                </span>
-
-                <span
-                  aria-hidden
-                  className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
-                    isOpen
-                      ? "rotate-180 border-violet bg-violet text-white"
-                      : "border-charcoal/15 text-charcoal/50 group-hover:border-violet/40 group-hover:text-violet"
-                  }`}
-                >
-                  <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none">
-                    <path d="M3 5.5 7 9.5l4-4" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </button>
-
-              <div
-                className={`grid transition-all duration-300 ${
-                  isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                }`}
-              >
-                <div className="overflow-hidden">
-                  {/* indented to line up under the question, not the number */}
-                  <p className="px-5 pb-5 pl-[4.5rem] text-sm leading-relaxed text-charcoal/65 sm:px-6 sm:pb-6 sm:pl-[4.75rem]">
-                    {item.a}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+          <div className="min-w-0">
+            <dt className="text-base font-bold leading-snug text-charcoal sm:text-lg">
+              {item.q}
+            </dt>
+            <dd className="mt-2 text-sm leading-relaxed text-charcoal/65">{item.a}</dd>
+          </div>
+        </div>
+      ))}
+    </dl>
   );
 
-  if (!aside) return <div className="mx-auto max-w-3xl">{list}</div>;
+  const heading = title ? (
+    <div className="max-w-xl">
+      <span className="text-sm font-bold tracking-wide text-violet">{eyebrow}</span>
+      <h2 className="mt-3 text-3xl font-extrabold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[42px]">
+        {title}
+      </h2>
+      {desc && (
+        <p className="mt-4 text-base leading-relaxed text-charcoal/60">{desc}</p>
+      )}
+    </div>
+  ) : null;
+
+  if (!aside) {
+    return (
+      <div className="mx-auto max-w-3xl">
+        {heading}
+        <div className={title ? "mt-10" : ""}>{list}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative">
-      {/* soft violet bloom so the block reads as a designed panel rather than
-          two columns floating on a flat background */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-violet/10 blur-[110px]"
-      />
+    <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,44%)] lg:items-center lg:gap-16">
+      <div>
+        {heading}
+        <div className={title ? "mt-10" : ""}>{list}</div>
+      </div>
 
-      <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)] lg:items-start lg:gap-14">
-        <div>
-          {title && (
-            <div className="max-w-xl">
-              <span className="eyebrow">{eyebrow}</span>
-              <h2 className="mt-4 text-3xl font-extrabold leading-[1.15] tracking-tight text-charcoal sm:text-4xl">
-                {title}
-              </h2>
-              {desc && (
-                <p className="mt-4 text-base leading-relaxed text-charcoal/60">{desc}</p>
-              )}
-            </div>
-          )}
-          <div className={title ? "mt-9" : ""}>{list}</div>
+      {/* Desktop only — the bubble composition needs room to read, and on a
+          phone it would push the answers off the first screen. */}
+      <div className="relative hidden lg:block">
+        {/* padding leaves room for the bubbles to sit outside the circle */}
+        <div className="relative mx-auto aspect-square w-full max-w-[440px] px-12 py-6">
+          {/* the circle the portrait sits in — her white backdrop dissolves
+              into it, so no photo edge is visible */}
+          <div className="relative h-full w-full overflow-hidden rounded-full bg-charcoal-50">
+            <Image
+              src={ASIDE_IMAGE}
+              alt=""
+              aria-hidden
+              fill
+              sizes="(max-width:1024px) 0px, 380px"
+              className="object-cover"
+            />
+          </div>
+
+          {BUBBLES.map((b, i) => (
+            <span
+              key={i}
+              aria-hidden
+              style={{ animationDelay: b.delay }}
+              className={`animate-float absolute grid place-items-center rounded-full font-extrabold shadow-soft ${b.cls} ${b.size} ${b.pos}`}
+            >
+              ?
+            </span>
+          ))}
+
+          {DOTS.map((d, i) => (
+            <span
+              key={i}
+              aria-hidden
+              style={{ animationDelay: `${0.4 + i * 0.5}s` }}
+              className={`animate-float absolute rounded-full ${d}`}
+            />
+          ))}
         </div>
 
-        {/* Desktop only — stacked on mobile this just pushes the answers down. */}
-        <aside className="hidden lg:block">
-          <div className="sticky top-28">
-            <div className="relative">
-              {/* glow behind the frame gives the column some depth */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-violet/30 via-violet/10 to-[#34E0F0]/25 blur-xl"
-              />
-
-              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/70 shadow-soft">
-                <Image
-                  src={ASIDE_IMAGE}
-                  alt=""
-                  aria-hidden
-                  fill
-                  sizes="(max-width:1024px) 0px, 360px"
-                  className="object-cover"
-                />
-                {/* warms the cool studio grey into the palette */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet/25 via-transparent to-[#34E0F0]/15" />
-                {/* darkens the base so the card below overlaps cleanly */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-charcoal/45 to-transparent" />
-              </div>
-
-              {/* Overlaps the photo for depth, and stays fully readable on its
-                  own ground if the remote image never loads. */}
-              <div className="relative -mt-12 mx-3 rounded-2xl border border-charcoal/[0.07] bg-white p-5 shadow-soft">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-violet to-violet-700 text-white shadow-glow">
-                    <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                    </svg>
-                  </span>
-                  <p className="text-base font-bold leading-snug text-charcoal">
-                    Still have a question?
-                  </p>
-                </div>
-
-                <p className="mt-3 text-sm leading-relaxed text-charcoal/60">
-                  Talk to someone who does this every day — the first
-                  consultation is free.
-                </p>
-
-                <ul className="mt-4 space-y-1.5">
-                  {["Free first consultation", "No obligation", "We reply within 24 hours"].map((t) => (
-                    <li key={t} className="flex items-center gap-2 text-xs font-semibold text-charcoal/70">
-                      <svg className="h-3.5 w-3.5 shrink-0 text-violet" viewBox="0 0 12 12" fill="none" aria-hidden>
-                        <path d="M2.5 6.5 5 9l4.5-5.5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-
-                <Link href="/contact" className="btn-primary btn-glow mt-5 w-full">
-                  Talk to us →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </aside>
+        <p className="mt-4 text-center text-sm text-charcoal/60">
+          Can&apos;t spot your question?{" "}
+          <Link href="/contact" className="font-bold text-violet hover:underline">
+            Ask us directly →
+          </Link>
+        </p>
       </div>
     </div>
   );
