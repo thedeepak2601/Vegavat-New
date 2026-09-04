@@ -7,3 +7,6 @@
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# alternate build dir used via NEXT_DIST_DIR so builds don't clobber `next dev`
+.next-build
