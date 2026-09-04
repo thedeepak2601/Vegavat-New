@@ -51,7 +51,7 @@ export default function PageHero({
 
   return (
     <section className="relative overflow-hidden bg-charcoal pt-[128px] pb-20 text-white">
-      <AnimatedBackground variant="dark" />
+      <AnimatedBackground variant="dark" cubes />
       <div className="container-x relative">
         <div className={image ? "grid items-center gap-12 lg:grid-cols-2" : ""}>
           <Reveal className="max-w-3xl">

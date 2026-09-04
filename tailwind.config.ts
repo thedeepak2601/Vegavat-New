@@ -57,6 +57,10 @@ const config: Config = {
           "0%": { transform: "translateX(-50%)" },
           "100%": { transform: "translateX(0)" },
         },
+        "cube-drift": {
+          "0%, 100%": { opacity: "0.35" },
+          "50%": { opacity: "1" },
+        },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-12px)" },
@@ -119,6 +123,7 @@ const config: Config = {
         "menu-in": "menu-in 0.18s ease-out forwards",
         marquee: "marquee 30s linear infinite",
         "marquee-reverse": "marquee-reverse 30s linear infinite",
+        "cube-drift": "cube-drift 9s ease-in-out infinite",
         float: "float 6s ease-in-out infinite",
         "orb-1": "orb-1 18s ease-in-out infinite",
         "orb-2": "orb-2 22s ease-in-out infinite",
