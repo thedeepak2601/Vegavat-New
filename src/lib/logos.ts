@@ -43,3 +43,43 @@ export const INTEGRATIONS: Brand[] = [
   { slug: "whatsapp", name: "WhatsApp", src: "/brands/whatsapp.svg" },
   { slug: "googlecloud", name: "Google Cloud", src: "/brands/googlecloud.svg" },
 ];
+
+/**
+ * Simple Icons slugs for the tech names used on service pages, where the
+ * slug is not simply the lower-cased name. Anything absent falls back to
+ * the normalised name, and `BrandLogo` shows a monogram chip if the CDN
+ * has no such icon — which is the right outcome for the generic entries
+ * ("Security", "Monitoring", "REST API") that have no brand at all.
+ *
+ * Verified against the CDN: the Adobe marks, Azure, OpenAI, Pinecone, Canva,
+ * Twilio and Nmap have no Simple Icons entry, so they render as monograms.
+ * Do not "fix" OpenAI with the `openaigym` slug — that is a different
+ * project's logo.
+ */
+const TECH_SLUG_OVERRIDES: Record<string, string> = {
+  "Next.js": "nextdotjs",
+  "Node.js": "nodedotjs",
+  "Tailwind CSS": "tailwindcss",
+  "GCP": "googlecloud",
+  "GitHub Actions": "githubactions",
+  "Burp Suite": "burpsuite",
+  "PostgreSQL": "postgresql",
+  "REST API": "openapiinitiative",
+  "WhatsApp Cloud API": "whatsapp",
+};
+
+/** Tech names that carry a local asset rather than a CDN icon. */
+const TECH_LOCAL_SRC: Record<string, string> = {
+  AWS: "/brands/aws.svg",
+};
+
+/** Resolve a display name from a service's `tech` list to a Brand. */
+export function techBrand(name: string): Brand {
+  return {
+    name,
+    slug:
+      TECH_SLUG_OVERRIDES[name] ??
+      name.toLowerCase().replace(/[^a-z0-9]/g, ""),
+    src: TECH_LOCAL_SRC[name],
+  };
+}

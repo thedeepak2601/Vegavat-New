@@ -11,6 +11,8 @@ import Stats from "@/components/Stats";
 import FAQ from "@/components/FAQ";
 import AnimatedBackground from "@/components/effects/AnimatedBackground";
 import LogoMarquee from "@/components/home/LogoMarquee";
+import BrandLogo from "@/components/BrandLogo";
+import { techBrand } from "@/lib/logos";
 import CTABanner from "@/components/CTABanner";
 import InquiryModalButton from "@/components/InquiryModalButton";
 import { SERVICES, SERVICE_HERO_IMAGES } from "@/lib/content";
@@ -323,21 +325,47 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
           <div className="relative overflow-hidden rounded-3xl border border-charcoal/[0.07] bg-white p-7 shadow-card sm:p-10">
             <div className="pointer-events-none absolute inset-0 bg-grid-violet bg-[size:34px_34px] opacity-35" />
             <div className="pointer-events-none absolute right-0 top-0 h-56 w-56 rounded-full bg-[#34E0F0]/15 blur-3xl" />
-            <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-              <SectionHeader
-                align="left"
-                eyebrow="Technologies We Use"
-                title="Modern, proven tools for the job"
-                desc={`The core stack we rely on to deliver reliable, scalable ${service.title.toLowerCase()}.`}
-              />
-              <div className="flex flex-wrap gap-3 lg:justify-end">
-                {tech.map((t) => (
-                  <span key={t} className="inline-flex items-center gap-2 rounded-full border border-charcoal/10 bg-white/85 px-4 py-2 text-sm font-semibold text-charcoal/75 shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:border-violet/35 hover:text-violet">
-                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-violet to-[#34E0F0]" />
-                    {t}
-                  </span>
-                ))}
+            <div className="relative grid gap-9 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-12">
+              <div>
+                <span className="eyebrow">Technologies We Use</span>
+                <h2 className="mt-4 text-3xl font-extrabold leading-[1.15] tracking-tight text-charcoal sm:text-[34px]">
+                  Modern, proven tools for the job
+                </h2>
+                {/* The title is not lower-cased here: "AI Software
+                    Development" became "ai software development". */}
+                <p className="mt-4 text-base leading-relaxed text-charcoal/60">
+                  The core stack behind our {service.title} work — chosen for
+                  reliability over novelty.
+                </p>
+                <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-violet/[0.07] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-violet ring-1 ring-violet/15">
+                  <span className="h-1.5 w-1.5 rounded-full bg-violet" />
+                  {tech.length} core tools
+                </p>
               </div>
+
+              {/* Real brand marks rather than identical dots — the logo
+                  language already used by the strip below. Names with no
+                  Simple Icons entry fall back to a monogram chip. */}
+              <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                {tech.map((t) => {
+                  const brand = techBrand(t);
+                  return (
+                    <li key={t}>
+                      <span className="group flex h-full items-center gap-2.5 rounded-xl border border-charcoal/[0.07] bg-white px-3 py-2.5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-violet/30 hover:shadow-card">
+                        <BrandLogo
+                          slug={brand.slug}
+                          name={brand.name}
+                          src={brand.src}
+                          className="h-5 w-5 shrink-0"
+                        />
+                        <span className="truncate text-sm font-semibold text-charcoal/80 transition-colors group-hover:text-charcoal">
+                          {t}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
         </div>
