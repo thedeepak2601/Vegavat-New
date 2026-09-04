@@ -6,6 +6,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// A value only counts up if it actually starts with a digit. "Free", "All"
+// and similar labels are rendered verbatim — counting them from zero produced
+// "0Free".
+const countable = (value: string) => /^\d/.test(value.trim());
+
 // Splits a value like "1500+" or "3.2x" into number + suffix.
 function parse(value: string) {
   const match = value.match(/^(\d+(?:\.\d+)?)(.*)$/);
@@ -26,10 +31,11 @@ export default function AnimatedCounter({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const { num, decimals, suffix } = parse(value);
+  const animate = countable(value);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !animate) return;
     const obj = { n: 0 };
     const tween = gsap.to(obj, {
       n: num,
@@ -47,11 +53,11 @@ export default function AnimatedCounter({
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, [num, decimals, suffix]);
+  }, [num, decimals, suffix, animate]);
 
   return (
     <span ref={ref} className={className}>
-      0{suffix}
+      {animate ? `0${suffix}` : value}
     </span>
   );
 }

@@ -72,14 +72,20 @@ function NavPill({
 
       {hasMenu && (
         <div className="invisible absolute left-1/2 top-full z-40 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-          <div className="animate-menu-in relative w-[min(94vw,900px)] overflow-hidden rounded-2xl border border-charcoal/[0.08] bg-white shadow-soft">
+          <div className={`animate-menu-in relative overflow-hidden rounded-2xl border border-charcoal/[0.08] bg-white shadow-soft ${
+            hasGroups && item.groups!.length > 3 ? "w-[min(96vw,1180px)]" : "w-[min(94vw,900px)]"
+          }`}>
             {/* soft gradient wash */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet/[0.05] via-transparent to-[#34E0F0]/[0.05]" />
             <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-violet/10 blur-3xl" />
 
             {hasGroups ? (
               // Grouped layout: one column per category, its sub-services listed beneath.
-              <div className="relative grid grid-cols-3 p-5">
+              <div
+                className={`relative grid p-5 ${
+                  item.groups!.length > 3 ? "grid-cols-4" : "grid-cols-3"
+                }`}
+              >
                 {item.groups!.map((g, gi) => (
                   <div
                     key={g.label}

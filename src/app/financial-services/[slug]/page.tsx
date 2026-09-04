@@ -21,6 +21,14 @@ import {
 // Cycled through the "who it's for" list so each entry gets a distinct icon.
 const WHO_ICONS = ["users", "building", "factory", "saas", "crm", "flag"];
 
+/**
+ * "Income Tax" -> "Income Tax services". Titles that already end in
+ * "Services" are left alone, so "Complete Business Services" does not
+ * become "Complete Business Services services".
+ */
+const withServices = (t: string, word = "services") =>
+  /services$/i.test(t) ? t : `${t} ${word}`;
+
 export function generateStaticParams() {
   return FINANCE_CATEGORIES.map((c) => ({ slug: c.slug }));
 }
@@ -28,7 +36,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const cat = getFinanceCategory(params.slug);
   return {
-    title: cat ? `${cat.title} Services` : "Financial Services",
+    title: cat ? withServices(cat.title, "Services") : "Financial Services",
     description: cat?.short,
   };
 }
@@ -44,7 +52,7 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
       <PageHero
         breadcrumb={`Home / Financial Services / ${cat.title}`}
         eyebrow="Financial Services"
-        title={`${cat.title} services`}
+        title={withServices(cat.title)}
         desc={cat.short}
         cta={{ label: `Call ${FINANCE_PHONE}`, href: FINANCE_PHONE_HREF }}
         image={cat.image}
@@ -88,7 +96,7 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
               <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-soft">
                 <Image
                   src={cat.sideImage}
-                  alt={`${cat.title} services`}
+                  alt={withServices(cat.title)}
                   fill
                   sizes="(max-width:1024px) 100vw, 50vw"
                   className="object-cover"
@@ -146,6 +154,12 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
                       <span className="rounded-full bg-violet/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-violet">
                         {s.includes.length} services
                       </span>
+                      {/* Indicative starting fee, where the service has one. */}
+                      {s.priceFrom ? (
+                        <span className="rounded-full bg-gradient-to-r from-violet to-violet-700 px-3 py-1 text-xs font-bold text-white shadow-soft">
+                          From {s.priceFrom}
+                        </span>
+                      ) : null}
                     </div>
 
                     <p className="mt-3 text-sm leading-relaxed text-charcoal/60">{s.desc}</p>
@@ -180,7 +194,7 @@ export default function FinanceCategoryPage({ params }: { params: { slug: string
                       </span>
 
                       <span className="inline-flex items-center justify-center gap-2 rounded-full border border-violet/25 bg-violet/[0.06] px-6 py-2.5 text-sm font-bold text-violet transition-all duration-300 group-hover:border-violet group-hover:bg-violet group-hover:text-white group-hover:shadow-glow">
-                        View Full Details
+                        {s.ctaLabel ?? "View Full Details"}
                         <span className="transition-transform duration-300 group-hover:translate-x-1">
                           →
                         </span>

@@ -9,6 +9,7 @@ import Icon from "@/components/Icon";
 import FAQ from "@/components/FAQ";
 import CTABanner from "@/components/CTABanner";
 import CallBar from "@/components/finance/CallBar";
+import ReasonStack from "@/components/finance/ReasonStack";
 import AnimatedBackground from "@/components/effects/AnimatedBackground";
 import {
   FINANCE_PHONE,
@@ -223,6 +224,12 @@ export default function FinanceSubPage({
           </div>
         </div>
       </section>
+
+      {/* Why it matters — a stacking scroll section, shown only where the
+          service has reasons written for it. */}
+      {sub.reasons?.length ? (
+        <ReasonStack subject={sub.label} reasons={sub.reasons} image={sub.image} />
+      ) : null}
 
       {/* Common mistakes — dark, so the warning reads as a warning and the page
           gets a visual break from the run of light sections. */}
