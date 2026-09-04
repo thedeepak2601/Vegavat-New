@@ -23,8 +23,8 @@ const WHO_ICONS = ["users", "building", "factory", "saas", "crm", "flag"];
 
 /**
  * "Income Tax" -> "Income Tax services". Titles that already end in
- * "Services" are left alone, so "Complete Business Services" does not
- * become "Complete Business Services services".
+ * "Services" are left alone, so "Business Services" does not become
+ * "Business Services services".
  */
 const withServices = (t: string, word = "services") =>
   /services$/i.test(t) ? t : `${t} ${word}`;

@@ -139,7 +139,7 @@ export const NAV: NavItem[] = [
         ],
       },
       {
-        label: "Complete Business Services",
+        label: "Business Services",
         href: "/financial-services/business-services",
         icon: "erp",
         items: [
@@ -147,8 +147,6 @@ export const NAV: NavItem[] = [
           { label: "Private Limited Company", href: "/financial-services/business-services/private-limited-company", desc: "SPICe+ incorporation", icon: "erp" },
           { label: "Proprietorship Firm", href: "/financial-services/business-services/proprietorship-firm", desc: "Udyam, GST & current account", icon: "flag" },
           { label: "Limited Liability Partnership", href: "/financial-services/business-services/limited-liability-partnership", desc: "FiLLiP & LLP agreement", icon: "users" },
-          { label: "GST Return Filing", href: "/financial-services/business-services/gst-return-filing", desc: "GSTR-1, 3B & 2B matching", icon: "sync" },
-          { label: "Accounting & Bookkeeping", href: "/financial-services/business-services/accounting-bookkeeping", desc: "Monthly books & reporting", icon: "finance" },
         ],
       },
     ],
