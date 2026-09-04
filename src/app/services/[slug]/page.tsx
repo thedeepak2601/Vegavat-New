@@ -422,8 +422,7 @@ export default function ServiceDetail({ params }: { params: { slug: string } }) 
       {/* FAQ */}
       <section className="section">
         <div className="container-x">
-          <SectionHeader eyebrow="FAQ" title="Frequently asked questions" />
-          <div className="mt-10"><FAQ items={FAQS} /></div>
+          <FAQ items={FAQS} title="Frequently asked questions" />
         </div>
       </section>
 

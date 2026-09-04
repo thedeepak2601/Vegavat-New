@@ -363,10 +363,7 @@ export default function FinanceSubPage({
       {/* FAQ */}
       <section className="section bg-charcoal-50/60">
         <div className="container-x">
-          <SectionHeader eyebrow="FAQ" title={`${sub.label} questions`} />
-          <div className="mt-12">
-            <FAQ items={sub.faqs} />
-          </div>
+          <FAQ items={sub.faqs} title={`${sub.label} questions`} />
         </div>
       </section>
 

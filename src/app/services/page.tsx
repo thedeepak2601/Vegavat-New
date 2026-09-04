@@ -261,14 +261,11 @@ export default function ServicesPage() {
       {/* FAQ */}
       <section className="section bg-charcoal-50/60">
         <div className="container-x">
-          <SectionHeader
-            eyebrow="FAQ"
+          <FAQ
+            items={FAQS}
             title="Questions we get asked before starting"
             desc="If yours isn't here, ask us directly — we answer straight."
           />
-          <div className="mt-12">
-            <FAQ items={FAQS} />
-          </div>
         </div>
       </section>
 

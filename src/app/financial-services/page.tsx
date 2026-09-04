@@ -201,14 +201,11 @@ export default function FinancialServicesPage() {
       {/* FAQ */}
       <section className="section">
         <div className="container-x">
-          <SectionHeader
-            eyebrow="FAQ"
+          <FAQ
+            items={TOP_FAQS}
             title="Common questions"
             desc="More detail on each practice area is on its own page."
           />
-          <div className="mt-12">
-            <FAQ items={TOP_FAQS} />
-          </div>
         </div>
       </section>
 
